@@ -94,7 +94,6 @@ const translations = {
 const AHLanding: NextPage = () => {
     const [selectedProjectIndex, setSelectedProjectIndex] = useState(0);
     const [isDarkMode, setIsDarkMode] = useState(false);
-    const [iframeError, setIframeError] = useState(false);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [language, setLanguage] = useState<"en" | "ko">("en");
 
@@ -117,15 +116,6 @@ const AHLanding: NextPage = () => {
 
     const toggleDarkMode = () => {
         setIsDarkMode(!isDarkMode);
-    };
-
-    const handleIframeLoad = () => {
-        setIframeError(false);
-    };
-
-    const handleIframeError = () => {
-        setIframeError(true);
-        console.error("Failed to load iframe");
     };
 
     const iframeRef = useRef<HTMLIFrameElement>(null);
@@ -190,8 +180,6 @@ const AHLanding: NextPage = () => {
                         title={projects[selectedProjectIndex].name}
                         className={styles.projectIframe}
                         allowFullScreen
-                        onLoad={handleIframeLoad}
-                        onError={handleIframeError}
                     />
                 ) : (
                     <div className={styles.comingSoon}>N/A</div>
