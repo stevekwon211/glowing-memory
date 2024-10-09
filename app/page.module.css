@@ -4,7 +4,7 @@
 .ah {
     position: relative;
     font-size: 48px;
-    font-weight: 500;
+    font-weight: 800;
 }
 .project {
     position: relative;
@@ -24,7 +24,7 @@
 }
 
 .playIcon {
-    color: var(--icon-color);
+    color: #ebece6;
     position: relative;
     overflow: hidden;
     cursor: pointer;
@@ -33,7 +33,7 @@
     justify-content: center;
     width: 100%;
     height: 100%;
-    padding: 6px;
+    padding: 0; /* 패딩을 제거합니다 */
     box-sizing: border-box;
 }
 
@@ -96,7 +96,19 @@
     border: 1px solid #010101;
     overflow: hidden;
     margin: 24px;
+    position: relative;
+    width: calc(100% - 48px);
+    height: calc(100% - 48px); /* 또는 원하는 고정 높이 (예: height: 500px;) */
 }
+
+.projectSlide {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
 .description {
     position: relative;
     font-size: 18px;
@@ -111,7 +123,15 @@
     justify-content: center;
     width: 36px;
     height: 36px;
+    cursor: pointer;
+    padding: 6px; /* 패딩을 여기로 이동합니다 */
+    box-sizing: border-box;
 }
+
+.darkMode .frame {
+    background-color: #bc3714;
+}
+
 .titleParent {
     align-self: stretch;
     flex: 1;
@@ -137,9 +157,9 @@
     flex-direction: row;
     align-items: stretch;
     justify-content: flex-start;
-    padding: 24px;
+    padding: 0;
     box-sizing: border-box;
-    gap: 48px;
+    gap: 0;
     text-align: left;
     font-size: 24px;
     transition: background-color 0.3s, color 0.3s;
@@ -161,15 +181,48 @@
     }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 1000px) {
     .ahLanding {
-        flex-direction: column;
-        gap: 24px;
+        flex-direction: column !important;
+        gap: 12px !important;
+        padding: 12px !important;
+        height: 100vh !important; /* Ensure full viewport height */
+        box-sizing: border-box !important;
     }
 
     .ahParent,
     .titleParent {
-        max-width: 100%;
+        max-width: 100% !important;
+        padding: 0 !important;
+        justify-content: flex-start !important;
+        gap: 12px !important;
+        height: auto !important; /* Allow height to fit content */
+        flex: 0 0 auto !important; /* Don't grow or shrink, size to content */
+    }
+
+    .projectsParent {
+        display: none !important;
+    }
+
+    .projectDisplay {
+        margin: 12px 0 !important;
+        flex: 1 1 auto !important; /* Allow it to grow and fill remaining space */
+        height: 0 !important; /* This forces the flex-grow to take effect */
+    }
+
+    .titleParent {
+        padding-top: 0 !important;
+    }
+
+    /* Additional styles to ensure elements are hugging in mobile view */
+    .ah,
+    .about,
+    .frameParent {
+        margin-bottom: 0 !important;
+    }
+
+    .description {
+        margin-top: 0 !important;
     }
 }
 
@@ -187,7 +240,7 @@
 }
 
 .playIcon {
-    color: var(--icon-color);
+    color: #ebece6;
     position: relative;
     overflow: hidden;
     cursor: pointer;
@@ -196,7 +249,7 @@
     justify-content: center;
     width: 100%;
     height: 100%;
-    padding: 6px;
+    padding: 0; /* 패딩을 제거합니다 */
     box-sizing: border-box;
 }
 
@@ -236,6 +289,16 @@
     border: none;
 }
 
+.comingSoon {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    font-size: 24px;
+    color: #bc3714;
+}
+
 .darkMode {
     background-color: #010101;
     color: #ebece5;
@@ -256,7 +319,7 @@
 }
 
 .darkMode .playIcon {
-    color: #ebece5; /* Icon color in dark mode */
+    color: #ebece6; /* Icon color in dark mode */
 }
 
 .darkMode .projectDisplay {
@@ -335,4 +398,149 @@
 
 .iframeError a:hover {
     text-decoration: underline;
+}
+
+/* 스크롤바 스타일링 (선택사항) */
+.projectDisplay::-webkit-scrollbar {
+    width: 6px;
+}
+
+.projectDisplay::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+.projectDisplay::-webkit-scrollbar-thumb {
+    background: #888;
+}
+
+.projectDisplay::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+.iconGroup {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 12px;
+}
+
+.frame {
+    background-color: #bc3714;
+    overflow: hidden;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    cursor: pointer;
+    padding: 6px; /* 패딩을 여기로 이동합니다 */
+    box-sizing: border-box;
+}
+
+.darkMode .frame {
+    background-color: #bc3714;
+}
+
+.playIcon {
+    color: #ebece6;
+    width: 24px;
+    height: 24px;
+}
+
+.darkMode .playIcon {
+    color: #ebece6;
+}
+
+.modalOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modalContent {
+    background-color: #ebece6;
+    padding: 24px;
+    max-width: 500px;
+    width: 90%;
+    position: relative;
+    font-family: "Manrope", sans-serif;
+}
+
+.darkMode .modalContent {
+    background-color: #010101;
+    color: #ebece6;
+}
+
+.closeButton {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #010101;
+}
+
+.darkMode .closeButton {
+    color: #ebece6;
+}
+
+.modalContent h2 {
+    margin-top: 0;
+    color: #bc3714;
+    font-size: 24px;
+    margin-bottom: 16px;
+}
+
+.modalContent p {
+    margin-bottom: 16px;
+    line-height: 1.6;
+    font-size: 16px;
+}
+
+.languagesIcon {
+    width: 24px;
+    height: 24px;
+    color: var(--icon-color);
+    position: relative;
+    overflow: hidden;
+    flex-shrink: 0;
+}
+
+.darkMode .languagesIcon {
+    color: #010101;
+}
+
+.modalContent h3 {
+    margin-top: 24px;
+    color: #bc3714;
+    font-size: 20px;
+    margin-bottom: 12px;
+}
+
+.contactInfo {
+    margin-bottom: 8px;
+    font-size: 14px;
+    color: #010101; /* 일반적인 검정색 */
+}
+
+.darkMode .contactInfo {
+    color: #ebece6; /* 다크 모드에서는 밝은 색상 */
+}
+
+.contactInfo a {
+    color: inherit; /* 부모 요소의 색상을 상속 */
+    text-decoration: none; /* 밑줄 제거 */
+}
+
+.contactInfo a:hover {
+    text-decoration: underline; /* 호버 시 밑줄 추가 (선택 사항) */
 }
