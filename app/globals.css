@@ -60,3 +60,8 @@ img {
 * {
     font-family: var(--font-manrope);
 }
+
+/* 전체 웹사이트에 Manrope 폰트 적용 */
+body {
+    font-family: "Manrope", sans-serif;
+}
