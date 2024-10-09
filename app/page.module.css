@@ -4,16 +4,17 @@
 .ah {
     position: relative;
     font-size: 48px;
+    font-weight: 500;
 }
 .project {
     position: relative;
     cursor: pointer;
-    font-weight: 300;
+    font-weight: 200;
 }
 
 .selectedProject {
     color: #bc3714;
-    font-weight: 300;
+    font-weight: 200;
 }
 
 .projectImage {
@@ -99,7 +100,7 @@
 .description {
     position: relative;
     font-size: 18px;
-    font-weight: 100;
+    font-weight: 200;
 }
 .frame {
     background-color: #bc3714;
@@ -141,7 +142,6 @@
     gap: 48px;
     text-align: left;
     font-size: 24px;
-    font-family: "Bagoss Standard";
     transition: background-color 0.3s, color 0.3s;
 }
 
@@ -315,4 +315,24 @@
 .darkMode .lightBulbOffIcon,
 .darkMode .anvilIcon {
     color: #010101;
+}
+
+.iframeError {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    text-align: center;
+    padding: 20px;
+}
+
+.iframeError a {
+    margin-top: 10px;
+    color: #bc3714;
+    text-decoration: none;
+}
+
+.iframeError a:hover {
+    text-decoration: underline;
 }

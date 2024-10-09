@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import type { NextPage } from "next";
 import styles from "./page.module.css";
 import { LightbulbOff, Lightbulb, SquareArrowOutUpRight, Anvil } from "lucide-react";
@@ -33,6 +33,8 @@ const projects: Project[] = [
 const AHLanding: NextPage = () => {
     const [selectedProject, setSelectedProject] = useState<Project | null>(null);
     const [isDarkMode, setIsDarkMode] = useState(false);
+    const [iframeError, setIframeError] = useState(false);
+    const iframeRef = useRef<HTMLIFrameElement>(null);
 
     useEffect(() => {
         // Detect system color scheme
@@ -57,6 +59,15 @@ const AHLanding: NextPage = () => {
 
     const toggleDarkMode = () => {
         setIsDarkMode(!isDarkMode);
+    };
+
+    const handleIframeLoad = () => {
+        setIframeError(false);
+    };
+
+    const handleIframeError = () => {
+        setIframeError(true);
+        console.error("Failed to load iframe");
     };
 
     return (
@@ -93,20 +104,27 @@ const AHLanding: NextPage = () => {
                 </div>
             </div>
             <div className={styles.projectDisplay}>
-                {selectedProject && (
-                    <iframe
-                        src={selectedProject.url}
-                        title={selectedProject.name}
-                        className={styles.projectIframe}
-                        allowFullScreen
-                        onError={(e) => {
-                            console.error("Failed to load iframe:", e);
-                        }}
-                    />
-                )}
+                {selectedProject &&
+                    (iframeError ? (
+                        <div className={styles.iframeError}>
+                            <p>Failed to load project. Please try again later.</p>
+                            <a href={selectedProject.url} target="_blank" rel="noopener noreferrer">
+                                Open project in new tab
+                            </a>
+                        </div>
+                    ) : (
+                        <iframe
+                            ref={iframeRef}
+                            src={selectedProject.url}
+                            title={selectedProject.name}
+                            className={styles.projectIframe}
+                            allowFullScreen
+                            onLoad={handleIframeLoad}
+                            onError={handleIframeError}
+                        />
+                    ))}
             </div>
             <div className={styles.titleParent}>
-                <div className={styles.projectTitle}>{selectedProject?.title || "Title"}</div>
                 <div className={styles.description}>{selectedProject?.description || "description"}</div>
                 <div className={styles.frame}>
                     <a href={selectedProject?.url} target="_blank" rel="noopener noreferrer">
