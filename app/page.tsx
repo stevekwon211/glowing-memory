@@ -41,8 +41,8 @@ const projects: Project[] = [
         url: "https://verae.vercel.app/",
         title: "Verae (WIP)",
         description: {
-            en: "Space exploration. JKL; controls the camera, WASD are direction keys, click on red (planets) on the map for auto-navigation.",
-            ko: "space 탐험. JKL;은 카메라 조종, WASD는 방향키, 지도의 빨간색(행성)을 클릭하면 자동 항해.",
+            en: "Space exploration. KL;' controls the camera, WASD are direction keys, click on red (planets) on the map for auto-navigation.",
+            ko: "space 탐험. KL;'은 카메라 조종, WASD는 방향키, 지도의 빨간색(행성)을 클릭하면 자동 항해.",
         },
         date: new Date("2024-10-02"),
     },
