@@ -1,29 +1,13 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import type { NextPage } from "next";
 import styles from "./page.module.css";
-import {
-    LightbulbOff,
-    Lightbulb,
-    SquareArrowOutUpRight,
-    Anvil,
-    ArrowLeft,
-    ArrowRight,
-    X,
-    Languages,
-} from "lucide-react";
-
-interface Project {
-    name: string;
-    url: string;
-    title: string;
-    description: {
-        en: string;
-        ko: string;
-    };
-    date: Date;
-}
+import { motion } from "framer-motion";
+import Header from "../components/Header";
+import ProjectDisplay from "../components/ProjectDisplay";
+import ProjectDescription from "../components/ProjectDescription";
+import { Project } from "../types";
 
 const projects: Project[] = [
     {
@@ -94,31 +78,23 @@ const translations = {
 const AHLanding: NextPage = () => {
     const [selectedProjectIndex, setSelectedProjectIndex] = useState(0);
     const [isDarkMode, setIsDarkMode] = useState(false);
-    const [isModalOpen, setIsModalOpen] = useState(false);
     const [language, setLanguage] = useState<"en" | "ko">("en");
 
     useEffect(() => {
-        // Detect system color scheme
-        const darkModeMediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
-        setIsDarkMode(darkModeMediaQuery.matches);
-
-        // Listen for changes in system color scheme
-        const handleColorSchemeChange = (e: MediaQueryListEvent) => {
-            setIsDarkMode(e.matches);
-        };
-        darkModeMediaQuery.addEventListener("change", handleColorSchemeChange);
-
-        // Cleanup listener on component unmount
-        return () => {
-            darkModeMediaQuery.removeEventListener("change", handleColorSchemeChange);
-        };
+        const savedMode = localStorage.getItem("darkMode");
+        if (savedMode) {
+            setIsDarkMode(JSON.parse(savedMode));
+        } else {
+            const darkModeMediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
+            setIsDarkMode(darkModeMediaQuery.matches);
+        }
     }, []);
 
     const toggleDarkMode = () => {
-        setIsDarkMode(!isDarkMode);
+        const newMode = !isDarkMode;
+        setIsDarkMode(newMode);
+        localStorage.setItem("darkMode", JSON.stringify(newMode));
     };
-
-    const iframeRef = useRef<HTMLIFrameElement>(null);
 
     const handlePrevProject = () => {
         setSelectedProjectIndex((prevIndex) => (prevIndex > 0 ? prevIndex - 1 : projects.length - 1));
@@ -128,127 +104,34 @@ const AHLanding: NextPage = () => {
         setSelectedProjectIndex((prevIndex) => (prevIndex < projects.length - 1 ? prevIndex + 1 : 0));
     };
 
-    const toggleModal = () => {
-        setIsModalOpen(!isModalOpen);
-    };
-
     const toggleLanguage = () => {
         setLanguage((prev) => (prev === "en" ? "ko" : "en"));
     };
 
     return (
-        <div className={`${styles.ahLanding} ${isDarkMode ? styles.darkMode : ""}`}>
-            <div className={styles.ahParent}>
-                <div className={styles.ah}>
-                    <span>DE</span>
-                    <span className={styles.span}>導彦</span>
-                </div>
-                <div className={styles.projectsParent}>
-                    {projects.map((project, index) => (
-                        <div
-                            key={project.name}
-                            className={`${styles.project} ${
-                                selectedProjectIndex === index ? styles.selectedProject : ""
-                            }`}
-                            onClick={() => setSelectedProjectIndex(index)}
-                        >
-                            {project.name}
-                        </div>
-                    ))}
-                </div>
-                <div className={styles.frameParent}>
-                    <div className={styles.frameWrapper} onClick={toggleModal}>
-                        <Anvil className={styles.anvilIcon} strokeWidth={1} />
-                    </div>
-                    <div className={styles.frameWrapper} onClick={toggleDarkMode}>
-                        {isDarkMode ? (
-                            <Lightbulb className={styles.lightBulbIcon} strokeWidth={1} />
-                        ) : (
-                            <LightbulbOff className={styles.lightBulbOffIcon} strokeWidth={1} />
-                        )}
-                    </div>
-                    <div className={styles.frameWrapper} onClick={toggleLanguage}>
-                        <Languages className={styles.languagesIcon} strokeWidth={1} />
-                    </div>
-                </div>
-            </div>
-            <div className={styles.projectDisplay}>
-                {projects[selectedProjectIndex].url ? (
-                    <iframe
-                        ref={iframeRef}
-                        src={projects[selectedProjectIndex].url}
-                        title={projects[selectedProjectIndex].name}
-                        className={styles.projectIframe}
-                        allowFullScreen
-                    />
-                ) : (
-                    <div className={styles.comingSoon}>N/A</div>
-                )}
-            </div>
-            <div className={styles.titleParent}>
-                <div className={styles.description}>
-                    {projects[selectedProjectIndex]?.description[language] || "description"}
-                </div>
-                <div className={styles.iconGroup}>
-                    <div className={styles.frame}>
-                        <a href={projects[selectedProjectIndex]?.url} target="_blank" rel="noopener noreferrer">
-                            <SquareArrowOutUpRight className={styles.playIcon} strokeWidth={1} fill="none" />
-                        </a>
-                    </div>
-                    <div className={styles.frame} onClick={handlePrevProject}>
-                        <ArrowLeft className={styles.playIcon} strokeWidth={1} />
-                    </div>
-                    <div className={styles.frame} onClick={handleNextProject}>
-                        <ArrowRight className={styles.playIcon} strokeWidth={1} />
-                    </div>
-                </div>
-            </div>
-
-            {isModalOpen && (
-                <div className={styles.modalOverlay} onClick={toggleModal}>
-                    <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
-                        <button className={styles.closeButton} onClick={toggleModal}>
-                            <X strokeWidth={1} />
-                        </button>
-                        <h2>{translations.about[language]}</h2>
-                        {translations.modalContent[language].map((paragraph, index) => {
-                            if (index === translations.modalContent[language].length - 3) {
-                                return <h3 key={index}>{paragraph}</h3>;
-                            }
-                            if (index === translations.modalContent[language].length - 2) {
-                                return (
-                                    <p key={index} className={styles.contactInfo}>
-                                        {paragraph}
-                                    </p>
-                                );
-                            }
-                            if (index === translations.modalContent[language].length - 1) {
-                                return (
-                                    <p key={index} className={styles.contactInfo}>
-                                        <a
-                                            href="https://disquiet.io/@kwondoeon"
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                        >
-                                            disquiet
-                                        </a>
-                                        {" / "}
-                                        <a
-                                            href="https://www.instagram.com/kwondoeon/"
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                        >
-                                            instagram
-                                        </a>
-                                    </p>
-                                );
-                            }
-                            return <p key={index}>{paragraph}</p>;
-                        })}
-                    </div>
-                </div>
-            )}
-        </div>
+        <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.5 }}
+            className={`${styles.ahLanding} ${isDarkMode ? styles.darkMode : ""}`}
+        >
+            <Header
+                isDarkMode={isDarkMode}
+                toggleDarkMode={toggleDarkMode}
+                toggleLanguage={toggleLanguage}
+                projects={projects}
+                selectedProjectIndex={selectedProjectIndex}
+                setSelectedProjectIndex={setSelectedProjectIndex}
+            />
+            <ProjectDisplay project={projects[selectedProjectIndex]} />
+            <ProjectDescription
+                project={projects[selectedProjectIndex]}
+                language={language}
+                handlePrevProject={handlePrevProject}
+                handleNextProject={handleNextProject}
+            />
+        </motion.div>
     );
 };
 
