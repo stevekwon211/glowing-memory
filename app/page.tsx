@@ -12,7 +12,7 @@ import { Project } from "../types";
 const projects: Project[] = [
     {
         name: "Undistracted (WIP)",
-        url: "https://do-you-feel-this.vercel.app/",
+        url: "https://undistracted.vercel.app/",
         title: "Undistracted (WIP)",
         description: {
             en: "Various tools and tips to help you focus. The sparkles in the background represent distracting elements.",
