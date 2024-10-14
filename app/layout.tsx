@@ -6,8 +6,8 @@ import { AnimatePresence } from "framer-motion";
 const manrope = Manrope({ subsets: ["latin"] });
 
 export const metadata = {
-    title: "DE 導彦",
-    description: "Portfolio",
+    title: "odeon",
+    description: "odeon by kwon doeon",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
