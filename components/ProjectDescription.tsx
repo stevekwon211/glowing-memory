@@ -17,19 +17,6 @@ const ProjectDescription: React.FC<ProjectDescriptionProps> = ({
 }) => (
     <div className={styles.titleParent}>
         <div className={styles.description}>{project.description[language] || "description"}</div>
-        <div className={styles.iconGroup}>
-            <div className={styles.frame}>
-                <a href={project.url} target="_blank" rel="noopener noreferrer">
-                    <SquareArrowOutUpRight className={styles.playIcon} strokeWidth={1} fill="none" />
-                </a>
-            </div>
-            <div className={styles.frame} onClick={handlePrevProject}>
-                <ArrowLeft className={styles.playIcon} strokeWidth={1} />
-            </div>
-            <div className={styles.frame} onClick={handleNextProject}>
-                <ArrowRight className={styles.playIcon} strokeWidth={1} />
-            </div>
-        </div>
     </div>
 );
 

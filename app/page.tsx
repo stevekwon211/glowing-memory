@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import type { NextPage } from "next";
 import styles from "./page.module.css";
 import { motion } from "framer-motion";
@@ -78,24 +78,7 @@ const projects: Project[] = [
 
 const AHLanding: NextPage = () => {
     const [selectedProjectIndex, setSelectedProjectIndex] = useState(0);
-    const [isDarkMode, setIsDarkMode] = useState(false);
     const [language, setLanguage] = useState<"en" | "ko">("en");
-
-    useEffect(() => {
-        const savedMode = localStorage.getItem("darkMode");
-        if (savedMode) {
-            setIsDarkMode(JSON.parse(savedMode));
-        } else {
-            const darkModeMediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
-            setIsDarkMode(darkModeMediaQuery.matches);
-        }
-    }, []);
-
-    const toggleDarkMode = () => {
-        const newMode = !isDarkMode;
-        setIsDarkMode(newMode);
-        localStorage.setItem("darkMode", JSON.stringify(newMode));
-    };
 
     const handlePrevProject = () => {
         setSelectedProjectIndex((prevIndex) => (prevIndex > 0 ? prevIndex - 1 : projects.length - 1));
@@ -115,12 +98,9 @@ const AHLanding: NextPage = () => {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.5 }}
-            className={`${styles.ahLanding} ${isDarkMode ? styles.darkMode : ""}`}
+            className={styles.ahLanding}
         >
             <Header
-                isDarkMode={isDarkMode}
-                toggleDarkMode={toggleDarkMode}
-                toggleLanguage={toggleLanguage}
                 projects={projects}
                 selectedProjectIndex={selectedProjectIndex}
                 setSelectedProjectIndex={setSelectedProjectIndex}
