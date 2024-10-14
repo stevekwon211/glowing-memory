@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import type { NextPage } from "next";
 import styles from "./page.module.css";
 import { motion } from "framer-motion";
 import Header from "../components/Header";
@@ -76,10 +75,9 @@ const projects: Project[] = [
 //     },
 // };
 
-const Home: React.FC = () => {
+export default function Home() {
     const [selectedProjectIndex, setSelectedProjectIndex] = useState(0);
-    const [isDarkMode, setIsDarkMode] = useState(false);
-    const [language, setLanguage] = useState<"en" | "ko">("en"); // 언어 상태 추가
+    const [language, setLanguage] = useState("en");
 
     const handlePrevProject = () => {
         setSelectedProjectIndex((prevIndex) => (prevIndex > 0 ? prevIndex - 1 : projects.length - 1));
@@ -110,6 +108,4 @@ const Home: React.FC = () => {
             <ProjectDescription project={projects[selectedProjectIndex]} language={language} />
         </motion.div>
     );
-};
-
-export default Home;
+}
