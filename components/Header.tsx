@@ -1,3 +1,4 @@
+import React from "react";
 import Link from "next/link";
 import { Anvil, SquareArrowOutUpRight, ArrowLeft, ArrowRight } from "lucide-react";
 import styles from "../app/page.module.css";
@@ -6,7 +7,7 @@ import { Project } from "../types";
 interface HeaderProps {
     projects: Project[];
     selectedProjectIndex: number;
-    setSelectedProjectIndex: (index: number) => void;
+    setSelectedProjectIndex: React.Dispatch<React.SetStateAction<number>>;
 }
 
 const Header: React.FC<HeaderProps> = ({ projects, selectedProjectIndex, setSelectedProjectIndex }) => {
