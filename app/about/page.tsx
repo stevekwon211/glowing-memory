@@ -31,8 +31,8 @@ const AboutPage = () => {
         >
             <div className={styles.ahParent}>
                 <div className={styles.ah}>
-                    <span>DE</span>
-                    <span className={styles.span}>導彦</span>
+                    <span>odeon</span>
+                    <span className={styles.span}>.</span>
                 </div>
                 <div className={styles.projectsParent}>{/* Menu items can be added here */}</div>
                 <div className={styles.frameParent}>
