@@ -43,7 +43,7 @@ const projects: Project[] = [
 
 export default function Home() {
     const [selectedProjectIndex, setSelectedProjectIndex] = useState(0);
-    const [language] = useState("en");
+    const [language] = useState<"en" | "ko">("en");
 
     return (
         <motion.div
