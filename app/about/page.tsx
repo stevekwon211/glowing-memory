@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import styles from "../page.module.css";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
