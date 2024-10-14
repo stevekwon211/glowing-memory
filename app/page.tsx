@@ -76,9 +76,10 @@ const projects: Project[] = [
 //     },
 // };
 
-const AHLanding: NextPage = () => {
+const Home: React.FC = () => {
     const [selectedProjectIndex, setSelectedProjectIndex] = useState(0);
-    const [language, setLanguage] = useState<"en" | "ko">("en");
+    const [isDarkMode, setIsDarkMode] = useState(false);
+    const [language, setLanguage] = useState<"en" | "ko">("en"); // 언어 상태 추가
 
     const handlePrevProject = () => {
         setSelectedProjectIndex((prevIndex) => (prevIndex > 0 ? prevIndex - 1 : projects.length - 1));
@@ -88,8 +89,8 @@ const AHLanding: NextPage = () => {
         setSelectedProjectIndex((prevIndex) => (prevIndex < projects.length - 1 ? prevIndex + 1 : 0));
     };
 
-    const toggleLanguage = () => {
-        setLanguage((prev) => (prev === "en" ? "ko" : "en"));
+    const toggleDarkMode = () => {
+        setIsDarkMode((prevMode) => !prevMode);
     };
 
     return (
@@ -106,14 +107,9 @@ const AHLanding: NextPage = () => {
                 setSelectedProjectIndex={setSelectedProjectIndex}
             />
             <ProjectDisplay project={projects[selectedProjectIndex]} />
-            <ProjectDescription
-                project={projects[selectedProjectIndex]}
-                language={language}
-                handlePrevProject={handlePrevProject}
-                handleNextProject={handleNextProject}
-            />
+            <ProjectDescription project={projects[selectedProjectIndex]} language={language} />
         </motion.div>
     );
 };
 
-export default AHLanding;
+export default Home;

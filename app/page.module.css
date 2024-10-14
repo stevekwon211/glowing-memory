@@ -26,7 +26,7 @@
 /* 기타 모든 요소들에 대해 필요한 경우 font-family 속성을 'Inter', sans-serif로 설정 */
 
 .span {
-    color: #986c40;
+    color: #dd8c43;
 }
 .ah {
     position: relative;
@@ -41,7 +41,7 @@
 }
 
 .selectedProject {
-    color: #986c40;
+    color: #dd8c43;
     font-weight: 400;
 }
 
@@ -121,7 +121,7 @@
 .projectDisplay {
     align-self: stretch;
     flex: 1;
-    border: 2px solid #986c40;
+    border: 2px solid #dd8c43;
     overflow: hidden;
     margin: 24px;
     position: relative;
@@ -336,7 +336,7 @@
 
 .darkMode .span,
 .darkMode .selectedProject {
-    color: #986c40;
+    color: #dd8c43;
 }
 
 .darkMode .frameWrapper {
@@ -353,7 +353,7 @@
 }
 
 .darkMode .projectDisplay {
-    border-color: #986c40;
+    border-color: #dd8c43;
 }
 
 .darkMode .lightBulbIcon,
@@ -364,7 +364,7 @@
 
 .darkMode .project:hover,
 .darkMode .selectedProject {
-    color: #986c40; /* Project text color when selected or hovered in dark mode */
+    color: #dd8c43; /* Project text color when selected or hovered in dark mode */
 }
 
 .anvilIcon {
@@ -422,7 +422,7 @@
 
 .iframeError a {
     margin-top: 10px;
-    color: #986c40;
+    color: #dd8c43;
     text-decoration: none;
 }
 
@@ -536,7 +536,7 @@
 
 .modalContent h2 {
     margin-top: 0;
-    color: #986c40;
+    color: #dd8c43;
     font-size: 24px;
     margin-bottom: 0px;
     font-weight: 400;
@@ -565,7 +565,7 @@
 
 .modalContent h3 {
     margin-top: 24px;
-    color: #986c40;
+    color: #dd8c43;
     font-size: 24px;
     margin-bottom: 0px;
     font-weight: 400;
@@ -619,7 +619,7 @@
 }
 
 .aboutContent h2 {
-    color: #986c40;
+    color: #dd8c43;
     font-size: 24px;
     margin-bottom: 18px;
     font-weight: 200;
@@ -633,7 +633,7 @@
 }
 
 .aboutContent h3 {
-    color: #986c40;
+    color: #dd8c43;
     font-size: 24px;
     margin-bottom: 18px;
     font-weight: 200;
