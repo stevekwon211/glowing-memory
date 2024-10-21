@@ -1,5 +1,5 @@
 import React from "react";
-import styles from "../app/page.module.css";
+import styles from "./ProjectDescription.module.css";
 import { Project } from "../types";
 
 interface ProjectDescriptionProps {
@@ -9,8 +9,12 @@ interface ProjectDescriptionProps {
 
 const ProjectDescription: React.FC<ProjectDescriptionProps> = ({ project, language }) => {
     return (
-        <div className={styles.titleParent}>
-            <p className={styles.description}>{project.description[language]}</p>
+        <div className={styles.projectDescription}>
+            <div className={styles.projectDescriptionDetail}>
+                <p>Year</p>
+                <h2>{project.year}</h2>
+            </div>
+            <h2>{project.description[language]}</h2>
         </div>
     );
 };

@@ -1,0 +1,50 @@
+.projectDescription {
+    color: #fff;
+    padding: 16px;
+    font-family: "Manrope", sans-serif;
+}
+
+.projectDescriptionDetail {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+}
+
+.projectDescriptionDetail p {
+    font-size: 8px;
+    opacity: 0.75;
+    margin: 0;
+}
+
+.projectDescriptionDetail h2 {
+    font-size: 32px;
+    margin: 0;
+    font-weight: 600;
+}
+
+.projectDescription > h2 {
+    font-size: 24px;
+    margin-top: 16px;
+    margin-bottom: 16px;
+    font-weight: 600;
+}
+
+.projectDescription p {
+    font-size: 16px;
+    line-height: 1.5;
+}
+
+@media (max-width: 768px) {
+    .projectDescription {
+        padding: 8px;
+    }
+
+    .projectDescription > h2 {
+        font-size: 20px;
+        margin-bottom: 8px;
+    }
+
+    .projectDescription p {
+        font-size: 14px;
+    }
+}
