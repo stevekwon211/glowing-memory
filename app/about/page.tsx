@@ -31,7 +31,7 @@ const AboutPage = () => {
         >
             <div className={styles.ahParent}>
                 <div className={styles.ah}>
-                    <span>odeon</span>
+                    <span>o</span>
                     <span className={styles.span}>.</span>
                 </div>
                 <div className={styles.projectsParent}>{/* Menu items can be added here */}</div>

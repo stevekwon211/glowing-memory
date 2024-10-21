@@ -24,7 +24,7 @@ const Header: React.FC<HeaderProps> = ({ projects, selectedProjectIndex, setSele
     return (
         <div className={styles.ahParent}>
             <div className={styles.ah}>
-                <span>odeon</span>
+                <span>o</span>
                 <span className={styles.span}>.</span>
             </div>
             <div className={styles.projectsParent}>
