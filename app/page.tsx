@@ -96,7 +96,6 @@ export default function Home() {
     const [selectedMenuIndex, setSelectedMenuIndex] = useState<number | null>(null);
     const [hoveredSubMenuUrl, setHoveredSubMenuUrl] = useState<string | null>(null);
     const descriptionRef = useRef<HTMLDivElement>(null);
-    const [shuffledContentItems, setShuffledContentItems] = useState<ContentItem[]>([]);
     const [columns, setColumns] = useState<ContentItem[][]>([]);
 
     const shuffleArray = useCallback((array: ContentItem[]) => {
@@ -110,7 +109,6 @@ export default function Home() {
 
     useEffect(() => {
         const shuffledItems = shuffleArray(contentItems);
-        setShuffledContentItems(shuffledItems);
 
         const newColumns: ContentItem[][] = [];
         for (let i = 0; i < shuffledItems.length; i += 3) {
@@ -170,7 +168,7 @@ export default function Home() {
 
                     {menuItems
                         .flatMap((item) => item.subItems)
-                        .map((subItem, index) => (
+                        .map((subItem) => (
                             <div
                                 key={subItem.name}
                                 className={`${styles.backgroundItem} ${
@@ -227,7 +225,7 @@ export default function Home() {
                     <b>NRU PROJECT 211.</b>
                     <br />
                     <br />
-                    NRU(느루): it means “not rushing everything at once but taking a longer, slower approach.” in Korean
+                    NRU(느루): it means "not rushing everything at once but taking a longer, slower approach." in Korean
                     <br />
                     211: just my birthday, wanna complete 211 projects before dying
                     <br />
