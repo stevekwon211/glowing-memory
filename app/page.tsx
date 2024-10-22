@@ -54,24 +54,6 @@ const Card = ({ item }: { item: ContentItem }) => {
     );
 };
 
-const shimmer = (w: number, h: number) => `
-<svg width="${w}" height="${h}" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-  <defs>
-    <linearGradient id="g">
-      <stop stop-color="#f6f7f8" offset="0%" />
-      <stop stop-color="#edeef1" offset="20%" />
-      <stop stop-color="#f6f7f8" offset="40%" />
-      <stop stop-color="#f6f7f8" offset="70%" />
-    </linearGradient>
-  </defs>
-  <rect width="${w}" height="${h}" fill="#f6f7f8" />
-  <rect id="r" width="${w}" height="${h}" fill="url(#g)" />
-  <animate xlink:href="#r" attributeName="x" from="-${w}" to="${w}" dur="1s" repeatCount="indefinite"  />
-</svg>`;
-
-const toBase64 = (str: string) =>
-    typeof window === "undefined" ? Buffer.from(str).toString("base64") : window.btoa(str);
-
 const menuItems = [
     {
         name: "taste",
@@ -225,7 +207,8 @@ export default function Home() {
                     <b>NRU PROJECT 211.</b>
                     <br />
                     <br />
-                    NRU(느루): it means "not rushing everything at once but taking a longer, slower approach." in Korean
+                    NRU(느루): it means &quot;not rushing everything at once but taking a longer, slower approach.&quot;
+                    in Korean
                     <br />
                     211: just my birthday, wanna complete 211 projects before dying
                     <br />
