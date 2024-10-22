@@ -1,49 +1,86 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 import styles from "./page.module.css";
 import { motion } from "framer-motion";
 import ProjectTitle from "../components/ProjectTitle";
 import ProjectDescription from "../components/ProjectDescription";
-import { Project } from "../types";
+import { Project } from "../types/project";
 import Menu from "../components/Menu";
 import SubMenu from "../components/SubMenu";
 import { AnimatePresence } from "framer-motion";
 import Masonry from "react-masonry-css";
 import { contentItems } from "../data/content";
 import { ContentItem } from "../types/content";
+import footerStyles from "../components/Footer.module.css";
+import Image from "next/image";
+import { useInView } from "react-intersection-observer";
 
-const projects: Project[] = [
-    {
-        name: "Verae",
-        url: "https://verae.vercel.app/",
-        title: "Verae",
-        description: {
-            en: "Space exploration. KL;' controls the camera, WASD are direction keys, click on red (planets) on the map for auto-navigation.",
-            ko: "space 탐험. KL;'은 카메라 조종, WASD는 방향키, 지도의 빨간색(행성)을 클릭하면 자동 항해.",
-        },
-        date: new Date("2024-10-02"),
-        year: 2024,
-        category: "work",
-    },
-    {
-        name: "Undistracted",
-        url: "https://undistracted.vercel.app/",
-        title: "Undistracted",
-        description: {
-            en: "Various tools and tips to help you focus. The sparkles in the background represent distracting elements.",
-            ko: "몰입을 도와주는 각종 도구와 팁들. 배경에 반짝거리는 건 집중을 해치는 요소를 표현한 것.",
-        },
-        date: new Date("2024-10-09"),
-        year: 2024,
-        category: "product",
-    },
-];
+const Card = ({ item }: { item: ContentItem }) => {
+    const [videoError, setVideoError] = useState(false);
+    const [ref, inView] = useInView({
+        triggerOnce: true,
+        rootMargin: "200px 0px",
+    });
+
+    const handleVideoError = () => {
+        console.error(`Error loading video: ${item.videoUrl}`);
+        setVideoError(true);
+    };
+
+    return (
+        <div ref={ref} className={styles.card}>
+            {inView &&
+                (item.type === "video" && item.videoUrl ? (
+                    videoError ? (
+                        <div className={styles.videoError}>Video failed to load</div>
+                    ) : (
+                        <video className={styles.cardVideo} autoPlay loop muted playsInline onError={handleVideoError}>
+                            <source src={item.videoUrl.replace(".mov", ".mp4")} type="video/mp4" />
+                            <source src={item.videoUrl.replace(".mov", ".webm")} type="video/webm" />
+                            <source src={item.videoUrl} type="video/quicktime" />
+                            Your browser does not support the video tag.
+                        </video>
+                    )
+                ) : (
+                    <Image
+                        src={item.imageUrl}
+                        alt={item.description}
+                        width={300}
+                        height={200}
+                        className={styles.cardImage}
+                        loading="lazy"
+                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                    />
+                ))}
+            <p>{item.description}</p>
+        </div>
+    );
+};
+
+// 블러 플레이스홀더를 위한 함수들
+const shimmer = (w: number, h: number) => `
+<svg width="${w}" height="${h}" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <defs>
+    <linearGradient id="g">
+      <stop stop-color="#f6f7f8" offset="0%" />
+      <stop stop-color="#edeef1" offset="20%" />
+      <stop stop-color="#f6f7f8" offset="40%" />
+      <stop stop-color="#f6f7f8" offset="70%" />
+    </linearGradient>
+  </defs>
+  <rect width="${w}" height="${h}" fill="#f6f7f8" />
+  <rect id="r" width="${w}" height="${h}" fill="url(#g)" />
+  <animate xlink:href="#r" attributeName="x" from="-${w}" to="${w}" dur="1s" repeatCount="indefinite"  />
+</svg>`;
+
+const toBase64 = (str: string) =>
+    typeof window === "undefined" ? Buffer.from(str).toString("base64") : window.btoa(str);
 
 const menuItems = [
     {
         name: "taste",
-        subItems: [], // taste에는 빈 배열로 subItems 설정
+        subItems: [],
     },
     {
         name: "work",
@@ -68,44 +105,41 @@ export default function Home() {
     const [selectedMenuIndex, setSelectedMenuIndex] = useState<number | null>(null);
     const [hoveredSubMenuUrl, setHoveredSubMenuUrl] = useState<string | null>(null);
     const descriptionRef = useRef<HTMLDivElement>(null);
+    const [shuffledContentItems, setShuffledContentItems] = useState<ContentItem[]>([]);
+    const [visibleItems, setVisibleItems] = useState<ContentItem[]>([]);
+    const [columns, setColumns] = useState<ContentItem[][]>([]);
+
+    const shuffleArray = useCallback((array: ContentItem[]) => {
+        const newArray = [...array];
+        for (let i = newArray.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
+        }
+        return newArray;
+    }, []);
 
     useEffect(() => {
-        const handleScroll = () => {
-            const scrollPosition = window.scrollY;
-            const windowHeight = window.innerHeight;
+        const shuffledItems = shuffleArray(contentItems);
+        setShuffledContentItems(shuffledItems);
 
-            // Featured 섹션을 벗어나면 배경 이미지를 숨깁니다.
-            const backgroundContainer = document.querySelector(`.${styles.backgroundContainer}`) as HTMLElement;
-            if (backgroundContainer) {
-                backgroundContainer.style.opacity = scrollPosition < windowHeight ? "1" : "0";
-            }
-        };
-
-        window.addEventListener("scroll", handleScroll);
-
-        return () => {
-            window.removeEventListener("scroll", handleScroll);
-        };
-    }, []);
+        // 모든 아이템을 3개씩 그룹화하여 컬럼 생성
+        const newColumns: ContentItem[][] = [];
+        for (let i = 0; i < shuffledItems.length; i += 3) {
+            newColumns.push(shuffledItems.slice(i, i + 3));
+        }
+        setColumns(newColumns);
+    }, [shuffleArray]);
 
     const handleProjectHover = (index: number) => {
         setHoveredProjectIndex(index);
         setIsBlurred(true);
         setTimeout(() => {
             setIsBlurred(false);
-        }, 1000); // 1초로 변경
+        }, 1000);
     };
 
     const handleProjectLeave = () => {
         setHoveredProjectIndex(null);
-    };
-
-    const handleMenuHover = (index: number) => {
-        // Menu hover 처리 로직
-    };
-
-    const handleMenuLeave = () => {
-        // Menu leave 처리 로직
     };
 
     const handleMenuClick = (index: number) => {
@@ -125,20 +159,14 @@ export default function Home() {
         setIsBlurred(true);
         setTimeout(() => {
             setIsBlurred(false);
-        }, 1000); // 1초로 변경
+        }, 1000);
     };
 
     const handleSubMenuLeave = () => {
         setHoveredSubMenuUrl(null);
     };
 
-    const renderCard = (item: ContentItem) => (
-        <div key={item.id} className={styles.card}>
-            {item.imageUrl && <img src={item.imageUrl} alt={item.title} className={styles.cardImage} />}
-            <h3>{item.title}</h3>
-            <p>{item.description}</p>
-        </div>
-    );
+    const renderCard = (item: ContentItem) => <Card key={item.id} item={item} />;
 
     const breakpointColumnsObj = {
         default: 4,
@@ -146,6 +174,14 @@ export default function Home() {
         700: 2,
         500: 1,
     };
+
+    useEffect(() => {
+        // 배경 이미지 프리로딩
+        if (typeof window !== "undefined") {
+            const preloadBackgroundImage = new window.Image();
+            preloadBackgroundImage.src = "/image/img-11.JPG";
+        }
+    }, []);
 
     return (
         <motion.div
@@ -158,34 +194,31 @@ export default function Home() {
             layout
         >
             <div className={styles.featured}>
-                <div className={styles.headerText}>211 project.</div>
+                <div className={styles.headerText}>NRU PROJECT 211.</div>
                 <div className={`${styles.backgroundContainer} ${isBlurred ? styles.blurred : ""}`}>
                     <div className={`${styles.backgroundItem} ${styles.active}`}>
-                        <div className={styles.backgroundImage}></div>
+                        <Image src="/image/img-11.JPG" alt="Background" layout="fill" objectFit="cover" priority />
                     </div>
-                    {projects.map((project, index) => (
-                        <div
-                            key={project.name}
-                            className={`${styles.backgroundItem} ${
-                                hoveredProjectIndex === index ||
-                                (hoveredProjectIndex === null && index === selectedProjectIndex) ||
-                                project.url === hoveredSubMenuUrl
-                                    ? styles.active
-                                    : ""
-                            }`}
-                        >
-                            {project.url ? (
-                                <iframe
-                                    src={project.url}
-                                    title={project.name}
-                                    className={styles.projectIframe}
-                                    allowFullScreen
-                                />
-                            ) : (
-                                <div className={styles.backgroundImage}></div>
-                            )}
-                        </div>
-                    ))}
+
+                    {menuItems
+                        .flatMap((item) => item.subItems)
+                        .map((subItem, index) => (
+                            <div
+                                key={subItem.name}
+                                className={`${styles.backgroundItem} ${
+                                    subItem.url === hoveredSubMenuUrl ? styles.active : ""
+                                }`}
+                            >
+                                {subItem.url && (
+                                    <iframe
+                                        src={subItem.url}
+                                        title={subItem.name}
+                                        className={styles.projectIframe}
+                                        allowFullScreen
+                                    />
+                                )}
+                            </div>
+                        ))}
                 </div>
                 <div className={styles.contentWrapper}>
                     <div className={styles.featuredColumn}>
@@ -213,18 +246,47 @@ export default function Home() {
                 </div>
             </div>
             <div className={styles.description} ref={descriptionRef}>
-                <Masonry
-                    breakpointCols={breakpointColumnsObj}
-                    className={styles.myMasonryGrid}
-                    columnClassName={styles.myMasonryGridColumn}
-                >
-                    {contentItems.map(renderCard)}
-                </Masonry>
+                <div className={styles.horizontalScrollContainer}>
+                    {columns.map((column, columnIndex) => (
+                        <div key={columnIndex} className={styles.column}>
+                            {column.map(renderCard)}
+                        </div>
+                    ))}
+                </div>
             </div>
-            <div className={styles.footer}>
-                <div className={styles.footerColumn}>{/* Footer Column 1 content */}</div>
-                <div className={styles.footerColumn}>{/* Footer Column 2 content */}</div>
-                <div className={styles.footerColumn}>{/* Footer Column 3 content */}</div>
+            <div className={footerStyles.footer}>
+                <div className={footerStyles.footerColumn}>
+                    <b>NRU PROJECT 211.</b>
+                    <br />
+                    <br />
+                    NRU(느루): it means “not rushing everything at once but taking a longer, slower approach.” in Korean
+                    <br />
+                    211: just my birthday, wanna complete 211 projects before dying
+                    <br />
+                    <br />
+                    taste: photos and videos I took
+                    <br />
+                    work: doing works to spread a message
+                    <br />
+                    music: making music I want to listen to
+                    <br />
+                    product: building products I want to use
+                    <br />
+                    <br />
+                </div>
+                <div className={footerStyles.footerColumn}>
+                    <a href="https://disquiet.io/@kwondoeon" target="_blank" rel="noopener noreferrer">
+                        disquiet
+                    </a>
+                    <span className={footerStyles.footerSeparator}> / </span>
+                    <a href="https://kwondoeon.substack.com/" target="_blank" rel="noopener noreferrer">
+                        substack
+                    </a>
+                    <span className={footerStyles.footerSeparator}> / </span>
+                    <a href="https://www.instagram.com/kwondoeon/" target="_blank" rel="noopener noreferrer">
+                        instagram
+                    </a>
+                </div>
             </div>
         </motion.div>
     );

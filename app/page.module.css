@@ -92,6 +92,7 @@
 
 /* 새로운 레이아웃 스타일 */
 .container {
+    background-color: #fff; /* Changed from #111 to #FFF */
     display: flex;
     flex-direction: column;
     min-height: 100vh;
@@ -106,6 +107,7 @@
     width: 100%;
     position: relative;
     overflow: hidden;
+    z-index: 1; /* 배경 이미지가 다른 요소 위에 오도록 설정 */
 }
 
 .contentWrapper {
@@ -129,21 +131,20 @@
     width: auto;
     min-width: 300px;
     max-width: 50%;
+    justify-content: space-between; /* Change this to space-between */
 }
 
-.headerText {
-    font-family: "Manrope", sans-serif;
-    font-size: 24px;
-    color: #fff;
-    font-weight: 600;
-    position: absolute;
-    top: 16px;
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 10;
-    text-align: center;
-    width: 100%;
-    padding: 12px 0;
+.logoContainer {
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+    padding-top: 20px;
+}
+
+.logo {
+    width: auto;
+    height: auto;
+    object-fit: contain;
 }
 
 .mobileHeader {
@@ -197,8 +198,11 @@
 }
 
 .description {
-    padding: 16px;
-    background-color: #111;
+    padding: 12px;
+    margin-left: 36px;
+    margin-right: 36px;
+    overflow-x: auto;
+    white-space: nowrap;
 }
 
 .myMasonryGrid {
@@ -208,15 +212,17 @@
 }
 
 .myMasonryGridColumn {
-    padding-left: 12px; /* gutter size */
+    padding-right: 12px; /* gutter size */
     background-clip: padding-box;
 }
 
 .card {
-    background-color: #222;
-    border-radius: 12px;
-    margin-bottom: 12px;
+    background-color: #fff; /* Changed from #222 to #FFF */
+    border-radius: 0px;
+    margin-bottom: 20px;
     overflow: hidden;
+    border: 1px solid #e5e5e5; /* Added card stroke color */
+    width: 100%; /* 카드가 컬럼 너비에 맞게 조정되도록 */
 }
 
 .cardImage {
@@ -228,14 +234,15 @@
 .card h3 {
     font-size: 14px;
     margin: 12px 12px 6px;
-    color: #eee;
-    font-weight: normal; /* 볼드 제거 */
+    color: #151515;
+    font-weight: 300; /* Changed from normal to 200 */
 }
 
 .card p {
     font-size: 12px;
-    margin: 0 12px 12px;
-    color: #999;
+    margin: 6px 12px 12px 12px;
+    color: #717171;
+    font-weight: 300; /* Added font-weight: 200 */
 }
 
 /* 카드 호버 효과 제거 */
@@ -248,18 +255,6 @@
     display: none;
 }
 
-.footer {
-    display: flex;
-    min-height: 100vh;
-    position: relative;
-    z-index: 1;
-}
-
-.footerColumn {
-    flex: 1;
-    padding: 12px;
-}
-
 /* 배경 이미지 설정 */
 .backgroundImage {
     position: absolute;
@@ -267,7 +262,7 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background-image: url("/o-bg-1.jpeg");
+    background-image: url("/image/img-11.JPG");
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -298,7 +293,7 @@
     left: 0;
     width: 100%;
     height: 100%;
-    z-index: 0;
+    z-index: -1; /* 배경 이미지를 컨텐츠 뒤로 보냄 */
     transition: filter 0.3s ease;
 }
 
@@ -325,4 +320,63 @@
     height: 100%;
     border: none;
     pointer-events: all; /* iframe 클릭 가능하게 변경 */
+}
+
+.footerColumn a {
+    color: inherit;
+    text-decoration: none;
+}
+
+.footerColumn a:hover {
+    text-decoration: underline;
+}
+
+.cardVideo {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+}
+
+.horizontalScrollContainer {
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 20px;
+    width: 100%;
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* Internet Explorer 10+ */
+}
+
+.column {
+    flex: 0 0 auto;
+    width: 300px;
+    margin-right: 20px;
+    scroll-snap-align: start;
+}
+
+.headerText {
+    font-family: "Manrope", sans-serif;
+    font-size: 24px;
+    color: #fff;
+    font-weight: 600;
+    position: absolute;
+    top: 16px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 10;
+    text-align: center;
+    width: 100%;
+    padding: 12px 0;
+}
+
+.videoError {
+    width: 100%;
+    height: 200px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #f8f8f8;
+    color: #666;
+    font-size: 14px;
 }

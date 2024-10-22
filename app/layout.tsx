@@ -6,8 +6,8 @@ import { AnimatePresence } from "framer-motion";
 const manrope = Manrope({ subsets: ["latin"] });
 
 export const metadata = {
-    title: "211.",
-    description: "",
+    title: "NRU PROJECT 211.",
+    description: "느루(NRU): '한번에 몰아치지 않고 시간을 길게 늦추어 잡아서'라는 뜻",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
