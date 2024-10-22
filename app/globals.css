@@ -15,7 +15,7 @@ body {
     height: 100%;
     margin: 0;
     padding: 0;
-    overflow: hidden;
+    overflow-y: auto; /* 'hidden'에서 'auto'로 변경 */
     user-select: none;
     -webkit-user-select: none;
     -moz-user-select: none;
@@ -24,9 +24,12 @@ body {
 }
 
 body {
-    font-family: var(--font-inter);
+    font-family: "Manrope", sans-serif;
     color: rgb(var(--foreground-rgb));
     background: linear-gradient(to bottom, transparent, rgb(var(--background-end-rgb))) rgb(var(--background-start-rgb));
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
 }
 
 #__next {

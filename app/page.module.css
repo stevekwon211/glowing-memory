@@ -1,663 +1,382 @@
-/* 파일 상단에 폰트 import 추가 */
-@import url("https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap");
+/* 폰트 import */
+@import url("https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&display=swap");
 
-/* 기본 폰트 설정을 Inter로 변경 */
-.ahLanding {
-    font-family: "Inter", sans-serif;
-    /* ... 기존 속성들 ... */
-}
-
-/* 다른 요소들의 폰트 설정 제거 (Inter로 통일) */
-.project[lang="en"],
-.description[lang="en"],
-.projectTitle[lang="en"],
-.project[lang="ko"],
-.description[lang="ko"],
-.projectTitle[lang="ko"] {
-    font-family: "Inter", sans-serif;
-}
-
-/* 모달 콘텐츠의 폰트도 Inter로 변경 */
+/* 기본 폰트 설정 */
+.default,
+.project,
+.description,
+.projectTitle,
 .modalContent {
-    font-family: "Inter", sans-serif;
-    /* ... 기존 속성들 ... */
+    font-family: "Manrope", sans-serif;
+    font-size: 12px;
+    line-height: 1.5;
 }
 
-/* 기타 모든 요소들에 대해 필요한 경우 font-family 속성을 'Inter', sans-serif로 설정 */
-
-.span {
-    color: #dd8c43;
-}
-.ah {
-    position: relative;
-    font-size: 16px;
-    font-weight: 600;
-}
-.project {
-    position: relative;
-    cursor: pointer;
-    font-weight: 300;
-    color: #21262c;
+/* 제목 스타일 */
+.h1 {
+    font-size: 24px;
+    line-height: 1.2;
+    margin-bottom: 12px;
 }
 
-.selectedProject {
-    color: #dd8c43;
-    font-weight: 400;
+.h2 {
+    font-size: 18px;
+    line-height: 1.3;
+    margin-bottom: 12px;
 }
 
-.projectImage {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
+.h3 {
+    font-size: 14px;
+    line-height: 1.4;
+    margin-bottom: 12px;
 }
 
-.playIcon {
-    color: #ebece6;
-    position: relative;
-    overflow: hidden;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-    height: 100%;
-    padding: 0; /* 패딩을 제거합니다 */
-    box-sizing: border-box;
+/* 단락 스타일 */
+.paragraph {
+    margin-bottom: 12px;
 }
 
-.playIcon svg {
-    width: 24px;
-    height: 24px;
+/* 버티컬 리듬을 위한 마진 설정 */
+.verticalRhythm > * + * {
+    margin-top: 12px;
 }
 
-/* Remove this rule if it exists */
-/* .playIcon path {
-    fill: currentColor;
-    stroke: currentColor;
-} */
+/* 반응형 폰트 크기 */
+@media (max-width: 768px) {
+    .ahLanding {
+        font-size: 12px;
+    }
 
-.frameIcon {
-    width: 24px;
-    height: 24px;
-    color: var(--icon-color);
-    position: relative;
-    overflow: hidden;
-    flex-shrink: 0;
+    .h1 {
+        font-size: 20px;
+    }
+
+    .h2 {
+        font-size: 16px;
+    }
+
+    .h3 {
+        font-size: 14px;
+    }
+
+    .featured {
+        flex-direction: column;
+        height: 100vh;
+    }
+
+    .featuredColumn {
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        padding: 16px;
+    }
+
+    .featuredColumn:first-child {
+        justify-content: flex-end;
+    }
+
+    .centerColumnHeader {
+        position: absolute;
+        top: 16px;
+        left: 16px;
+        text-align: left;
+        padding: 0;
+        font-size: 24px;
+    }
+
+    .desktopOnly {
+        display: none;
+    }
 }
-.frameWrapper {
-    background-color: #21262c;
+
+/* 새로운 레이아웃 스타일 */
+.container {
+    background-color: #fff; /* Changed from #111 to #FFF */
     display: flex;
     flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 6px;
-    cursor: pointer;
-    width: 24px;
-    height: 24px;
+    min-height: 100vh;
+    overflow-y: auto;
+    position: relative;
 }
 
-.about {
-    font-weight: 200;
-}
-.frameParent {
+.featured {
     display: flex;
-    flex-direction: row; /* Changed from column to row */
-    align-items: center; /* Center items vertically */
-    justify-content: flex-start; /* Align items to the start horizontally */
-    gap: 12px; /* Reduced gap between icons */
+    flex-direction: column;
+    height: 100vh;
+    width: 100%;
+    position: relative;
+    overflow: hidden;
+    z-index: 1; /* 배경 이미지가 다른 요소 위에 오도록 설정 */
 }
-.ahParent {
-    align-self: stretch;
+
+.contentWrapper {
+    display: flex;
     flex: 1;
-    overflow: hidden;
+    position: relative;
+    z-index: 2;
+}
+
+.featuredColumn {
+    flex: 1;
     display: flex;
     flex-direction: column;
+    justify-content: flex-end;
+    padding: 12px;
+    overflow: visible;
+}
+
+.featuredColumn:first-child {
+    flex: 0 0 auto;
+    width: auto;
+    min-width: 300px;
+    max-width: 50%;
+    justify-content: space-between; /* Change this to space-between */
+}
+
+.logoContainer {
+    display: flex;
+    justify-content: flex-start;
     align-items: flex-start;
-    justify-content: space-between;
-    padding: 24px;
-    box-sizing: border-box;
-    max-width: 240px;
-}
-.projectDisplay {
-    align-self: stretch;
-    flex: 1;
-    border: 2px solid #21262c;
-    overflow: hidden;
-    margin: 24px;
-    position: relative;
-    width: calc(100% - 48px);
-    height: calc(100% - 48px); /* 또는 원하는 고정 높이 (예: height: 500px;) */
+    padding-top: 20px;
 }
 
-.projectSlide {
-    width: 100%;
-    height: 100%;
-    position: absolute;
-    top: 0;
-    left: 0;
+.logo {
+    width: auto;
+    height: auto;
+    object-fit: contain;
+}
+
+.mobileHeader {
+    display: none;
+}
+
+@media (max-width: 768px) {
+    .mobileHeader {
+        display: block;
+        position: absolute;
+        top: 16px;
+        left: 16px;
+        font-size: 24px;
+        color: #fff;
+        z-index: 2;
+    }
+
+    .desktopOnly {
+        display: none;
+    }
+
+    .contentWrapper {
+        flex-direction: column-reverse;
+    }
+
+    .featuredColumn {
+        justify-content: flex-end;
+        height: auto;
+    }
+
+    .featuredColumn:nth-child(2),
+    .featuredColumn:nth-child(3) {
+        display: none;
+    }
+
+    .featuredColumn:first-child {
+        justify-content: flex-end;
+        height: 100vh;
+        width: 100%;
+        min-width: unset;
+    }
+
+    .centerColumnHeader {
+        display: none;
+    }
+
+    .headerText {
+        font-size: 24px;
+        top: 16px;
+    }
 }
 
 .description {
-    position: relative;
-    font-size: 18px;
-    font-weight: 200;
-    color: #21262c;
+    padding: 12px;
+    margin-left: 36px;
+    margin-right: 36px;
+    overflow-x: auto;
+    white-space: nowrap;
 }
-.frame {
-    background-color: #21262c;
-    overflow: hidden;
+
+.myMasonryGrid {
     display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: center;
-    width: 36px;
-    height: 36px;
-    cursor: pointer;
-    padding: 6px; /* 패딩을 여기로 이동합니다 */
-    box-sizing: border-box;
+    margin-left: -12px; /* gutter size offset */
+    width: auto;
 }
 
-.darkMode .frame {
-    background-color: #21262c;
+.myMasonryGridColumn {
+    padding-right: 12px; /* gutter size */
+    background-clip: padding-box;
 }
 
-.titleParent {
-    align-self: stretch;
-    flex: 1;
+.card {
+    background-color: #fff; /* Changed from #222 to #FFF */
+    border-radius: 0px;
+    margin-bottom: 20px;
     overflow: hidden;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    justify-content: center;
-    padding: 24px;
-    box-sizing: border-box;
-    gap: 24px;
-    max-width: 288px;
-    font-size: 24px;
-}
-.ahLanding {
-    width: 100vw;
-    height: 100vh;
-    position: relative;
-    background-color: #f8f8f8;
-    color: #21262c;
-    overflow: hidden;
-    display: flex;
-    flex-direction: row;
-    align-items: stretch;
-    justify-content: flex-start;
-    padding: 0;
-    box-sizing: border-box;
-    gap: 0;
-    text-align: left;
-    font-size: 18px;
-    transition: background-color 0.3s, color 0.3s;
-    font-family: "Merriweather", "Noto Sans KR", sans-serif;
+    border: 1px solid #e5e5e5; /* Added card stroke color */
+    width: 100%; /* 카드가 컬럼 너비에 맞게 조정되도록 */
 }
 
-.main {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    align-items: center;
-    min-height: 100vh;
-    padding: 6rem;
-    box-sizing: border-box;
+.cardImage {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
 }
 
-@media (max-width: 700px) {
-    .main {
-        padding: 2rem;
-    }
+.card h3 {
+    font-size: 14px;
+    margin: 12px 12px 6px;
+    color: #151515;
+    font-weight: 300; /* Changed from normal to 200 */
 }
 
-@media (max-width: 1000px) {
-    .ahLanding {
-        flex-direction: column !important;
-        gap: 12px !important;
-        padding: 12px !important;
-        height: 100vh !important; /* Ensure full viewport height */
-        box-sizing: border-box !important;
-    }
-
-    .ahParent,
-    .titleParent {
-        max-width: 100% !important;
-        padding: 0 !important;
-        justify-content: flex-start !important;
-        gap: 12px !important;
-        height: auto !important; /* Allow height to fit content */
-        flex: 0 0 auto !important; /* Don't grow or shrink, size to content */
-    }
-
-    .projectsParent {
-        display: none !important;
-    }
-
-    .projectDisplay {
-        margin: 12px 0 !important;
-        flex: 1 1 auto !important; /* Allow it to grow and fill remaining space */
-        height: 0 !important; /* This forces the flex-grow to take effect */
-    }
-
-    .titleParent {
-        padding-top: 0 !important;
-    }
-
-    /* Additional styles to ensure elements are hugging in mobile view */
-    .ah,
-    .about,
-    .frameParent {
-        margin-bottom: 0 !important;
-    }
-
-    .description {
-        margin-top: 0 !important;
-    }
+.card p {
+    font-size: 12px;
+    margin: 6px 12px 12px 12px;
+    color: #717171;
+    font-weight: 300; /* Added font-weight: 200 */
 }
 
-.coloredIcon {
-    color: #ebece6;
+/* 카드 호버 효과 제거 */
+.card:hover {
+    transform: none;
 }
 
-.lightBulbOffIcon {
-    width: 24px;
-    height: 24px;
-    color: var(--icon-color);
-    position: relative;
-    overflow: hidden;
-    flex-shrink: 0;
+/* Learn More 링크 스타일 제거 */
+.cardLink {
+    display: none;
 }
 
-.playIcon {
-    color: #ebece6;
-    position: relative;
-    overflow: hidden;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+/* 배경 이미지 설정 */
+.backgroundImage {
+    position: absolute;
+    top: 0;
+    left: 0;
     width: 100%;
     height: 100%;
-    padding: 0; /* 패딩을 제거합니다 */
-    box-sizing: border-box;
+    background-image: url("/image/img-11.JPG");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    z-index: 0;
 }
 
-.playIcon svg {
-    width: 24px;
-    height: 24px;
+/* 콘텐츠 오버레이 */
+.contentOverlay {
+    position: relative;
+    width: 100%;
+    min-height: 100vh;
+    z-index: 1;
 }
 
-/* Remove this rule if it exists */
-/* .playIcon path {
-    fill: currentColor;
-    stroke: currentColor;
-} */
-
-.projectsParent {
-    display: flex;
-    flex-direction: column;
-    gap: 24px;
+.centerColumnHeader {
+    font-family: "Manrope", sans-serif;
+    font-size: 32px;
+    color: #fff;
+    font-weight: 600;
+    text-align: center;
+    width: 100%;
+    padding: 16px 0;
 }
 
-.projectTitle {
-    font-size: 18px;
-    font-weight: 400;
-    color: #21262c;
-    word-break: break-word;
-    max-width: 100%;
-    overflow-wrap: break-word;
+.backgroundContainer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1; /* 배경 이미지를 컨텐츠 뒤로 보냄 */
+    transition: filter 0.3s ease;
 }
 
-.darkMode .projectTitle {
-    color: #ebece5;
+.backgroundContainer.blurred {
+    filter: blur(10px);
+}
+
+.backgroundItem {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+}
+
+.backgroundItem.active {
+    opacity: 1;
 }
 
 .projectIframe {
     width: 100%;
     height: 100%;
     border: none;
+    pointer-events: all; /* iframe 클릭 가능하게 변경 */
 }
 
-.comingSoon {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-    height: 100%;
-    font-size: 24px;
-    color: #010101;
-}
-
-.darkMode {
-    background-color: #3b4237;
-    color: #f8f8f8;
-}
-
-.darkMode .span,
-.darkMode .selectedProject {
-    color: #dd8c43;
-}
-
-.darkMode .frameWrapper {
-    background-color: #21262c;
-    cursor: pointer; /* Add this line to ensure the cursor change in dark mode as well */
-}
-
-.darkMode .frame {
-    background-color: #21262c;
-}
-
-.darkMode .playIcon {
-    color: #f8f8f8; /* Icon color in dark mode */
-}
-
-.darkMode .projectDisplay {
-    border-color: #dd8c43;
-}
-
-.darkMode .lightBulbIcon,
-.darkMode .lightBulbOffIcon,
-.darkMode .anvilIcon {
-    color: #f8f8f8; /* Lightbulb icon color in dark mode */
-}
-
-.darkMode .project:hover,
-.darkMode .selectedProject {
-    color: #dd8c43; /* Project text color when selected or hovered in dark mode */
-}
-
-.anvilIcon {
-    width: 24px;
-    height: 24px;
-    color: #010101;
-}
-
-.darkMode .anvilIcon {
-    color: #ebece5;
-}
-
-.frameWrapper {
-    background-color: #21262c;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 6px;
-    cursor: pointer;
-    width: 24px;
-    height: 24px;
-}
-
-.lightBulbIcon,
-.lightBulbOffIcon,
-.anvilIcon {
-    width: 24px;
-    height: 24px;
-    color: var(--icon-color);
-    position: relative;
-    overflow: hidden;
-    flex-shrink: 0;
-}
-
-.darkMode .frameWrapper {
-    background-color: #21262c;
-}
-
-.darkMode .lightBulbIcon,
-.darkMode .lightBulbOffIcon,
-.darkMode .anvilIcon {
-    color: #f8f8f8;
-}
-
-.iframeError {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    height: 100%;
-    text-align: center;
-    padding: 20px;
-}
-
-.iframeError a {
-    margin-top: 10px;
-    color: #dd8c43;
+.footerColumn a {
+    color: inherit;
     text-decoration: none;
 }
 
-.iframeError a:hover {
+.footerColumn a:hover {
     text-decoration: underline;
 }
 
-/* 스크롤바 스타일링 (선택사항) */
-.projectDisplay::-webkit-scrollbar {
-    width: 6px;
+.cardVideo {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
 }
 
-.projectDisplay::-webkit-scrollbar-track {
-    background: #f1f1f1;
-}
-
-.projectDisplay::-webkit-scrollbar-thumb {
-    background: #888;
-}
-
-.projectDisplay::-webkit-scrollbar-thumb:hover {
-    background: #555;
-}
-
-.iconGroup {
+.horizontalScrollContainer {
     display: flex;
-    flex-direction: row;
-    align-items: center;
-    gap: 12px;
-}
-
-.frame {
-    background-color: #21262c;
-    overflow: hidden;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: center;
-    width: 36px;
-    height: 36px;
-    cursor: pointer;
-    padding: 6px; /* 패딩을 여기로 이동합니다 */
-    box-sizing: border-box;
-}
-
-.darkMode .frame {
-    background-color: #21262c;
-}
-
-.playIcon {
-    color: #ebece6;
-    width: 24px;
-    height: 24px;
-}
-
-.darkMode .playIcon {
-    color: #ebece6;
-}
-
-.modalOverlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: rgba(0, 0, 0, 0.5);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 1000;
-    overflow-y: auto;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
     -webkit-overflow-scrolling: touch;
+    padding-bottom: 20px;
+    width: 100%;
     scrollbar-width: none; /* Firefox */
     -ms-overflow-style: none; /* Internet Explorer 10+ */
 }
 
-.modalOverlay::-webkit-scrollbar {
-    display: none; /* WebKit */
+.column {
+    flex: 0 0 auto;
+    width: 300px;
+    margin-right: 20px;
+    scroll-snap-align: start;
 }
 
-.modalContent {
-    background-color: #f8f8f8;
-    padding: 24px;
-    max-width: 500px;
-    width: 90%;
-    position: relative;
+.headerText {
     font-family: "Manrope", sans-serif;
-    max-height: 90vh;
-    display: flex;
-    flex-direction: column;
-}
-
-.darkMode .modalContent {
-    background-color: #3b4237;
-    color: #f8f8f8;
-}
-
-.closeButton {
+    font-size: 24px;
+    color: #fff;
+    font-weight: 600;
     position: absolute;
-    top: 10px;
-    right: 10px;
-    background: none;
-    border: none;
-    cursor: pointer;
-    color: #21262c;
+    top: 16px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 10;
+    text-align: center;
+    width: 100%;
+    padding: 12px 0;
 }
 
-.darkMode .closeButton {
-    color: #ebece6;
-}
-
-.modalContent h2 {
-    margin-top: 0;
-    color: #dd8c43;
-    font-size: 24px;
-    margin-bottom: 0px;
-    font-weight: 400;
-}
-
-.modalContent p {
-    margin-bottom: 16px;
-    line-height: 1.6;
-    font-size: 18px;
-    font-weight: 300;
-    color: #21262c;
-}
-
-.languagesIcon {
-    width: 24px;
-    height: 24px;
-    color: var(--icon-color);
-    position: relative;
-    overflow: hidden;
-    flex-shrink: 0;
-}
-
-.darkMode .languagesIcon {
-    color: #010101;
-}
-
-.modalContent h3 {
-    margin-top: 24px;
-    color: #dd8c43;
-    font-size: 24px;
-    margin-bottom: 0px;
-    font-weight: 400;
-}
-
-.contactInfo {
-    margin-bottom: 8px;
-    font-size: 12px;
-    color: #21262c; /* 일반적인 검정색 */
-}
-
-.darkMode .contactInfo {
-    color: #f8f8f8; /* 다크 모드에서는 밝은 색상 */
-}
-
-.contactInfo a {
-    color: inherit; /* 부모 요소의 색상을 상속 */
-    text-decoration: none; /* 밑줄 제거 */
-}
-
-.contactInfo a:hover {
-    text-decoration: underline; /* 호버 시 밑줄 추가 (선택 사항) */
-}
-
-.modalScrollContent {
-    overflow-y: auto;
-    -webkit-overflow-scrolling: touch;
-    padding: 20px;
-    flex-grow: 1;
-    scrollbar-width: none; /* Firefox */
-    -ms-overflow-style: none; /* Internet Explorer 10+ */
-}
-
-.modalScrollContent::-webkit-scrollbar {
-    display: none; /* WebKit */
-}
-
-@media (max-width: 768px) {
-    .modalContent {
-        width: 90%;
-        max-height: 80vh;
-    }
-}
-
-.aboutContent {
-    flex: 1;
-    overflow-y: auto;
-    padding: 18px;
-    max-width: 800px;
-    margin: 0 auto;
-}
-
-.aboutContent h2 {
-    color: #dd8c43;
-    font-size: 24px;
-    margin-bottom: 18px;
-    font-weight: 200;
-}
-
-.aboutContent p {
-    line-height: 1.5; /* Adjusted to be a multiple of 18px */
-    font-size: 18px;
-    font-weight: 200;
-    color: #21262c;
-}
-
-.aboutContent h3 {
-    color: #dd8c43;
-    font-size: 24px;
-    margin-bottom: 18px;
-    font-weight: 200;
-}
-
-.darkMode .aboutContent {
-    color: #f8f8f8;
-}
-
-/* 다른 요소들에 대해서도 필요한 경우 lang 속성에 따라 폰트 지정 */
-.project[lang="en"],
-.description[lang="en"],
-.projectTitle[lang="en"] {
-    font-family: "Merriweather", serif;
-}
-
-.project[lang="ko"],
-.description[lang="ko"],
-.projectTitle[lang="ko"] {
-    font-family: "Noto Sans KR", sans-serif;
-}
-
-.headerIcon {
-    width: 24px; /* Adjust this value to your desired icon size */
-    height: 24px;
-    stroke-width: 1px;
+.videoError {
+    width: 100%;
+    height: 200px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #f8f8f8;
+    color: #666;
+    font-size: 14px;
 }

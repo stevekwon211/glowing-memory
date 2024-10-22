@@ -1,0 +1,40 @@
+.subMenu {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    height: 100%;
+    padding: 36px;
+    color: #ebece6;
+    white-space: normal;
+    overflow: visible;
+}
+
+.subMenuItem {
+    font-size: 84px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-bottom: -10%;
+    word-wrap: break-word;
+}
+
+.subMenuItem:last-child {
+    margin-bottom: 0;
+}
+
+.subMenuItem:hover {
+    opacity: 0.7;
+}
+
+@media (max-width: 768px) {
+    .subMenu {
+        padding: 0;
+        justify-content: flex-end;
+        height: auto;
+    }
+
+    .subMenuItem {
+        font-size: 12px;
+        text-align: left;
+        padding-bottom: 12px;
+    }
+}
