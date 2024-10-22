@@ -1,6 +1,6 @@
 import React from "react";
 import styles from "./ProjectDescription.module.css";
-import { Project } from "../types";
+import { Project } from "../types/project";
 
 interface ProjectDescriptionProps {
     project: Project;

@@ -1,12 +1,11 @@
 export interface Project {
-    name: string;
-    url: string;
+    id: number;
     title: string;
     description: {
         en: string;
         ko: string;
     };
-    date: Date;
-    year: number;
-    category: string;
+    year: string;
+    imageUrl: string;
+    projectUrl: string;
 }
