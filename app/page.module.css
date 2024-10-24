@@ -203,6 +203,7 @@
     margin-right: 36px;
     overflow-x: auto;
     white-space: nowrap;
+    overflow: visible;
 }
 
 .myMasonryGrid {
@@ -340,12 +341,17 @@
 .horizontalScrollContainer {
     display: flex;
     overflow-x: auto;
+    overflow-y: hidden;
     scroll-snap-type: x mandatory;
     -webkit-overflow-scrolling: touch;
     padding-bottom: 20px;
     width: 100%;
     scrollbar-width: none; /* Firefox */
     -ms-overflow-style: none; /* Internet Explorer 10+ */
+}
+
+.horizontalScrollContainer::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, and Opera */
 }
 
 .column {
@@ -379,4 +385,35 @@
     background-color: #f8f8f8;
     color: #666;
     font-size: 14px;
+}
+
+.noOverflow {
+    height: 100vh;
+    overflow: hidden;
+}
+
+.scrollContainer {
+    height: 100%;
+    overflow-y: auto;
+    overflow-x: hidden;
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE and Edge */
+}
+
+.scrollContainer::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, and Opera */
+}
+
+.pageWrapper {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    overflow: hidden;
+}
+
+.container {
+    height: 100%;
+    overflow: hidden;
 }
