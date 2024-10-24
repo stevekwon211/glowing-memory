@@ -141,28 +141,6 @@ export default function Home() {
         preloadImages();
     }, []);
 
-    const [isDescriptionVisible, setIsDescriptionVisible] = useState(false);
-
-    useEffect(() => {
-        const observer = new IntersectionObserver(
-            (entries) => {
-                if (entries[0].isIntersecting) {
-                    setIsDescriptionVisible(true);
-                    observer.disconnect();
-                }
-            },
-            { threshold: 0.1 }
-        );
-
-        if (descriptionRef.current) {
-            observer.observe(descriptionRef.current);
-        }
-
-        return () => {
-            observer.disconnect();
-        };
-    }, []);
-
     return (
         <div className={styles.pageWrapper}>
             <motion.div
