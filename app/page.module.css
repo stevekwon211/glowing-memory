@@ -64,29 +64,23 @@
         height: 100vh;
     }
 
-    .featuredColumn {
-        height: 100vh;
-        display: flex;
+    .contentWrapper {
         flex-direction: column;
-        justify-content: space-between;
-        padding: 16px;
     }
 
-    .featuredColumn:first-child {
-        justify-content: flex-end;
+    .featuredColumn {
+        width: 100%;
+        height: auto;
+        min-height: 0;
     }
 
-    .centerColumnHeader {
+    .subMenuColumn {
         position: absolute;
-        top: 16px;
-        left: 16px;
-        text-align: left;
-        padding: 0;
-        font-size: 24px;
-    }
-
-    .desktopOnly {
-        display: none;
+        top: 0;
+        right: 0;
+        width: 50%;
+        height: 100%;
+        justify-content: center;
     }
 }
 
@@ -115,6 +109,7 @@
     flex: 1;
     position: relative;
     z-index: 2;
+    flex-direction: row;
 }
 
 .featuredColumn {
@@ -131,7 +126,7 @@
     width: auto;
     min-width: 300px;
     max-width: 50%;
-    justify-content: space-between; /* Change this to space-between */
+    justify-content: space-between;
 }
 
 .logoContainer {
@@ -145,56 +140,6 @@
     width: auto;
     height: auto;
     object-fit: contain;
-}
-
-.mobileHeader {
-    display: none;
-}
-
-@media (max-width: 768px) {
-    .mobileHeader {
-        display: block;
-        position: absolute;
-        top: 16px;
-        left: 16px;
-        font-size: 24px;
-        color: #fff;
-        z-index: 2;
-    }
-
-    .desktopOnly {
-        display: none;
-    }
-
-    .contentWrapper {
-        flex-direction: column-reverse;
-    }
-
-    .featuredColumn {
-        justify-content: flex-end;
-        height: auto;
-    }
-
-    .featuredColumn:nth-child(2),
-    .featuredColumn:nth-child(3) {
-        display: none;
-    }
-
-    .featuredColumn:first-child {
-        justify-content: flex-end;
-        height: 100vh;
-        width: 100%;
-        min-width: unset;
-    }
-
-    .centerColumnHeader {
-        display: none;
-    }
-
-    .headerText {
-        font-size: 24px;
-        top: 16px;
-    }
 }
 
 .description {
@@ -251,7 +196,7 @@
     transform: none;
 }
 
-/* Learn More 링크 스타일 제거 */
+/* Learn More 링크 스일 제거 */
 .cardLink {
     display: none;
 }
@@ -416,4 +361,100 @@
 .container {
     height: 100%;
     overflow: hidden;
+}
+
+@media (min-width: 768px) {
+    .mobileContentWrapper {
+        flex-direction: row;
+    }
+}
+
+.featuredColumn {
+    width: 100%;
+}
+
+@media (min-width: 768px) {
+    .featuredColumn {
+        width: 33.33%;
+    }
+}
+
+.featuredColumn {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 12px;
+    overflow: visible;
+}
+
+@media (max-width: 768px) {
+    .featuredColumn {
+        height: auto;
+        min-height: 50vh;
+    }
+}
+
+.subMenuColumn {
+    justify-content: flex-start;
+}
+
+@media (max-width: 768px) {
+    .subMenuColumn {
+        height: auto;
+        min-height: 0;
+    }
+}
+
+.contentWrapper {
+    display: flex;
+    flex: 1;
+    position: relative;
+    z-index: 2;
+    flex-direction: row;
+}
+
+.featuredColumn {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 12px;
+    overflow: visible;
+}
+
+.featuredColumn:first-child {
+    flex: 0 0 auto;
+    width: auto;
+    min-width: 300px;
+    max-width: 50%;
+    justify-content: space-between;
+}
+
+@media (max-width: 768px) {
+    .contentWrapper {
+        flex-direction: row;
+        justify-content: flex-start; /* 왼쪽 정렬 */
+    }
+
+    .featuredColumn {
+        flex: 0 0 auto; /* flex-grow: 0, flex-shrink: 0, flex-basis: auto */
+        width: auto; /* 내용에 맞게 너비 조정 */
+        min-width: 0; /* 최소 너비 제거 */
+        max-width: none; /* 최대 너비 제한 제거 */
+    }
+
+    .featuredColumn:first-child {
+        min-width: 0; /* 최소 너비 제거 */
+        max-width: none; /* 최대 너비 제한 제거 */
+    }
+
+    .subMenuColumn {
+        position: relative; /* absolute 대신 relative 사용 */
+        top: auto;
+        right: auto;
+        width: auto;
+        height: auto;
+        justify-content: flex-start;
+    }
 }

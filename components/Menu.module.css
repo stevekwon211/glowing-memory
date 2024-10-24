@@ -1,6 +1,7 @@
 .menu {
     display: flex;
     flex-direction: column;
+    align-items: flex-start;
     justify-content: flex-end;
     height: 100%;
     padding: 36px;
@@ -10,7 +11,7 @@
 }
 
 .menuItem {
-    font-size: 84px;
+    font-size: 7vw; /* 뷰포트 너비의 7% */
     cursor: pointer;
     transition: all 0.3s ease;
     margin-bottom: -10%;
@@ -29,18 +30,17 @@
 
 @media (max-width: 768px) {
     .menu {
-        padding: 0;
-        justify-content: flex-end;
-        height: auto;
+        padding: 20px;
     }
 
     .menuItem {
-        font-size: 12px;
-        text-align: left;
-        padding-bottom: 12px;
+        font-size: 8vw; /* 모바일에서는 뷰포트 너비의 8% */
+        margin-bottom: -5%;
     }
+}
 
-    .selectedMenuItem {
-        display: block !important;
+@media (min-width: 1200px) {
+    .menuItem {
+        font-size: 84px; /* 큰 화면에서는 최대 크기 제한 */
     }
 }
