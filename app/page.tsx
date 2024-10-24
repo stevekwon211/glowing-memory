@@ -205,7 +205,7 @@ export default function Home() {
                                     onLeave={() => {}}
                                 />
                             </div>
-                            <div className={styles.featuredColumn}>
+                            <div className={`${styles.featuredColumn} ${styles.subMenuColumn}`}>
                                 <AnimatePresence>
                                     {selectedMenuIndex !== null && (
                                         <SubMenu
@@ -217,7 +217,6 @@ export default function Home() {
                                     )}
                                 </AnimatePresence>
                             </div>
-                            <div className={styles.featuredColumn}></div>
                         </div>
                     </div>
                     <div className={styles.description} ref={descriptionRef}>
