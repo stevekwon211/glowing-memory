@@ -10,7 +10,8 @@ import SubMenu from "../components/SubMenu";
 import { AnimatePresence } from "framer-motion";
 import { contentItems } from "../data/content";
 import Image from "next/image";
-const backgroundImage = "/image/img-11.JPG";
+
+const backgroundImage = "/image/img-11.jpeg";
 
 const Card = ({ item }: { item: ContentItem }) => {
     const [videoError, setVideoError] = useState(false);
@@ -37,8 +38,16 @@ const Card = ({ item }: { item: ContentItem }) => {
                 <Image
                     src={item.imageUrl}
                     alt={item.description}
-                    width={300}
-                    height={200}
+                    width={0}
+                    height={0}
+                    sizes="100vw"
+                    style={{
+                        width: "100%",
+                        height: "auto",
+                        maxWidth: "300px",
+                        aspectRatio: "auto",
+                        objectFit: "cover",
+                    }}
                     quality={60}
                     className={styles.cardImage}
                 />
