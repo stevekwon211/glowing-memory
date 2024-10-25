@@ -162,7 +162,18 @@ export default function Home() {
             >
                 <div className={styles.scrollContainer}>
                     <div className={styles.featured}>
-                        <div className={styles.headerText}>NRU PROJECT 211.</div>
+                        <AnimatePresence>
+                            {selectedMenuIndex === null && (
+                                <motion.div
+                                    className={styles.headerText}
+                                    initial={{ opacity: 0 }}
+                                    animate={{ opacity: 1 }}
+                                    exit={{ opacity: 0 }}
+                                >
+                                    NRU PROJECT 211.
+                                </motion.div>
+                            )}
+                        </AnimatePresence>
                         <div className={`${styles.backgroundContainer} ${isBlurred ? styles.blurred : ""}`}>
                             <div className={`${styles.backgroundItem} ${styles.active}`}>
                                 <Image
@@ -174,7 +185,6 @@ export default function Home() {
                                     quality={60}
                                 />
                             </div>
-
                             {menuItems
                                 .flatMap((item) => item.subItems)
                                 .map((subItem) => (
