@@ -38,14 +38,13 @@ const Card = ({ item }: { item: ContentItem }) => {
                 <Image
                     src={item.imageUrl}
                     alt={item.description}
-                    width={0}
-                    height={0}
+                    width={300}
+                    height={200}
                     sizes="100vw"
                     style={{
                         width: "100%",
                         height: "auto",
                         maxWidth: "300px",
-                        aspectRatio: "auto",
                         objectFit: "cover",
                     }}
                     quality={60}
