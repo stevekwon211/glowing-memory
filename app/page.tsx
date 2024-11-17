@@ -169,7 +169,7 @@ export default function Home() {
                                     animate={{ opacity: 1 }}
                                     exit={{ opacity: 0 }}
                                 >
-                                    NRU PROJECT 211.
+                                    NRU.
                                 </motion.div>
                             )}
                         </AnimatePresence>
@@ -241,22 +241,8 @@ export default function Home() {
                     </div>
                     <div className={footerStyles.footer}>
                         <div className={footerStyles.footerColumn}>
-                            <b>NRU PROJECT 211.</b>
-                            <br />
-                            <br />
-                            NRU(느루): it means &quot;not rushing everything at once but taking a longer, slower
+                            <b>NRU</b> means &quot;not rushing everything at once but taking a longer, slower
                             approach.&quot; in Korean
-                            <br />
-                            211: just my birthday, wanna complete 211 projects before dying
-                            <br />
-                            <br />
-                            taste: photos and videos I took
-                            <br />
-                            work: doing works to spread a message
-                            <br />
-                            music: making music I want to listen to
-                            <br />
-                            product: building products I want to use
                             <br />
                             <br />
                         </div>
