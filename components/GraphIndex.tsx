@@ -1,10 +1,9 @@
 import { useEffect, useRef, useState } from "react";
-import ForceGraph2D, { ForceGraphMethods } from "react-force-graph-2d";
+import ForceGraph2D, { ForceGraphMethods, NodeObject } from "react-force-graph-2d";
 import { writingLinks } from "../data/writings";
 import { contentItems } from "../data/content";
-// import { projectItems } from "../data/projects"; // projects.ts 생성 후 import
 
-interface Node {
+interface Node extends NodeObject {
     id: string;
     name: string;
     group: string;
@@ -47,14 +46,6 @@ export default function GraphIndex() {
                 val: 15,
             })
         ),
-        // Project 카테고리 (추후 추가)
-        // ...Array.from(new Set(projectItems.flatMap((item) => item.category))).map((category) => ({
-        //     id: `project-category-${category}`,
-        //     name: category,
-        //     group: "category",
-        //     val: 15,
-        // })),
-
         // Writing 아이템
         ...writingLinks.map((item) => ({
             id: `writing-${item.id}`,
@@ -69,13 +60,6 @@ export default function GraphIndex() {
             group: "content",
             val: 8,
         })),
-        // Project 아이템 (추후 추가)
-        // ...projectItems.map((item) => ({
-        //     id: `project-${item.id}`,
-        //     name: item.title,
-        //     group: "project",
-        //     val: 8,
-        // })),
     ];
 
     // 모든 데이터 소스의 링크를 통합
@@ -100,14 +84,6 @@ export default function GraphIndex() {
                   ]
                 : []
         ),
-        // Project 링크 (추후 추가)
-        // ...projectItems.flatMap((item) =>
-        //     item.category.map((category) => ({
-        //         source: `project-category-${category}`,
-        //         target: `project-${item.id}`,
-        //         value: 1,
-        //     }))
-        // ),
     ];
 
     const graphData: GraphData = { nodes, links };
@@ -140,16 +116,16 @@ export default function GraphIndex() {
                     graphData={graphData}
                     width={dimensions.width}
                     height={dimensions.height}
-                    nodeColor={(node: any) => {
+                    nodeColor={(node: Node) => {
                         if (node.group === "category") return "#ff6b6b";
                         if (node.group === "writing") return "#4dabf7";
                         if (node.group === "content") return "#51cf66";
                         if (node.group === "project") return "#ffd43b";
                         return "#868e96";
                     }}
-                    nodeLabel={(node: any) => node.name}
+                    nodeLabel={(node: Node) => node.name}
                     linkColor={() => "#e9ecef"}
-                    nodeCanvasObject={(node: any, ctx: CanvasRenderingContext2D, globalScale: number) => {
+                    nodeCanvasObject={(node: Node, ctx: CanvasRenderingContext2D) => {
                         if (!node.x || !node.y) return;
 
                         ctx.beginPath();
@@ -161,7 +137,8 @@ export default function GraphIndex() {
                         ctx.lineWidth = 2;
                         ctx.stroke();
                     }}
-                    nodePointerAreaPaint={(node: any, color: string, ctx: CanvasRenderingContext2D) => {
+                    nodePointerAreaPaint={(node: Node, color: string, ctx: CanvasRenderingContext2D) => {
+                        if (!node.x || !node.y) return;
                         ctx.beginPath();
                         ctx.arc(node.x, node.y, node.val * 1.5, 0, 2 * Math.PI);
                         ctx.fillStyle = color;
