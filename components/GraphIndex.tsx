@@ -1,7 +1,14 @@
+import dynamic from "next/dynamic";
 import { useEffect, useRef, useState } from "react";
-import ForceGraph2D, { ForceGraphMethods } from "react-force-graph-2d";
+import { ForceGraphMethods } from "react-force-graph-2d";
 import { writingLinks } from "../data/writings";
 import { contentItems } from "../data/content";
+
+// ForceGraph2D를 클라이언트 사이드에서만 로드
+const ForceGraph2D = dynamic(() => import("react-force-graph-2d"), {
+    ssr: false,
+    loading: () => <div>Loading...</div>,
+});
 
 interface Node {
     id: string;
@@ -114,7 +121,7 @@ export default function GraphIndex() {
 
     return (
         <div ref={containerRef} style={{ width: "100%", height: "100%", position: "relative" }}>
-            {dimensions.width > 0 && dimensions.height > 0 && (
+            {typeof window !== "undefined" && dimensions.width > 0 && dimensions.height > 0 && (
                 <ForceGraph2D<Node, Link>
                     ref={fgRef}
                     graphData={graphData}
