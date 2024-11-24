@@ -123,8 +123,8 @@ export default function GraphIndex() {
                     nodeAutoColorBy="group"
                     linkColor={() => "#e9ecef"}
                     nodeCanvasObjectMode={() => "after"}
-                    nodeCanvasObject={(node: any, ctx: CanvasRenderingContext2D) => {
-                        const { x, y, name, group, val } = node;
+                    nodeCanvasObject={(node: NodeType, ctx: CanvasRenderingContext2D) => {
+                        const { x, y, group, val } = node;
                         if (typeof x !== "number" || typeof y !== "number") return;
 
                         ctx.beginPath();
