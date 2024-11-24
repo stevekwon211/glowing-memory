@@ -3,46 +3,40 @@ import { useEffect, useRef, useState } from "react";
 import { writingLinks } from "../data/writings";
 import { contentItems } from "../data/content";
 
-// ForceGraph2D를 동적으로 임포트
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
 const ForceGraph2D = dynamic(() => import("react-force-graph-2d"), {
     ssr: false,
     loading: () => <div>Loading...</div>,
 });
 
-// 타입 정의
-type NodeType = {
-    [key: string]: any;
+type BaseNode = {
     id: string;
     name: string;
     group: string;
     val: number;
-    x?: number;
-    y?: number;
-    vx?: number;
-    vy?: number;
-    fx?: number;
-    fy?: number;
-    __indexColor?: string;
-    index?: number;
 };
 
-type LinkType = {
-    source: string | NodeType;
-    target: string | NodeType;
+type GraphNode = BaseNode & {
+    [key: string]: unknown;
+};
+
+type GraphLink = {
+    source: string;
+    target: string;
     value: number;
 };
 
 type GraphData = {
-    nodes: NodeType[];
-    links: LinkType[];
+    nodes: GraphNode[];
+    links: GraphLink[];
 };
 
 export default function GraphIndex() {
     const containerRef = useRef<HTMLDivElement>(null);
     const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
 
-    // 모드와 링크 데이터 생성
-    const nodes: NodeType[] = [
+    const nodes: GraphNode[] = [
         // Writing 카테고리
         ...Array.from(new Set(writingLinks.flatMap((item) => item.category))).map((category) => ({
             id: `writing-category-${category}`,
@@ -75,7 +69,7 @@ export default function GraphIndex() {
         })),
     ];
 
-    const links: LinkType[] = [
+    const links: GraphLink[] = [
         // Writing 링크
         ...writingLinks.flatMap((item) =>
             item.category.map((category) => ({
@@ -117,6 +111,8 @@ export default function GraphIndex() {
     return (
         <div ref={containerRef} style={{ width: "100%", height: "100%", position: "relative" }}>
             {typeof window !== "undefined" && dimensions.width > 0 && dimensions.height > 0 && (
+                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                // @ts-ignore
                 <ForceGraph2D
                     graphData={graphData}
                     width={dimensions.width}
@@ -124,8 +120,8 @@ export default function GraphIndex() {
                     nodeAutoColorBy="group"
                     linkColor={() => "#e9ecef"}
                     nodeCanvasObjectMode={() => "after"}
-                    nodeCanvasObject={(node: NodeType, ctx: CanvasRenderingContext2D) => {
-                        const { x, y, group, val } = node;
+                    nodeCanvasObject={(node, ctx) => {
+                        const { x, y, group, val } = node as GraphNode;
                         if (typeof x !== "number" || typeof y !== "number") return;
 
                         ctx.beginPath();
