@@ -7,4 +7,5 @@ export interface ContentItem {
     link: string;
     category: string;
     type: "image" | "video";
+    date: string;
 }
