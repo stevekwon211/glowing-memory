@@ -2,15 +2,15 @@ import dynamic from "next/dynamic";
 import { useEffect, useRef, useState } from "react";
 import { writingLinks } from "../data/writings";
 import { contentItems } from "../data/content";
-import type { ForceGraphMethods } from "react-force-graph-2d";
 
-// ForceGraph2D를 구체적인 타입으로 임포트
-const ForceGraph2D = dynamic(() => import("react-force-graph-2d").then((mod) => mod.default), {
+// ForceGraph2D를 동적으로 임포트
+const ForceGraph2D = dynamic(() => import("react-force-graph-2d"), {
     ssr: false,
     loading: () => <div>Loading...</div>,
 });
 
-interface Node {
+// 타입 정의
+type NodeType = {
     id: string;
     name: string;
     group: string;
@@ -21,26 +21,27 @@ interface Node {
     vy?: number;
     fx?: number;
     fy?: number;
-}
+    __indexColor?: string;
+    index?: number;
+};
 
-interface Link {
-    source: string;
-    target: string;
+type LinkType = {
+    source: string | NodeType;
+    target: string | NodeType;
     value: number;
-}
+};
 
-interface GraphData {
-    nodes: Node[];
-    links: Link[];
-}
+type GraphData = {
+    nodes: NodeType[];
+    links: LinkType[];
+};
 
 export default function GraphIndex() {
-    const fgRef = useRef<ForceGraphMethods<Node, Link>>();
     const containerRef = useRef<HTMLDivElement>(null);
     const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
 
-    // 모든 데이터 소스의 카테고리와 아이템을 통합
-    const nodes: Node[] = [
+    // 모드와 링크 데이터 생성
+    const nodes: NodeType[] = [
         // Writing 카테고리
         ...Array.from(new Set(writingLinks.flatMap((item) => item.category))).map((category) => ({
             id: `writing-category-${category}`,
@@ -73,8 +74,7 @@ export default function GraphIndex() {
         })),
     ];
 
-    // 모든 데이터 소스의 링크를 통합
-    const links: Link[] = [
+    const links: LinkType[] = [
         // Writing 링크
         ...writingLinks.flatMap((item) =>
             item.category.map((category) => ({
@@ -104,12 +104,6 @@ export default function GraphIndex() {
             if (containerRef.current) {
                 const { width, height } = containerRef.current.getBoundingClientRect();
                 setDimensions({ width, height });
-
-                if (fgRef.current) {
-                    fgRef.current.d3Force("charge")?.strength(-200);
-                    fgRef.current.d3Force("link")?.distance(100);
-                    fgRef.current.zoomToFit(400);
-                }
             }
         };
 
@@ -123,45 +117,26 @@ export default function GraphIndex() {
         <div ref={containerRef} style={{ width: "100%", height: "100%", position: "relative" }}>
             {typeof window !== "undefined" && dimensions.width > 0 && dimensions.height > 0 && (
                 <ForceGraph2D
-                    ref={fgRef}
                     graphData={graphData}
                     width={dimensions.width}
                     height={dimensions.height}
-                    nodeColor={(node: Node) => {
-                        if (node.group === "category") return "#ff6b6b";
-                        if (node.group === "writing") return "#4dabf7";
-                        if (node.group === "content") return "#51cf66";
-                        if (node.group === "project") return "#ffd43b";
-                        return "#868e96";
-                    }}
-                    nodeLabel={(node: Node) => node.name}
+                    nodeAutoColorBy="group"
                     linkColor={() => "#e9ecef"}
-                    nodeCanvasObject={(node: Node, ctx: CanvasRenderingContext2D) => {
-                        if (!node.x || !node.y) return;
+                    nodeCanvasObjectMode={() => "after"}
+                    nodeCanvasObject={(node: any, ctx: CanvasRenderingContext2D) => {
+                        const { x, y, name, group, val } = node;
+                        if (typeof x !== "number" || typeof y !== "number") return;
 
                         ctx.beginPath();
-                        ctx.arc(node.x, node.y, node.val, 0, 2 * Math.PI);
-                        ctx.fillStyle = node.group === "category" ? "#ff6b6b" : "#4dabf7";
+                        ctx.arc(x, y, val, 0, 2 * Math.PI);
+                        ctx.fillStyle = group === "category" ? "#ff6b6b" : "#4dabf7";
                         ctx.fill();
 
                         ctx.strokeStyle = "#ffffff";
                         ctx.lineWidth = 2;
                         ctx.stroke();
                     }}
-                    nodePointerAreaPaint={(node: Node, color: string, ctx: CanvasRenderingContext2D) => {
-                        if (!node.x || !node.y) return;
-                        ctx.beginPath();
-                        ctx.arc(node.x, node.y, node.val * 1.5, 0, 2 * Math.PI);
-                        ctx.fillStyle = color;
-                        ctx.fill();
-                    }}
                     cooldownTicks={100}
-                    onEngineStop={() => {
-                        if (fgRef.current) {
-                            fgRef.current.zoomToFit(400);
-                        }
-                    }}
-                    linkWidth={1}
                     minZoom={0.5}
                     maxZoom={2}
                     enableZoomInteraction={true}
