@@ -11,6 +11,7 @@ const ForceGraph2D = dynamic(() => import("react-force-graph-2d"), {
 
 // 타입 정의
 type NodeType = {
+    [key: string]: any;
     id: string;
     name: string;
     group: string;
