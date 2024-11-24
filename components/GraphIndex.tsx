@@ -2,9 +2,10 @@ import dynamic from "next/dynamic";
 import { useEffect, useRef, useState } from "react";
 import { writingLinks } from "../data/writings";
 import { contentItems } from "../data/content";
+import type { ForceGraphMethods } from "react-force-graph-2d";
 
-// ForceGraph2D를 any 타입으로 임포트
-const ForceGraph2D: any = dynamic(() => import("react-force-graph-2d"), {
+// ForceGraph2D를 구체적인 타입으로 임포트
+const ForceGraph2D = dynamic(() => import("react-force-graph-2d").then((mod) => mod.default), {
     ssr: false,
     loading: () => <div>Loading...</div>,
 });
@@ -34,7 +35,7 @@ interface GraphData {
 }
 
 export default function GraphIndex() {
-    const fgRef = useRef<any>();
+    const fgRef = useRef<ForceGraphMethods<Node, Link>>();
     const containerRef = useRef<HTMLDivElement>(null);
     const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
 
