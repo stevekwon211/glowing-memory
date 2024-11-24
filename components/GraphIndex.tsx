@@ -3,13 +3,17 @@ import ForceGraph2D, { ForceGraphMethods, NodeObject } from "react-force-graph-2
 import { writingLinks } from "../data/writings";
 import { contentItems } from "../data/content";
 
-interface Node extends NodeObject {
+interface Node {
     id: string;
     name: string;
     group: string;
     val: number;
     x?: number;
     y?: number;
+    vx?: number;
+    vy?: number;
+    fx?: number;
+    fy?: number;
 }
 
 interface Link {
@@ -24,7 +28,7 @@ interface GraphData {
 }
 
 export default function GraphIndex() {
-    const fgRef = useRef<ForceGraphMethods>();
+    const fgRef = useRef<ForceGraphMethods<Node, Link>>();
     const containerRef = useRef<HTMLDivElement>(null);
     const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
 
@@ -111,21 +115,21 @@ export default function GraphIndex() {
     return (
         <div ref={containerRef} style={{ width: "100%", height: "100%", position: "relative" }}>
             {dimensions.width > 0 && dimensions.height > 0 && (
-                <ForceGraph2D
+                <ForceGraph2D<Node, Link>
                     ref={fgRef}
                     graphData={graphData}
                     width={dimensions.width}
                     height={dimensions.height}
-                    nodeColor={(node: Node) => {
+                    nodeColor={(node) => {
                         if (node.group === "category") return "#ff6b6b";
                         if (node.group === "writing") return "#4dabf7";
                         if (node.group === "content") return "#51cf66";
                         if (node.group === "project") return "#ffd43b";
                         return "#868e96";
                     }}
-                    nodeLabel={(node: Node) => node.name}
+                    nodeLabel={(node) => node.name}
                     linkColor={() => "#e9ecef"}
-                    nodeCanvasObject={(node: Node, ctx: CanvasRenderingContext2D) => {
+                    nodeCanvasObject={(node, ctx) => {
                         if (!node.x || !node.y) return;
 
                         ctx.beginPath();
@@ -137,7 +141,7 @@ export default function GraphIndex() {
                         ctx.lineWidth = 2;
                         ctx.stroke();
                     }}
-                    nodePointerAreaPaint={(node: Node, color: string, ctx: CanvasRenderingContext2D) => {
+                    nodePointerAreaPaint={(node, color, ctx) => {
                         if (!node.x || !node.y) return;
                         ctx.beginPath();
                         ctx.arc(node.x, node.y, node.val * 1.5, 0, 2 * Math.PI);
