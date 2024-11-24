@@ -1,267 +1,173 @@
 "use client";
 
-import { useState, useRef, useEffect, useCallback } from "react";
+import { useState, useEffect, useRef } from "react";
 import styles from "./page.module.css";
-import { motion } from "framer-motion";
-import { ContentItem } from "../types/content";
-import footerStyles from "../components/Footer.module.css";
-import Menu from "../components/Menu";
-import SubMenu from "../components/SubMenu";
-import { AnimatePresence } from "framer-motion";
 import { contentItems } from "../data/content";
 import Image from "next/image";
-
-const backgroundImage = "/image/img-11.jpeg";
-
-const Card = ({ item }: { item: ContentItem }) => {
-    const [videoError, setVideoError] = useState(false);
-
-    const handleVideoError = () => {
-        console.error(`Error loading video: ${item.videoUrl}`);
-        setVideoError(true);
-    };
-
-    return (
-        <div className={styles.card}>
-            {item.type === "video" && item.videoUrl ? (
-                videoError ? (
-                    <div className={styles.videoError}>Video failed to load</div>
-                ) : (
-                    <video className={styles.cardVideo} autoPlay loop muted playsInline onError={handleVideoError}>
-                        <source src={item.videoUrl.replace(".mov", ".mp4")} type="video/mp4" />
-                        <source src={item.videoUrl.replace(".mov", ".webm")} type="video/webm" />
-                        <source src={item.videoUrl} type="video/quicktime" />
-                        Your browser does not support the video tag.
-                    </video>
-                )
-            ) : (
-                <Image
-                    src={item.imageUrl}
-                    alt={item.description}
-                    width={300}
-                    height={200}
-                    sizes="100vw"
-                    style={{
-                        width: "100%",
-                        height: "auto",
-                        maxWidth: "300px",
-                        objectFit: "cover",
-                    }}
-                    quality={60}
-                    className={styles.cardImage}
-                />
-            )}
-            <p>{item.description}</p>
-        </div>
-    );
-};
-
-const menuItems = [
-    {
-        name: "taste",
-        subItems: [],
-    },
-    {
-        name: "work",
-        subItems: [{ name: "Verae", url: "https://verae.vercel.app/" }],
-    },
-    {
-        name: "music",
-        subItems: [{ name: "coming soon..", url: "#comingsoon.." }],
-    },
-    {
-        name: "product",
-        subItems: [{ name: "Undistracted", url: "https://undistracted.vercel.app/" }],
-    },
-];
+import WritingList from "../components/WritingList";
+import { writingLinks } from "../data/writings";
+import GraphIndex from "../components/GraphIndex";
 
 export default function Home() {
-    const [isBlurred, setIsBlurred] = useState(false);
-    const [selectedMenuIndex, setSelectedMenuIndex] = useState<number | null>(null);
-    const [hoveredSubMenuUrl, setHoveredSubMenuUrl] = useState<string | null>(null);
-    const descriptionRef = useRef<HTMLDivElement>(null);
-    const [columns, setColumns] = useState<ContentItem[][]>([]);
+    const [selectedCategory, setSelectedCategory] = useState<string | null>("Taste");
+    const [selectedYear, setSelectedYear] = useState<string | null>(null);
+    const [currentContentIndex, setCurrentContentIndex] = useState(0);
+    const selectedItemFrameRef = useRef<HTMLDivElement>(null);
 
-    const shuffleArray = useCallback((array: ContentItem[]) => {
-        const newArray = [...array];
-        for (let i = newArray.length - 1; i > 0; i--) {
-            const j = Math.floor(Math.random() * (i + 1));
-            [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
+    const handleCategoryClick = (category: string) => {
+        if (category === "Taste" || category === "Writing") {
+            setSelectedCategory(category);
+            setSelectedYear(null);
+            setCurrentContentIndex(0);
+        } else {
+            setSelectedCategory(null);
         }
-        return newArray;
-    }, []);
+    };
+
+    const handleYearClick = (year: string) => {
+        setSelectedYear(year);
+        setCurrentContentIndex(0);
+    };
+
+    const filteredItems = contentItems
+        .filter((item) => {
+            const yearMatch = selectedYear ? item.date.startsWith(selectedYear) : true;
+            const categoryMatch = selectedCategory === "Taste" ? true : false;
+            return yearMatch && categoryMatch;
+        })
+        .sort((a, b) => {
+            return new Date(b.date).getTime() - new Date(a.date).getTime();
+        });
 
     useEffect(() => {
-        const shuffledItems = shuffleArray(contentItems);
+        const frameElement = selectedItemFrameRef.current;
+        if (!frameElement || (!selectedCategory && !selectedYear)) return;
 
-        const newColumns: ContentItem[][] = [];
-        for (let i = 0; i < shuffledItems.length; i += 3) {
-            newColumns.push(shuffledItems.slice(i, i + 3));
-        }
-        setColumns(newColumns);
-    }, [shuffleArray]);
+        const handleScroll = () => {
+            const scrollPosition = frameElement.scrollTop;
+            const itemHeight = frameElement.clientHeight;
+            const newIndex = Math.round(scrollPosition / itemHeight);
 
-    const handleMenuClick = (index: number) => {
-        setSelectedMenuIndex(index);
-        if (menuItems[index].name === "taste") {
-            descriptionRef.current?.scrollIntoView({ behavior: "smooth" });
-        }
-    };
-
-    const handleSubMenuSelect = (url: string) => {
-        console.log("Selected sub-menu item:", url);
-        setSelectedMenuIndex(null);
-    };
-
-    const handleSubMenuHover = (url: string) => {
-        setHoveredSubMenuUrl(url);
-        setIsBlurred(true);
-        setTimeout(() => {
-            setIsBlurred(false);
-        }, 1000);
-    };
-
-    const handleSubMenuLeave = () => {
-        setHoveredSubMenuUrl(null);
-    };
-
-    useEffect(() => {
-        const preloadImages = async () => {
-            const imagePromises = contentItems
-                .filter((item) => item.type === "image")
-                .map((item) => {
-                    return new Promise((resolve, reject) => {
-                        const img = document.createElement("img");
-                        img.src = item.imageUrl;
-                        img.onload = resolve;
-                        img.onerror = reject;
-                    });
-                });
-
-            try {
-                await Promise.all(imagePromises);
-                console.log("All images preloaded successfully");
-            } catch (error) {
-                console.error("Error preloading images:", error);
+            if (newIndex !== currentContentIndex && newIndex >= 0 && newIndex < filteredItems.length) {
+                setCurrentContentIndex(newIndex);
             }
         };
 
-        preloadImages();
-    }, []);
+        frameElement.addEventListener("scroll", handleScroll);
+        return () => frameElement.removeEventListener("scroll", handleScroll);
+    }, [selectedCategory, selectedYear, currentContentIndex, filteredItems.length]);
+
+    const renderSelectedItem = () => {
+        if (selectedCategory === "Taste" || (!selectedCategory && selectedYear)) {
+            return (
+                <div className={styles.selectedItemFrame} ref={selectedItemFrameRef}>
+                    {filteredItems.map((item, index) => (
+                        <div key={index} className={styles.selectedItemContent}>
+                            <div className={styles.imageWrapper}>
+                                {item.type === "video" && item.videoUrl ? (
+                                    <video className={styles.mediaContent} autoPlay loop muted playsInline>
+                                        <source src={item.videoUrl} type="video/mp4" />
+                                        Your browser does not support the video tag.
+                                    </video>
+                                ) : (
+                                    <Image
+                                        src={item.imageUrl}
+                                        alt={item.description}
+                                        width={0}
+                                        height={0}
+                                        sizes="(max-width: 768px) 100vw, 50vw"
+                                        style={{
+                                            width: "auto",
+                                            height: "auto",
+                                            maxWidth: "100%",
+                                            maxHeight: "calc(100vh - 4rem)",
+                                            objectFit: "contain",
+                                            margin: 0,
+                                        }}
+                                        quality={75}
+                                    />
+                                )}
+                            </div>
+                            <p className={styles.itemDescription}>{item.description}</p>
+                        </div>
+                    ))}
+                </div>
+            );
+        } else if (selectedCategory === "Writing") {
+            const filteredWritings = writingLinks.filter((item) =>
+                selectedYear ? item.date.startsWith(selectedYear) : true
+            );
+            return (
+                <div className={styles.selectedItemFrame}>
+                    <WritingList items={filteredWritings} />
+                </div>
+            );
+        } else if (selectedCategory === "Artifact") {
+            return null;
+        }
+        return null;
+    };
+
+    const getAvailableYears = () => {
+        if (selectedCategory === "Taste") {
+            return Array.from(new Set(contentItems.map((item) => item.date.substring(0, 4)))).sort((a, b) =>
+                b.localeCompare(a)
+            );
+        } else if (selectedCategory === "Writing") {
+            return Array.from(new Set(writingLinks.map((item) => item.date.substring(0, 4)))).sort((a, b) =>
+                b.localeCompare(a)
+            );
+        } else if (selectedCategory === "Artifact") {
+            return [];
+        }
+        return ["2025", "2024", "2023", "2022", "2021", "2020", "2019", "2018"];
+    };
 
     return (
-        <div className={styles.pageWrapper}>
-            <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.5 }}
-                className={styles.container}
-                layout
-            >
-                <div className={styles.scrollContainer}>
-                    <div className={styles.featured}>
-                        <AnimatePresence>
-                            {selectedMenuIndex === null && (
-                                <motion.div
-                                    className={styles.headerText}
-                                    initial={{ opacity: 0 }}
-                                    animate={{ opacity: 1 }}
-                                    exit={{ opacity: 0 }}
-                                >
-                                    NRU.
-                                </motion.div>
-                            )}
-                        </AnimatePresence>
-                        <div className={`${styles.backgroundContainer} ${isBlurred ? styles.blurred : ""}`}>
-                            <div className={`${styles.backgroundItem} ${styles.active}`}>
-                                <Image
-                                    src={backgroundImage}
-                                    alt="Background"
-                                    fill
-                                    style={{ objectFit: "cover" }}
-                                    priority
-                                    quality={60}
-                                />
-                            </div>
-                            {menuItems
-                                .flatMap((item) => item.subItems)
-                                .map((subItem) => (
-                                    <div
-                                        key={subItem.name}
-                                        className={`${styles.backgroundItem} ${
-                                            subItem.url === hoveredSubMenuUrl ? styles.active : ""
-                                        }`}
-                                    >
-                                        {subItem.url && (
-                                            <iframe
-                                                src={subItem.url}
-                                                title={subItem.name}
-                                                className={styles.projectIframe}
-                                                allowFullScreen
-                                            />
-                                        )}
-                                    </div>
-                                ))}
-                        </div>
-                        <div className={styles.contentWrapper}>
-                            <div className={styles.featuredColumn}>
-                                <Menu
-                                    items={menuItems}
-                                    selectedItemIndex={selectedMenuIndex}
-                                    setSelectedItemIndex={handleMenuClick}
-                                    onHover={() => {}}
-                                    onLeave={() => {}}
-                                />
-                            </div>
-                            <div className={`${styles.featuredColumn} ${styles.subMenuColumn}`}>
-                                <AnimatePresence>
-                                    {selectedMenuIndex !== null && (
-                                        <SubMenu
-                                            items={menuItems[selectedMenuIndex].subItems}
-                                            onSelect={handleSubMenuSelect}
-                                            onHover={handleSubMenuHover}
-                                            onLeave={handleSubMenuLeave}
-                                        />
-                                    )}
-                                </AnimatePresence>
-                            </div>
-                        </div>
+        <div className={styles.container}>
+            <div className={styles.topSection}>
+                <div className={styles.nameFrame}>
+                    <div className={styles.name}>Kwon Doeon</div>
+                </div>
+                <div className={styles.categoriesFrame}>
+                    <div
+                        className={`${styles.category} ${selectedCategory === "Taste" ? styles.active : ""}`}
+                        onClick={() => handleCategoryClick("Taste")}
+                    >
+                        Taste
                     </div>
-                    <div className={styles.description} ref={descriptionRef}>
-                        <div className={styles.horizontalScrollContainer}>
-                            {columns.map((column, columnIndex) => (
-                                <div key={columnIndex} className={styles.column}>
-                                    {column.map((item) => (
-                                        <Card key={item.id} item={item} />
-                                    ))}
-                                </div>
-                            ))}
-                        </div>
+                    <div
+                        className={`${styles.category} ${selectedCategory === "Writing" ? styles.active : ""}`}
+                        onClick={() => handleCategoryClick("Writing")}
+                    >
+                        Writing
                     </div>
-                    <div className={footerStyles.footer}>
-                        <div className={footerStyles.footerColumn}>
-                            <b>NRU</b> means &quot;not rushing everything at once but taking a longer, slower
-                            approach.&quot; in Korean
-                            <br />
-                            <br />
+                    <div className={styles.category}>Artifact</div>
+                </div>
+                <div className={styles.yearsFrame}>
+                    {getAvailableYears().map((year) => (
+                        <div
+                            key={year}
+                            className={`${styles.year} ${selectedYear === year ? styles.active : ""}`}
+                            onClick={() => handleYearClick(year)}
+                        >
+                            {year}
                         </div>
-                        <div className={footerStyles.footerColumn}>
-                            <a href="https://disquiet.io/@kwondoeon" target="_blank" rel="noopener noreferrer">
-                                disquiet
-                            </a>
-                            <span className={footerStyles.footerSeparator}> / </span>
-                            <a href="https://kwondoeon.substack.com/" target="_blank" rel="noopener noreferrer">
-                                substack
-                            </a>
-                            <span className={footerStyles.footerSeparator}> / </span>
-                            <a href="https://www.instagram.com/kwondoeon/" target="_blank" rel="noopener noreferrer">
-                                instagram
-                            </a>
-                        </div>
+                    ))}
+                </div>
+                <div className={styles.emptyFrame} />
+                <div className={styles.infoFrame}>
+                    <div className={styles.info}>Info</div>
+                </div>
+            </div>
+            <div className={styles.bottomSection}>
+                {renderSelectedItem()}
+                <div className={styles.contentFrame}>
+                    <div className={styles.graphIndex}>
+                        <GraphIndex />
                     </div>
                 </div>
-            </motion.div>
+            </div>
         </div>
     );
 }

@@ -48,15 +48,15 @@
     }
 
     .h1 {
-        font-size: 20px;
+        font-size: 12px;
     }
 
     .h2 {
-        font-size: 16px;
+        font-size: 12px;
     }
 
     .h3 {
-        font-size: 14px;
+        font-size: 12px;
     }
 
     .featured {
@@ -86,12 +86,150 @@
 
 /* 새로운 레이아웃 스타일 */
 .container {
-    background-color: #fff; /* Changed from #111 to #FFF */
+    width: 100%;
+    height: 100vh;
+    background-color: white;
     display: flex;
     flex-direction: column;
-    min-height: 100vh;
-    overflow-y: auto;
+    padding: 1.25rem;
+    overflow: hidden;
+}
+
+.topSection {
+    display: flex;
+    justify-content: space-between;
+    gap: 1.25rem;
+}
+
+.nameFrame,
+.categoriesFrame,
+.yearsFrame,
+.emptyFrame,
+.infoFrame {
+    flex: 1;
+    padding: 0.625rem;
+    background-color: white;
+}
+
+.name,
+.category,
+.year,
+.info {
+    font-size: 12px;
+    font-weight: normal;
+    color: black;
+}
+
+.categoriesFrame,
+.yearsFrame {
+    display: flex;
+    flex-direction: column;
+    gap: 0.625rem;
+}
+
+.bottomSection {
+    flex: 1;
+    display: flex;
+    gap: 1.25rem;
+    min-height: 0;
+    height: 100%;
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+}
+
+/* Chrome, Safari and Opera */
+.bottomSection::-webkit-scrollbar {
+    display: none;
+}
+
+.selectedItemFrame {
+    flex: 1;
+    overflow-y: scroll;
+    background-color: white;
+    height: 100%;
     position: relative;
+    scroll-snap-type: y mandatory;
+    scroll-behavior: smooth;
+    padding: 0;
+}
+
+.selectedItemContent {
+    height: 100%;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    scroll-snap-align: start;
+    scroll-snap-stop: always;
+    position: relative;
+    padding: 2rem 1rem 2rem 0;
+}
+
+.imageWrapper {
+    position: relative;
+    width: auto;
+    height: auto;
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-start;
+    margin-right: auto;
+}
+
+.mediaContent {
+    max-width: 100%;
+    max-height: calc(100vh - 4rem);
+    object-fit: contain;
+    margin: 0;
+}
+
+.itemDescription {
+    position: absolute;
+    bottom: 1rem;
+    left: 1rem;
+    right: 1rem;
+    text-align: center;
+    padding: 0.5rem;
+    background: rgba(255, 255, 255, 0.9);
+    font-size: 12px;
+    line-height: 1.5;
+}
+
+/* 스크롤 관련 스타일 */
+.selectedItemFrame {
+    scroll-snap-type: y mandatory;
+    scroll-behavior: smooth;
+}
+
+.selectedItemContent {
+    scroll-snap-align: start;
+    scroll-snap-stop: always;
+}
+
+.contentFrame {
+    background-color: white;
+    display: flex;
+    flex-direction: column;
+    gap: 0.625rem;
+    padding: 0;
+    flex: 1;
+    height: 100%;
+}
+
+.description,
+.graphIndex {
+    width: 100%;
+    height: 100%;
+    background: white;
+    border-radius: 4px;
+    overflow: hidden;
+    position: relative;
+    flex: 1;
+}
+
+.infoFrame {
+    display: flex;
+    justify-content: flex-end;
 }
 
 .featured {
@@ -178,7 +316,7 @@
 }
 
 .card h3 {
-    font-size: 14px;
+    font-size: 12px;
     margin: 12px 12px 6px;
     color: #151515;
     font-weight: 300; /* Changed from normal to 200 */
@@ -457,4 +595,158 @@
         height: auto;
         justify-content: flex-start;
     }
+}
+
+.category {
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.category:hover {
+    color: #666;
+}
+
+.category.active {
+    color: #000;
+    font-weight: 500;
+}
+
+/* 스크롤바 숨기기 */
+.selectedItemFrame {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+.selectedItemFrame::-webkit-scrollbar {
+    display: none;
+}
+
+/* 기존 스타일은 유지하고 모바일 관련 스타일만 추가/수정합니다 */
+
+@media (max-width: 768px) {
+    .container {
+        padding: 0.75rem;
+    }
+
+    .topSection {
+        flex-wrap: wrap;
+        gap: 0.5rem;
+    }
+
+    .nameFrame,
+    .infoFrame {
+        flex: 0 0 auto;
+        width: calc(50% - 0.25rem);
+        min-width: auto;
+        order: 0;
+    }
+
+    .categoriesFrame,
+    .yearsFrame {
+        flex: 0 0 auto;
+        width: calc(50% - 0.25rem);
+        min-width: auto;
+        order: 1;
+    }
+
+    .emptyFrame {
+        display: none;
+        order: 2;
+    }
+
+    .infoFrame {
+        justify-content: flex-start;
+        display: flex;
+        flex-direction: column;
+        gap: 0.625rem;
+    }
+
+    .info {
+        text-align: left;
+    }
+
+    .bottomSection {
+        flex-direction: column;
+        position: relative;
+        height: calc(100vh - 120px);
+    }
+
+    .selectedItemFrame {
+        flex: 1;
+        width: 100%;
+        height: auto;
+        min-height: 0;
+        padding: 0;
+    }
+
+    .selectedItemContent {
+        min-height: fit-content;
+        padding: 1rem 0.5rem 1rem 0;
+    }
+
+    .imageWrapper {
+        width: 100%;
+        height: auto;
+    }
+
+    .mediaContent {
+        max-height: calc(100vh - 200px);
+    }
+
+    .contentFrame {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: white;
+        padding: 0;
+        box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
+    }
+
+    .graphIndex {
+        display: none;
+    }
+
+    .description {
+        width: 100%;
+        height: auto;
+        min-height: 60px;
+    }
+
+    .infoFrame {
+        flex: 0 0 auto;
+        width: calc(50% - 0.25rem);
+        min-width: auto;
+        justify-content: flex-start;
+        display: flex;
+        flex-direction: column;
+        gap: 0.625rem;
+    }
+
+    .info {
+        text-align: left;
+    }
+}
+
+/* Image 컴포넌트 스타일 수정 */
+@media (max-width: 768px) {
+    .selectedItemContent img {
+        max-width: 100% !important;
+        height: auto !important;
+        width: auto !important;
+    }
+}
+
+.year {
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.year:hover {
+    color: #666;
+}
+
+.year.active {
+    color: #000;
+    font-weight: 500;
 }
