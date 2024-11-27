@@ -74,16 +74,16 @@ interface ThreeObject {
     __data?: GraphNode;
 }
 
-// ForceGraph3D 타입 정의 개선
+// ForceGraph3D 타입 정의 수정
 interface ForceGraphMethods {
     graphData: (data: { nodes: GraphNode[]; links: GraphLink[] }) => ForceGraphMethods;
-    nodeLabel: (node: GraphNode) => string;
-    nodeVisibility: (node: GraphNode) => boolean;
-    linkVisibility: (link: LinkObject) => boolean;
-    nodeThreeObject: (node: GraphNode) => THREE.Mesh;
+    nodeLabel: (callback: (node: GraphNode) => string) => ForceGraphMethods;
+    nodeVisibility: (callback: (node: GraphNode) => boolean) => ForceGraphMethods;
+    linkVisibility: (callback: (link: LinkObject) => boolean) => ForceGraphMethods;
+    nodeThreeObject: (callback: (node: GraphNode) => THREE.Mesh) => ForceGraphMethods;
     onNodeClick: (callback: (node: GraphNode) => void) => ForceGraphMethods;
     onNodeHover: (callback: (node: GraphNode | null, prev: GraphNode | null) => void) => ForceGraphMethods;
-    linkColor: (link: LinkObject) => string;
+    linkColor: (callback: (link: LinkObject) => string) => ForceGraphMethods;
     backgroundColor: (color: string) => ForceGraphMethods;
     cameraPosition: (position: { x: number; y: number; z: number }) => ForceGraphMethods;
     width: (width: number) => ForceGraphMethods;
@@ -434,9 +434,9 @@ const GraphIndex = ({ selectedCategory, selectedYear, selectedItem }: Props) => 
         graphDataRef.current = graphData;
 
         Graph.graphData(graphData)
-            .linkColor(() => "#3C3C3C")
-            .nodeLabel(() => "")
-            .nodeVisibility(shouldNodeBeVisible)
+            .linkColor((link: LinkObject) => "#3C3C3C")
+            .nodeLabel((node: GraphNode) => "")
+            .nodeVisibility((node: GraphNode) => shouldNodeBeVisible(node))
             .linkVisibility((link: LinkObject): boolean => {
                 const sourceNode = graphData.nodes.find((n) => n.id === link.source);
                 const targetNode = graphData.nodes.find((n) => n.id === link.target);
