@@ -5,17 +5,30 @@ import Image from "next/image";
 import { contentItems } from "@/data/content";
 import { writingLinks } from "@/data/writings";
 import { projects } from "@/data/projects";
-import { OctahedronGeometry } from "three";
 import Modal from "./Modal";
 
-// Define types for the graph structure
+// 타입 정의 개선
+interface NodeData {
+    id: string;
+    title?: string;
+    imageUrl?: string;
+    date?: string;
+    year?: string;
+    category?: string;
+    description?: {
+        en?: string;
+        ko?: string;
+    };
+    url?: string;
+}
+
 interface GraphNode {
     id: string;
     name: string;
     group: string;
     level: "root" | "category" | "item" | "top";
     val: number;
-    data?: any;
+    data?: NodeData;
 }
 
 interface GraphLink {
@@ -24,10 +37,10 @@ interface GraphLink {
 }
 
 interface Props {
-    onItemSelect: (item: any) => void;
-    selectedItem?: any;
     selectedCategory?: string | null;
     selectedYear?: string | null;
+    selectedItem?: NodeData | null;
+    onItemSelect: (item: NodeData) => void;
 }
 
 interface TooltipContent {
@@ -80,6 +93,9 @@ const GraphIndex = ({ onItemSelect, selectedItem, selectedCategory, selectedYear
 
     // 그래프 데이터를 저장할 ref 추가
     const graphDataRef = useRef<{ nodes: GraphNode[]; links: GraphLink[] }>({ nodes: [], links: [] });
+
+    // ForceGraph 인스턴스를 저장할 ref 추가
+    const graphInstanceRef = useRef<any>(null);
 
     // 마우스 위치 추적을 위한 이벤트 리스너
     useEffect(() => {
@@ -247,7 +263,7 @@ const GraphIndex = ({ onItemSelect, selectedItem, selectedCategory, selectedYear
     };
 
     // 노드의 선택 상태를 확인하는 함수를 단순화
-    const isNodeSelected = (node: any) => {
+    const isNodeSelected = (node: GraphNode): boolean => {
         // About me 노드는 메뉴나 연도가 선택된 경우에만 강조
         if (node.level === "top") {
             return selectedCategory || selectedYear;
@@ -308,7 +324,7 @@ const GraphIndex = ({ onItemSelect, selectedItem, selectedCategory, selectedYear
     };
 
     // 노드가 현재 선택 상태에서 보여져야 하는지 확인하는 함수
-    const shouldNodeBeVisible = (node: any) => {
+    const shouldNodeBeVisible = (node: GraphNode): boolean => {
         // 아무것도 선택되지 않았다면 모든 노드 표시
         if (!selectedCategory && !selectedYear) {
             return true;
@@ -340,14 +356,52 @@ const GraphIndex = ({ onItemSelect, selectedItem, selectedCategory, selectedYear
         return isConnectedToSelected;
     };
 
+    // 초기 설정을 위한 useEffect
     useEffect(() => {
-        if (!containerRef.current) return;
+        const currentContainer = containerRef.current;
+        if (!currentContainer) return;
 
+        // 이전 인스턴스 정리
+        if (graphInstanceRef.current) {
+            graphInstanceRef.current._destructor();
+            graphInstanceRef.current = null;
+        }
+
+        // 새 인스턴스 생성은 한 번만
+        if (!graphInstanceRef.current) {
+            const graphData = createGraphData();
+            graphDataRef.current = graphData;
+
+            const Graph = ForceGraph3D()(currentContainer);
+            graphInstanceRef.current = Graph;
+            graphRef.current = Graph;
+
+            // 기본 설정
+            Graph.backgroundColor("#EFEFEF").cameraPosition({ x: 0, y: 0, z: 600 });
+
+            // 씬 설정
+            const scene = Graph.scene();
+            scene.add(new THREE.AmbientLight(0xbbbbbb));
+            scene.add(new THREE.DirectionalLight(0xffffff, 0.6));
+        }
+
+        return () => {
+            if (graphInstanceRef.current) {
+                graphInstanceRef.current._destructor();
+                graphInstanceRef.current = null;
+            }
+        };
+    }, []); // 빈 의존성 배열로 초기 설정은 한 번만 실행
+
+    // 데이터 업데이트를 위한 useEffect
+    useEffect(() => {
+        if (!graphInstanceRef.current) return;
+
+        const Graph = graphInstanceRef.current;
         const graphData = createGraphData();
         graphDataRef.current = graphData;
 
-        const Graph = ForceGraph3D()(containerRef.current)
-            .graphData(graphData)
+        Graph.graphData(graphData)
             .linkColor(() => "#3C3C3C")
             .nodeLabel(() => "")
             .nodeVisibility((node: GraphNode) => shouldNodeBeVisible(node))
@@ -548,18 +602,9 @@ const GraphIndex = ({ onItemSelect, selectedItem, selectedCategory, selectedYear
                 } else {
                     setTooltip((prev) => ({ ...prev, show: false }));
                 }
-            })
-            .cameraPosition({ x: 0, y: 0, z: 600 });
+            });
 
-        graphRef.current = Graph;
-
-        // Set up scene
-        const scene = Graph.scene();
-        scene.add(new THREE.AmbientLight(0xbbbbbb));
-        scene.add(new THREE.DirectionalLight(0xffffff, 0.6));
-        Graph.backgroundColor("#EFEFEF");
-
-        // Handle window resize
+        // 리사이즈 핸들러
         const handleResize = () => {
             if (containerRef.current) {
                 Graph.width(containerRef.current.clientWidth).height(containerRef.current.clientHeight);
@@ -567,31 +612,12 @@ const GraphIndex = ({ onItemSelect, selectedItem, selectedCategory, selectedYear
         };
 
         window.addEventListener("resize", handleResize);
-
-        // 선택 상태가 변경될 때마다 그래프 업데이트
-        const updateVisibility = () => {
-            const { nodes, links } = Graph.graphData();
-            Graph.graphData({
-                nodes: nodes.map((node) => ({
-                    ...node,
-                    visible: shouldNodeBeVisible(node),
-                })),
-                links: links.map((link) => ({
-                    ...link,
-                    visible: shouldNodeBeVisible(link.source) && shouldNodeBeVisible(link.target),
-                })),
-            });
-        };
-
-        updateVisibility();
+        handleResize();
 
         return () => {
             window.removeEventListener("resize", handleResize);
-            if (containerRef.current) {
-                containerRef.current.innerHTML = "";
-            }
         };
-    }, [selectedCategory, selectedYear]);
+    }, [selectedCategory, selectedYear, selectedItem]); // 필요한 의존성만 포함
 
     return (
         <div
