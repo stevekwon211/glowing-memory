@@ -507,16 +507,16 @@ const GraphIndex = ({ selectedCategory, selectedYear, selectedItem }: Props) => 
                 return new THREE.Mesh(geometry, material);
             })
             .onNodeClick((node: GraphNode) => {
-                if (node.level === "item") {
+                if (node.level === "item" && node.data) {
                     switch (node.group) {
                         case "taste":
                             setModalContent({
                                 isOpen: true,
                                 content: {
                                     type: "content",
-                                    title: node.data.title,
-                                    imageUrl: node.data.imageUrl,
-                                    date: node.data.date,
+                                    title: node.data?.title ?? "",
+                                    imageUrl: node.data?.imageUrl,
+                                    date: node.data?.date,
                                 },
                             });
                             break;
@@ -525,9 +525,9 @@ const GraphIndex = ({ selectedCategory, selectedYear, selectedItem }: Props) => 
                                 isOpen: true,
                                 content: {
                                     type: "writing",
-                                    title: node.data.title,
-                                    url: node.data.url,
-                                    date: node.data.date,
+                                    title: node.data?.title ?? "",
+                                    url: node.data?.url,
+                                    date: node.data?.date,
                                 },
                             });
                             break;
@@ -536,10 +536,10 @@ const GraphIndex = ({ selectedCategory, selectedYear, selectedItem }: Props) => 
                                 isOpen: true,
                                 content: {
                                     type: "project",
-                                    title: node.data.title,
-                                    imageUrl: node.data.imageUrl,
-                                    description: node.data.description,
-                                    year: node.data.year,
+                                    title: node.data?.title ?? "",
+                                    imageUrl: node.data?.imageUrl,
+                                    description: node.data?.description,
+                                    year: node.data?.year,
                                 },
                             });
                             break;
