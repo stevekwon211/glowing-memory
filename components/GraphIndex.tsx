@@ -74,28 +74,26 @@ interface ThreeObject {
     __data?: GraphNode;
 }
 
-// ForceGraph3D 타입 정의 수정
-type ForceGraphInstance = ReturnType<typeof ForceGraph3D>;
-
+// ForceGraph3D 타입 정의 개선
 interface ForceGraphMethods {
-    graphData: (data: { nodes: GraphNode[]; links: GraphLink[] }) => any;
-    nodeLabel: (node: any) => string;
-    nodeVisibility: (node: any) => boolean;
-    linkVisibility: (link: any) => boolean;
-    nodeThreeObject: (node: any) => THREE.Mesh;
-    onNodeClick: (callback: (node: any) => void) => any;
-    onNodeHover: (callback: (node: any, prev: any) => void) => any;
-    linkColor: (link: any) => string;
-    backgroundColor: (color: string) => any;
-    cameraPosition: (position: { x: number; y: number; z: number }) => any;
-    width: (width: number) => any;
-    height: (height: number) => any;
+    graphData: (data: { nodes: GraphNode[]; links: GraphLink[] }) => ForceGraphMethods;
+    nodeLabel: (node: GraphNode) => string;
+    nodeVisibility: (node: GraphNode) => boolean;
+    linkVisibility: (link: LinkObject) => boolean;
+    nodeThreeObject: (node: GraphNode) => THREE.Mesh;
+    onNodeClick: (callback: (node: GraphNode) => void) => ForceGraphMethods;
+    onNodeHover: (callback: (node: GraphNode | null, prev: GraphNode | null) => void) => ForceGraphMethods;
+    linkColor: (link: LinkObject) => string;
+    backgroundColor: (color: string) => ForceGraphMethods;
+    cameraPosition: (position: { x: number; y: number; z: number }) => ForceGraphMethods;
+    width: (width: number) => ForceGraphMethods;
+    height: (height: number) => ForceGraphMethods;
     scene: () => THREE.Scene;
     _destructor: () => void;
 }
 
 // GraphRef 타입 수정
-interface GraphRef extends ForceGraphMethods {
+interface GraphRef {
     current: ForceGraphMethods | null;
 }
 
