@@ -194,9 +194,9 @@ const GraphIndex = ({ selectedCategory, selectedYear, selectedItem }: Props) => 
 
         // Add root nodes and link them to 'About me'
         const rootNodes = [
-            { id: "taste", name: "Taste", group: "taste", level: "root" as const, val: 35 },
-            { id: "writing", name: "Writing", group: "writing", level: "root" as const, val: 35 },
-            { id: "artifact", name: "Artifact", group: "artifact", level: "root" as const, val: 35 },
+            { id: "taste", name: "Taste", group: "taste", level: "root" as const, val: 50 },
+            { id: "writing", name: "Writing", group: "writing", level: "root" as const, val: 50 },
+            { id: "artifact", name: "Artifact", group: "artifact", level: "root" as const, val: 50 },
         ];
         nodes.push(...rootNodes);
         rootNodes.forEach((node) => {
@@ -212,7 +212,7 @@ const GraphIndex = ({ selectedCategory, selectedYear, selectedItem }: Props) => 
                 name: category,
                 group: "taste",
                 level: "category",
-                val: 30,
+                val: 40,
             });
             links.push({ source: "taste", target: categoryId });
 
@@ -225,7 +225,7 @@ const GraphIndex = ({ selectedCategory, selectedYear, selectedItem }: Props) => 
                         name: item.title || `Content ${item.id}`,
                         group: "taste",
                         level: "item",
-                        val: 35,
+                        val: 30,
                         data: {
                             ...item,
                             description: item.description ? { ko: item.description } : undefined,
@@ -244,7 +244,7 @@ const GraphIndex = ({ selectedCategory, selectedYear, selectedItem }: Props) => 
                 name: category,
                 group: "writing",
                 level: "category",
-                val: 30,
+                val: 40,
             });
             links.push({ source: "writing", target: categoryId });
 
@@ -257,7 +257,7 @@ const GraphIndex = ({ selectedCategory, selectedYear, selectedItem }: Props) => 
                         name: item.title,
                         group: "writing",
                         level: "item",
-                        val: 35,
+                        val: 30,
                         data: item,
                     });
                     links.push({ source: categoryId, target: `writing-${item.id}` });
@@ -273,7 +273,7 @@ const GraphIndex = ({ selectedCategory, selectedYear, selectedItem }: Props) => 
                 name: category,
                 group: "artifact",
                 level: "category",
-                val: 30,
+                val: 40,
             });
             links.push({ source: "artifact", target: categoryId });
 
@@ -286,7 +286,7 @@ const GraphIndex = ({ selectedCategory, selectedYear, selectedItem }: Props) => 
                         name: item.title,
                         group: "artifact",
                         level: "item",
-                        val: 35,
+                        val: 30,
                         data: {
                             ...item,
                             id: item.id.toString(),
@@ -538,7 +538,10 @@ const GraphIndex = ({ selectedCategory, selectedYear, selectedItem }: Props) => 
                                     type: "project",
                                     title: node.data?.title ?? "",
                                     imageUrl: node.data?.imageUrl,
-                                    description: node.data?.description,
+                                    description:
+                                        typeof node.data?.description === "string"
+                                            ? { ko: node.data.description }
+                                            : node.data?.description,
                                     year: node.data?.year,
                                 },
                             });
