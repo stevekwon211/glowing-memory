@@ -271,7 +271,10 @@ const GraphIndex = ({ selectedCategory, selectedYear, selectedItem }: Props) => 
                         group: "artifact",
                         level: "item",
                         val: 20,
-                        data: item,
+                        data: {
+                            ...item,
+                            id: item.id.toString(),
+                        },
                     });
                     links.push({ source: categoryId, target: `project-${item.id}` });
                 });
