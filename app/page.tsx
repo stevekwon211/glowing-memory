@@ -3,8 +3,6 @@
 import { useState, useEffect, useRef } from "react";
 import styles from "./page.module.css";
 import { contentItems } from "../data/content";
-import Image from "next/image";
-import WritingList from "../components/WritingList";
 import { writingLinks } from "../data/writings";
 import GraphIndex from "../components/GraphIndex";
 

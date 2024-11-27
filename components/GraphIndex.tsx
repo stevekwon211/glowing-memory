@@ -359,7 +359,7 @@ const GraphIndex = ({ selectedCategory, selectedYear, selectedItem }: Props) => 
 
             return isConnectedToSelected;
         },
-        [isNodeSelected]
+        [isNodeSelected, selectedCategory, selectedYear]
     );
 
     // 초기 설정을 위한 useEffect
