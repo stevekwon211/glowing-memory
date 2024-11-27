@@ -77,6 +77,9 @@ interface GraphRef {
     _destructor: () => void;
 }
 
+// ForceGraph3D 타입 정의 추가
+type ForceGraphInstance = ReturnType<typeof ForceGraph3D>;
+
 const GraphIndex = ({ selectedCategory, selectedYear, selectedItem }: Props) => {
     const containerRef = useRef<HTMLDivElement>(null);
     const graphRef = useRef<GraphRef>(null);
@@ -104,8 +107,8 @@ const GraphIndex = ({ selectedCategory, selectedYear, selectedItem }: Props) => 
     // 그래프 데이터를 저장할 ref 추가
     const graphDataRef = useRef<{ nodes: GraphNode[]; links: GraphLink[] }>({ nodes: [], links: [] });
 
-    // ForceGraph 인스턴스를 저장할 ref 추가
-    const graphInstanceRef = useRef<ForceGraph3D | null>(null);
+    // ForceGraph 인스턴스를 저장할 ref 수정
+    const graphInstanceRef = useRef<ForceGraphInstance | null>(null);
 
     // 마우스 위치 추적을 위한 이벤트 리스너
     useEffect(() => {
