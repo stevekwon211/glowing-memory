@@ -42,6 +42,18 @@ interface TooltipContent {
     type: "content" | "writing" | "project" | "root" | "category";
 }
 
+// 타입 정의 추가
+interface LinkObject {
+    source: string;
+    target: string;
+    visible?: boolean;
+}
+
+interface NodeObject {
+    id: string;
+    visible?: boolean;
+}
+
 const GraphIndex = ({ onItemSelect, selectedItem, selectedCategory, selectedYear }: Props) => {
     const containerRef = useRef<HTMLDivElement>(null);
     const graphRef = useRef<any>(null);
@@ -338,13 +350,13 @@ const GraphIndex = ({ onItemSelect, selectedItem, selectedCategory, selectedYear
             .graphData(graphData)
             .linkColor(() => "#3C3C3C")
             .nodeLabel(() => "")
-            // 노드 가시성 제어
-            .nodeVisibility((node: any) => shouldNodeBeVisible(node))
-            // 링크 가시성 제어
-            .linkVisibility((link: any) => {
+            .nodeVisibility((node: GraphNode) => shouldNodeBeVisible(node))
+            .linkVisibility((link: LinkObject): boolean => {
                 const sourceNode = graphData.nodes.find((n) => n.id === link.source);
                 const targetNode = graphData.nodes.find((n) => n.id === link.target);
-                return sourceNode && targetNode && shouldNodeBeVisible(sourceNode) && shouldNodeBeVisible(targetNode);
+                return Boolean(
+                    sourceNode && targetNode && shouldNodeBeVisible(sourceNode) && shouldNodeBeVisible(targetNode)
+                );
             })
             .nodeThreeObject((node: any) => {
                 let geometry;
