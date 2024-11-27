@@ -1,16 +1,20 @@
 import "./globals.css";
-import { Inter } from "next/font/google";
+import { Manrope } from "next/font/google";
 
-const inter = Inter({ subsets: ["latin"] });
+const manrope = Manrope({
+    subsets: ["latin"],
+    weight: ["400", "500", "600", "700"],
+    display: "swap",
+});
 
 export const metadata = {
     title: "Kwon Doeon",
-    description: "Portfolio",
+    description: "Kwon Doeon's portfolio",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
     return (
-        <html lang="en" className={inter.className}>
+        <html lang="en" className={manrope.className}>
             <body>{children}</body>
         </html>
     );

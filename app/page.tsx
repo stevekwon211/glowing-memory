@@ -3,19 +3,23 @@
 import { useState, useEffect, useRef } from "react";
 import styles from "./page.module.css";
 import { contentItems } from "../data/content";
-import Image from "next/image";
-import WritingList from "../components/WritingList";
 import { writingLinks } from "../data/writings";
-import GraphIndex from "../components/GraphIndex";
+import dynamic from "next/dynamic";
+
+// GraphIndex를 클라이언트 사이드에서만 로드
+const GraphIndex = dynamic(() => import("../components/GraphIndex"), {
+    ssr: false,
+    loading: () => <div style={{ width: "100%", height: "100%", background: "#EFEFEF", minHeight: "600px" }}></div>,
+});
 
 export default function Home() {
-    const [selectedCategory, setSelectedCategory] = useState<string | null>("Taste");
+    const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
     const [selectedYear, setSelectedYear] = useState<string | null>(null);
     const [currentContentIndex, setCurrentContentIndex] = useState(0);
     const selectedItemFrameRef = useRef<HTMLDivElement>(null);
 
     const handleCategoryClick = (category: string) => {
-        if (category === "Taste" || category === "Writing") {
+        if (category === "Taste" || category === "Writing" || category === "Artifact") {
             setSelectedCategory(category);
             setSelectedYear(null);
             setCurrentContentIndex(0);
@@ -57,56 +61,7 @@ export default function Home() {
         return () => frameElement.removeEventListener("scroll", handleScroll);
     }, [selectedCategory, selectedYear, currentContentIndex, filteredItems.length]);
 
-    const renderSelectedItem = () => {
-        if (selectedCategory === "Taste" || (!selectedCategory && selectedYear)) {
-            return (
-                <div className={styles.selectedItemFrame} ref={selectedItemFrameRef}>
-                    {filteredItems.map((item, index) => (
-                        <div key={index} className={styles.selectedItemContent}>
-                            <div className={styles.imageWrapper}>
-                                {item.type === "video" && item.videoUrl ? (
-                                    <video className={styles.mediaContent} autoPlay loop muted playsInline>
-                                        <source src={item.videoUrl} type="video/mp4" />
-                                        Your browser does not support the video tag.
-                                    </video>
-                                ) : (
-                                    <Image
-                                        src={item.imageUrl}
-                                        alt={item.description}
-                                        width={0}
-                                        height={0}
-                                        sizes="(max-width: 768px) 100vw, 50vw"
-                                        style={{
-                                            width: "auto",
-                                            height: "auto",
-                                            maxWidth: "100%",
-                                            maxHeight: "calc(100vh - 4rem)",
-                                            objectFit: "contain",
-                                            margin: 0,
-                                        }}
-                                        quality={75}
-                                    />
-                                )}
-                            </div>
-                            <p className={styles.itemDescription}>{item.description}</p>
-                        </div>
-                    ))}
-                </div>
-            );
-        } else if (selectedCategory === "Writing") {
-            const filteredWritings = writingLinks.filter((item) =>
-                selectedYear ? item.date.startsWith(selectedYear) : true
-            );
-            return (
-                <div className={styles.selectedItemFrame}>
-                    <WritingList items={filteredWritings} />
-                </div>
-            );
-        } else if (selectedCategory === "Artifact") {
-            return null;
-        }
-        return null;
-    };
+    // const renderSelectedItem = () => { ... };
 
     const getAvailableYears = () => {
         if (selectedCategory === "Taste") {
@@ -125,7 +80,15 @@ export default function Home() {
 
     return (
         <div className={styles.container}>
-            <div className={styles.topSection}>
+            <div
+                className={styles.topSection}
+                style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    width: "fit-content",
+                    height: "100%",
+                }}
+            >
                 <div className={styles.nameFrame}>
                     <div className={styles.name}>Kwon Doeon</div>
                 </div>
@@ -142,7 +105,12 @@ export default function Home() {
                     >
                         Writing
                     </div>
-                    <div className={styles.category}>Artifact</div>
+                    <div
+                        className={`${styles.category} ${selectedCategory === "Artifact" ? styles.active : ""}`}
+                        onClick={() => handleCategoryClick("Artifact")}
+                    >
+                        Artifact
+                    </div>
                 </div>
                 <div className={styles.yearsFrame}>
                     {getAvailableYears().map((year) => (
@@ -155,16 +123,28 @@ export default function Home() {
                         </div>
                     ))}
                 </div>
-                <div className={styles.emptyFrame} />
-                <div className={styles.infoFrame}>
+                <div
+                    className={styles.infoFrame}
+                    style={{
+                        height: "100%",
+                        display: "flex",
+                        flexDirection: "column",
+                        justifyContent: "flex-end",
+                    }}
+                >
                     <div className={styles.info}>Info</div>
                 </div>
             </div>
             <div className={styles.bottomSection}>
-                {renderSelectedItem()}
+                {/* {renderSelectedItem()} */}
                 <div className={styles.contentFrame}>
                     <div className={styles.graphIndex}>
-                        <GraphIndex />
+                        <GraphIndex
+                            onItemSelect={() => {}}
+                            selectedItem={null}
+                            selectedCategory={selectedCategory}
+                            selectedYear={selectedYear}
+                        />
                     </div>
                 </div>
             </div>
