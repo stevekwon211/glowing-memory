@@ -54,6 +54,7 @@ interface TooltipContent {
         en?: string;
         ko?: string;
     };
+    url?: string;
     type: "content" | "writing" | "project" | "root" | "category";
 }
 
@@ -512,7 +513,7 @@ const GraphIndex = ({ selectedCategory, selectedYear, selectedItem }: Props) => 
                             setModalContent({
                                 isOpen: true,
                                 content: {
-                                    type: "taste",
+                                    type: "content",
                                     title: node.data.title,
                                     imageUrl: node.data.imageUrl,
                                     date: node.data.date,
@@ -534,7 +535,7 @@ const GraphIndex = ({ selectedCategory, selectedYear, selectedItem }: Props) => 
                             setModalContent({
                                 isOpen: true,
                                 content: {
-                                    type: "artifact",
+                                    type: "project",
                                     title: node.data.title,
                                     imageUrl: node.data.imageUrl,
                                     description: node.data.description,
