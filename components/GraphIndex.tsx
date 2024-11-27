@@ -188,14 +188,14 @@ const GraphIndex = ({ selectedCategory, selectedYear, selectedItem }: Props) => 
             name: "About me",
             group: "root",
             level: "top",
-            val: 100,
+            val: 75,
         });
 
         // Add root nodes and link them to 'About me'
         const rootNodes = [
-            { id: "taste", name: "Taste", group: "taste", level: "root" as const, val: 50 },
-            { id: "writing", name: "Writing", group: "writing", level: "root" as const, val: 50 },
-            { id: "artifact", name: "Artifact", group: "artifact", level: "root" as const, val: 50 },
+            { id: "taste", name: "Taste", group: "taste", level: "root" as const, val: 35 },
+            { id: "writing", name: "Writing", group: "writing", level: "root" as const, val: 35 },
+            { id: "artifact", name: "Artifact", group: "artifact", level: "root" as const, val: 35 },
         ];
         nodes.push(...rootNodes);
         rootNodes.forEach((node) => {
@@ -224,7 +224,7 @@ const GraphIndex = ({ selectedCategory, selectedYear, selectedItem }: Props) => 
                         name: item.title || `Content ${item.id}`,
                         group: "taste",
                         level: "item",
-                        val: 20,
+                        val: 35,
                         data: {
                             ...item,
                             description: item.description ? { ko: item.description } : undefined,
@@ -256,7 +256,7 @@ const GraphIndex = ({ selectedCategory, selectedYear, selectedItem }: Props) => 
                         name: item.title,
                         group: "writing",
                         level: "item",
-                        val: 20,
+                        val: 35,
                         data: item,
                     });
                     links.push({ source: categoryId, target: `writing-${item.id}` });
@@ -285,7 +285,7 @@ const GraphIndex = ({ selectedCategory, selectedYear, selectedItem }: Props) => 
                         name: item.title,
                         group: "artifact",
                         level: "item",
-                        val: 20,
+                        val: 35,
                         data: {
                             ...item,
                             id: item.id.toString(),
@@ -434,8 +434,8 @@ const GraphIndex = ({ selectedCategory, selectedYear, selectedItem }: Props) => 
         graphDataRef.current = graphData;
 
         Graph.graphData(graphData)
-            .linkColor((link: LinkObject) => "#3C3C3C")
-            .nodeLabel((node: GraphNode) => "")
+            .linkColor((_link: LinkObject) => "#3C3C3C")
+            .nodeLabel((_node: GraphNode) => "")
             .nodeVisibility((node: GraphNode) => shouldNodeBeVisible(node))
             .linkVisibility((link: LinkObject): boolean => {
                 const sourceNode = graphData.nodes.find((n) => n.id === link.source);
