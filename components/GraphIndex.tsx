@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
 import * as THREE from "three";
 import ForceGraph3D from "3d-force-graph";
 import Image from "next/image";
@@ -40,7 +40,7 @@ interface Props {
     selectedCategory?: string | null;
     selectedYear?: string | null;
     selectedItem?: NodeData | null;
-    onItemSelect: (item: NodeData) => void;
+    onItemSelect?: (item: NodeData) => void;
 }
 
 interface TooltipContent {
@@ -62,16 +62,21 @@ interface LinkObject {
     visible?: boolean;
 }
 
-interface NodeObject {
-    id: string;
-    visible?: boolean;
+interface ThreeMesh extends THREE.Mesh {
+    __data?: GraphNode;
 }
 
-const GraphIndex = ({ onItemSelect, selectedItem, selectedCategory, selectedYear }: Props) => {
+interface ThreeObject {
+    type: string;
+    material: THREE.Material;
+    __data?: GraphNode;
+}
+
+const GraphIndex = ({ selectedCategory, selectedYear, selectedItem }: Props) => {
     const containerRef = useRef<HTMLDivElement>(null);
     const graphRef = useRef<any>(null);
     const hoveredNodeRef = useRef<GraphNode | null>(null);
-    const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+    const mousePositionRef = useRef({ x: 0, y: 0 });
     const [tooltip, setTooltip] = useState<{
         show: boolean;
         content: TooltipContent | null;
@@ -95,17 +100,17 @@ const GraphIndex = ({ onItemSelect, selectedItem, selectedCategory, selectedYear
     const graphDataRef = useRef<{ nodes: GraphNode[]; links: GraphLink[] }>({ nodes: [], links: [] });
 
     // ForceGraph 인스턴스를 저장할 ref 추가
-    const graphInstanceRef = useRef<any>(null);
+    const graphInstanceRef = useRef<ForceGraph3D | null>(null);
 
     // 마우스 위치 추적을 위한 이벤트 리스너
     useEffect(() => {
         const handleMouseMove = (event: MouseEvent) => {
             if (containerRef.current) {
                 const rect = containerRef.current.getBoundingClientRect();
-                setMousePosition({
+                mousePositionRef.current = {
                     x: event.clientX - rect.left,
                     y: event.clientY - rect.top,
-                });
+                };
             }
         };
 
@@ -262,99 +267,95 @@ const GraphIndex = ({ onItemSelect, selectedItem, selectedCategory, selectedYear
         return { nodes, links };
     };
 
-    // 노드의 선택 상태를 확인하는 함수를 단순화
-    const isNodeSelected = (node: GraphNode): boolean => {
-        // About me 노드는 메뉴나 연도가 선택된 경우에만 강조
-        if (node.level === "top") {
-            return selectedCategory || selectedYear;
-        }
-
-        const belongsToSelectedCategory = selectedCategory?.toLowerCase() === node.group?.toLowerCase();
-
-        // 연도만 선택된 경우
-        if (!selectedCategory && selectedYear) {
-            if (node.level === "item") {
-                const nodeYear = node.data?.date?.substring(0, 4) || node.data?.year;
-                return nodeYear === selectedYear;
+    // 노드의 선택 상태를 확인하는 함수를 useCallback으로 감싸기
+    const isNodeSelected = useCallback(
+        (node: GraphNode): boolean => {
+            if (node.level === "top") {
+                return Boolean(selectedCategory || selectedYear);
             }
-            // 카테고리나 메인 노드의 경우, 하위 아이템 중 선택된 연도와 일치하는 것이 있는지 확인
-            return graphDataRef.current.nodes.some((n: any) => {
-                if (n.level === "item" && n.group === node.group) {
-                    const itemYear = n.data?.date?.substring(0, 4) || n.data?.year;
-                    return itemYear === selectedYear;
+
+            const belongsToSelectedCategory = selectedCategory?.toLowerCase() === node.group?.toLowerCase();
+
+            if (!selectedCategory && selectedYear) {
+                if (node.level === "item") {
+                    const nodeYear = node.data?.date?.substring(0, 4) || node.data?.year;
+                    return nodeYear === selectedYear;
+                }
+                return graphDataRef.current.nodes.some((n) => {
+                    if (n.level === "item" && n.group === node.group) {
+                        const itemYear = n.data?.date?.substring(0, 4) || n.data?.year;
+                        return itemYear === selectedYear;
+                    }
+                    return false;
+                });
+            }
+
+            if (selectedCategory && !selectedYear) {
+                return belongsToSelectedCategory;
+            }
+
+            if (selectedCategory && selectedYear) {
+                if (node.level === "item") {
+                    const nodeYear = node.data?.date?.substring(0, 4) || node.data?.year;
+                    return belongsToSelectedCategory && nodeYear === selectedYear;
+                }
+                if (node.level === "category") {
+                    return (
+                        belongsToSelectedCategory &&
+                        graphDataRef.current.nodes.some((n) => {
+                            if (n.level === "item") {
+                                const categoryId = `${node.group}-category-${node.name}`;
+                                const isLinked = graphDataRef.current.links.some(
+                                    (l) => l.source === categoryId && l.target === n.id
+                                );
+                                if (isLinked) {
+                                    const itemYear = n.data?.date?.substring(0, 4) || n.data?.year;
+                                    return itemYear === selectedYear;
+                                }
+                            }
+                            return false;
+                        })
+                    );
+                }
+                return belongsToSelectedCategory;
+            }
+
+            return false;
+        },
+        [selectedCategory, selectedYear]
+    );
+
+    // 노드 가시성 확인 함수를 useCallback으로 감싸기
+    const shouldNodeBeVisible = useCallback(
+        (node: GraphNode): boolean => {
+            if (!selectedCategory && !selectedYear) {
+                return true;
+            }
+
+            if (node.level === "top") {
+                return true;
+            }
+
+            const isSelected = isNodeSelected(node);
+
+            if (isSelected) {
+                return true;
+            }
+
+            const links = graphDataRef.current.links;
+            const isConnectedToSelected = links.some((link) => {
+                const otherNode = link.source === node.id ? link.target : link.source === node.id ? link.source : null;
+                if (otherNode) {
+                    const connectedNode = graphDataRef.current.nodes.find((n) => n.id === otherNode);
+                    return connectedNode && isNodeSelected(connectedNode);
                 }
                 return false;
             });
-        }
 
-        // 카테고리만 선택된 경우
-        if (selectedCategory && !selectedYear) {
-            return belongsToSelectedCategory;
-        }
-
-        // 카테고리와 연도 모두 선택된 경우
-        if (selectedCategory && selectedYear) {
-            if (node.level === "item") {
-                const nodeYear = node.data?.date?.substring(0, 4) || node.data?.year;
-                return belongsToSelectedCategory && nodeYear === selectedYear;
-            }
-            if (node.level === "category") {
-                // 카테고리 노드는 해당 연도의 아이템을 가지고 있을 때만 활성화
-                return (
-                    belongsToSelectedCategory &&
-                    graphDataRef.current.nodes.some((n: any) => {
-                        if (n.level === "item") {
-                            const categoryId = `${node.group}-category-${node.name}`;
-                            const isLinked = graphDataRef.current.links.some(
-                                (l) => l.source === categoryId && l.target === n.id
-                            );
-                            if (isLinked) {
-                                const itemYear = n.data?.date?.substring(0, 4) || n.data?.year;
-                                return itemYear === selectedYear;
-                            }
-                        }
-                        return false;
-                    })
-                );
-            }
-            return belongsToSelectedCategory;
-        }
-
-        return false;
-    };
-
-    // 노드가 현재 선택 상태에서 보여져야 하는지 확인하는 함수
-    const shouldNodeBeVisible = (node: GraphNode): boolean => {
-        // 아무것도 선택되지 않았다면 모든 노드 표시
-        if (!selectedCategory && !selectedYear) {
-            return true;
-        }
-
-        // About me 노드는 항상 표시
-        if (node.level === "top") {
-            return true;
-        }
-
-        const isSelected = isNodeSelected(node);
-
-        // 선택된 노드와 그 상위/하위 노드들만 표시
-        if (isSelected) {
-            return true;
-        }
-
-        // 선택된 노드의 부모나 자식 노드인 경우 표시
-        const links = graphDataRef.current.links;
-        const isConnectedToSelected = links.some((link) => {
-            const otherNode = link.source === node.id ? link.target : link.source === node.id ? link.source : null;
-            if (otherNode) {
-                const connectedNode = graphDataRef.current.nodes.find((n) => n.id === otherNode);
-                return connectedNode && isNodeSelected(connectedNode);
-            }
-            return false;
-        });
-
-        return isConnectedToSelected;
-    };
+            return isConnectedToSelected;
+        },
+        [isNodeSelected]
+    );
 
     // 초기 설정을 위한 useEffect
     useEffect(() => {
@@ -404,7 +405,7 @@ const GraphIndex = ({ onItemSelect, selectedItem, selectedCategory, selectedYear
         Graph.graphData(graphData)
             .linkColor(() => "#3C3C3C")
             .nodeLabel(() => "")
-            .nodeVisibility((node: GraphNode) => shouldNodeBeVisible(node))
+            .nodeVisibility(shouldNodeBeVisible)
             .linkVisibility((link: LinkObject): boolean => {
                 const sourceNode = graphData.nodes.find((n) => n.id === link.source);
                 const targetNode = graphData.nodes.find((n) => n.id === link.target);
@@ -412,7 +413,7 @@ const GraphIndex = ({ onItemSelect, selectedItem, selectedCategory, selectedYear
                     sourceNode && targetNode && shouldNodeBeVisible(sourceNode) && shouldNodeBeVisible(targetNode)
                 );
             })
-            .nodeThreeObject((node: any) => {
+            .nodeThreeObject((node: GraphNode) => {
                 let geometry;
 
                 // Different shapes for different levels
@@ -435,7 +436,7 @@ const GraphIndex = ({ onItemSelect, selectedItem, selectedCategory, selectedYear
 
                 // 노드의 색상 결정
                 const getNodeColor = () => {
-                    // 선택된 노드는 무조건 강조 색상 유지
+                    // 택된 노드는 무조건 강조 색상 유지
                     if (isSelected) {
                         return {
                             color: "#F3ECC2",
@@ -473,7 +474,7 @@ const GraphIndex = ({ onItemSelect, selectedItem, selectedCategory, selectedYear
 
                 return new THREE.Mesh(geometry, material);
             })
-            .onNodeClick((node: any) => {
+            .onNodeClick((node: GraphNode) => {
                 if (node.level === "item") {
                     switch (node.group) {
                         case "taste":
@@ -513,18 +514,18 @@ const GraphIndex = ({ onItemSelect, selectedItem, selectedCategory, selectedYear
                     }
                 }
             })
-            .onNodeHover((node: any) => {
+            .onNodeHover((node: GraphNode | null) => {
                 hoveredNodeRef.current = node;
 
                 if (containerRef.current) {
                     containerRef.current.style.cursor = node ? "pointer" : "default";
                 }
 
-                // 호버 상태가 변경될 때마다 그래프를 새로 그리지 않고,
-                // 해당 노드의 material만 업데이트
-                const allNodes = graphRef.current.scene().children.filter((obj: any) => obj.type === "Mesh");
+                const allNodes = graphRef.current
+                    .scene()
+                    .children.filter((obj: ThreeObject) => obj.type === "Mesh") as ThreeMesh[];
 
-                allNodes.forEach((obj: any) => {
+                allNodes.forEach((obj: ThreeMesh) => {
                     const nodeData = obj.__data;
                     if (nodeData) {
                         const isHovered = node?.id === nodeData.id;
@@ -596,8 +597,8 @@ const GraphIndex = ({ onItemSelect, selectedItem, selectedCategory, selectedYear
                     setTooltip({
                         show: true,
                         content: tooltipContent,
-                        x: mousePosition.x,
-                        y: mousePosition.y,
+                        x: mousePositionRef.current.x,
+                        y: mousePositionRef.current.y,
                     });
                 } else {
                     setTooltip((prev) => ({ ...prev, show: false }));
@@ -617,7 +618,7 @@ const GraphIndex = ({ onItemSelect, selectedItem, selectedCategory, selectedYear
         return () => {
             window.removeEventListener("resize", handleResize);
         };
-    }, [selectedCategory, selectedYear, selectedItem]); // 필요한 의존성만 포함
+    }, [selectedCategory, selectedYear, selectedItem, isNodeSelected, shouldNodeBeVisible]);
 
     return (
         <div
@@ -635,8 +636,8 @@ const GraphIndex = ({ onItemSelect, selectedItem, selectedCategory, selectedYear
                     ref={(el) => {
                         if (el) {
                             const { x, y } = calculateTooltipPosition(
-                                mousePosition.x,
-                                mousePosition.y,
+                                mousePositionRef.current.x,
+                                mousePositionRef.current.y,
                                 el.offsetWidth,
                                 el.offsetHeight
                             );
