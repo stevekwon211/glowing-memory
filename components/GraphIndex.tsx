@@ -14,11 +14,13 @@ interface NodeData {
     imageUrl?: string;
     date?: string;
     year?: string;
-    category?: string;
-    description?: {
-        en?: string;
-        ko?: string;
-    };
+    category?: string | string[];
+    description?:
+        | string
+        | {
+              en?: string;
+              ko?: string;
+          };
     url?: string;
 }
 
@@ -208,7 +210,10 @@ const GraphIndex = ({ selectedCategory, selectedYear, selectedItem }: Props) => 
                         group: "taste",
                         level: "item",
                         val: 20,
-                        data: item,
+                        data: {
+                            ...item,
+                            description: item.description ? { ko: item.description } : undefined,
+                        },
                     });
                     links.push({ source: categoryId, target: `content-${item.id}` });
                 });
