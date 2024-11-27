@@ -11,6 +11,7 @@ export const projects: Project[] = [
         year: "2023",
         imageUrl: "/path/to/image.jpg",
         projectUrl: "https://example.com",
+        category: "category",
     },
     // 다른 프로젝트들도 같은 방식으로 수정합니다
 ];

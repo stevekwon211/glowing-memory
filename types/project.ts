@@ -8,4 +8,5 @@ export interface Project {
     year: string;
     imageUrl: string;
     projectUrl: string;
+    category: string;
 }

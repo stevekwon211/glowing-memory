@@ -9,13 +9,13 @@ import { writingLinks } from "../data/writings";
 import GraphIndex from "../components/GraphIndex";
 
 export default function Home() {
-    const [selectedCategory, setSelectedCategory] = useState<string | null>("Taste");
+    const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
     const [selectedYear, setSelectedYear] = useState<string | null>(null);
     const [currentContentIndex, setCurrentContentIndex] = useState(0);
     const selectedItemFrameRef = useRef<HTMLDivElement>(null);
 
     const handleCategoryClick = (category: string) => {
-        if (category === "Taste" || category === "Writing") {
+        if (category === "Taste" || category === "Writing" || category === "Artifact") {
             setSelectedCategory(category);
             setSelectedYear(null);
             setCurrentContentIndex(0);
@@ -125,7 +125,15 @@ export default function Home() {
 
     return (
         <div className={styles.container}>
-            <div className={styles.topSection}>
+            <div
+                className={styles.topSection}
+                style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    width: "fit-content",
+                    height: "100%",
+                }}
+            >
                 <div className={styles.nameFrame}>
                     <div className={styles.name}>Kwon Doeon</div>
                 </div>
@@ -142,7 +150,12 @@ export default function Home() {
                     >
                         Writing
                     </div>
-                    <div className={styles.category}>Artifact</div>
+                    <div
+                        className={`${styles.category} ${selectedCategory === "Artifact" ? styles.active : ""}`}
+                        onClick={() => handleCategoryClick("Artifact")}
+                    >
+                        Artifact
+                    </div>
                 </div>
                 <div className={styles.yearsFrame}>
                     {getAvailableYears().map((year) => (
@@ -155,16 +168,28 @@ export default function Home() {
                         </div>
                     ))}
                 </div>
-                <div className={styles.emptyFrame} />
-                <div className={styles.infoFrame}>
+                <div
+                    className={styles.infoFrame}
+                    style={{
+                        height: "100%",
+                        display: "flex",
+                        flexDirection: "column",
+                        justifyContent: "flex-end",
+                    }}
+                >
                     <div className={styles.info}>Info</div>
                 </div>
             </div>
             <div className={styles.bottomSection}>
-                {renderSelectedItem()}
+                {/* {renderSelectedItem()} */}
                 <div className={styles.contentFrame}>
                     <div className={styles.graphIndex}>
-                        <GraphIndex />
+                        <GraphIndex
+                            onItemSelect={() => {}}
+                            selectedItem={null}
+                            selectedCategory={selectedCategory}
+                            selectedYear={selectedYear}
+                        />
                     </div>
                 </div>
             </div>

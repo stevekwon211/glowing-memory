@@ -88,17 +88,23 @@
 .container {
     width: 100%;
     height: 100vh;
-    background-color: white;
+    background-color: #efefef;
     display: flex;
-    flex-direction: column;
-    padding: 1.25rem;
+    flex-direction: row;
+    padding: 0;
     overflow: hidden;
+    gap: 1.25rem;
 }
 
 .topSection {
     display: flex;
-    justify-content: space-between;
+    flex-direction: column;
     gap: 1.25rem;
+    border-right: 1px solid #dcdcdc;
+    padding: 24px;
+    width: 240px;
+    flex-shrink: 0;
+    height: 100%;
 }
 
 .nameFrame,
@@ -108,7 +114,8 @@
 .infoFrame {
     flex: 1;
     padding: 0.625rem;
-    background-color: white;
+    padding-left: 0;
+    background-color: #efefef;
 }
 
 .name,
@@ -117,7 +124,8 @@
 .info {
     font-size: 12px;
     font-weight: normal;
-    color: black;
+    color: #3c3c3c;
+    text-align: left;
 }
 
 .categoriesFrame,
@@ -131,10 +139,8 @@
     flex: 1;
     display: flex;
     gap: 1.25rem;
-    min-height: 0;
     height: 100%;
-    -ms-overflow-style: none; /* IE and Edge */
-    scrollbar-width: none; /* Firefox */
+    overflow: hidden;
 }
 
 /* Chrome, Safari and Opera */
@@ -207,9 +213,11 @@
 }
 
 .contentFrame {
-    background-color: white;
+    background-color: #efefef;
     display: flex;
     flex-direction: column;
+    align-items: center;
+    justify-content: center;
     gap: 0.625rem;
     padding: 0;
     flex: 1;
@@ -220,16 +228,26 @@
 .graphIndex {
     width: 100%;
     height: 100%;
-    background: white;
+    background: #efefef;
     border-radius: 4px;
     overflow: hidden;
     position: relative;
     flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .infoFrame {
+    flex: 1;
+    padding: 0.625rem;
+    padding-left: 0;
+    background-color: #efefef;
     display: flex;
+    flex-direction: column;
     justify-content: flex-end;
+    align-items: flex-start;
+    height: 100%;
 }
 
 .featured {
@@ -301,11 +319,11 @@
 }
 
 .card {
-    background-color: #fff; /* Changed from #222 to #FFF */
+    background-color: #efefef;
     border-radius: 0px;
     margin-bottom: 20px;
     overflow: hidden;
-    border: 1px solid #e5e5e5; /* Added card stroke color */
+    border: 1px solid #3c3c3c;
     width: 100%; /* 카드가 컬럼 너비에 맞게 조정되도록 */
 }
 
@@ -318,14 +336,14 @@
 .card h3 {
     font-size: 12px;
     margin: 12px 12px 6px;
-    color: #151515;
+    color: #0c0c0c;
     font-weight: 300; /* Changed from normal to 200 */
 }
 
 .card p {
     font-size: 12px;
     margin: 6px 12px 12px 12px;
-    color: #717171;
+    color: #3c3c3c;
     font-weight: 300; /* Added font-weight: 200 */
 }
 
@@ -603,11 +621,11 @@
 }
 
 .category:hover {
-    color: #666;
+    color: #0c0c0c;
 }
 
 .category.active {
-    color: #000;
+    color: #0c0c0c;
     font-weight: 500;
 }
 
@@ -625,12 +643,18 @@
 
 @media (max-width: 768px) {
     .container {
-        padding: 0.75rem;
+        flex-direction: column;
+        padding: 0;
     }
 
     .topSection {
-        flex-wrap: wrap;
-        gap: 0.5rem;
+        width: 100%;
+        border-right: none;
+        border-bottom: 1px solid black;
+        margin-right: 0;
+        margin-bottom: 4px;
+        padding: 24px;
+        padding-bottom: 28px;
     }
 
     .nameFrame,
@@ -662,7 +686,7 @@
     }
 
     .info {
-        text-align: left;
+        text-align: left !important; /* Force left alignment on mobile */
     }
 
     .bottomSection {
@@ -698,7 +722,7 @@
         bottom: 0;
         left: 0;
         right: 0;
-        background: white;
+        background: #efefef;
         padding: 0;
         box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
     }
@@ -724,7 +748,7 @@
     }
 
     .info {
-        text-align: left;
+        text-align: left !important; /* Force left alignment on mobile */
     }
 }
 
@@ -743,10 +767,53 @@
 }
 
 .year:hover {
-    color: #666;
+    color: #0c0c0c;
 }
 
 .year.active {
-    color: #000;
+    color: #0c0c0c;
     font-weight: 500;
+}
+
+/* 기본 info 스타일 */
+.info {
+    font-size: 12px;
+    font-weight: normal;
+    color: #3c3c3c;
+    text-align: left !important;
+}
+
+/* 기본 infoFrame 스타일 */
+.infoFrame {
+    flex: 1;
+    padding: 0;
+    background-color: #efefef;
+    display: flex;
+    justify-content: flex-start;
+}
+
+/* 모바일 스타일 - 파일 맨 아래에 위치하도록 이동 */
+@media (max-width: 768px) {
+    .info {
+        /* Remove text-align override since it's already left-aligned */
+    }
+
+    .infoFrame {
+        padding: 0;
+        background-color: #efefef;
+    }
+
+    .contentFrame {
+        background: #efefef;
+    }
+}
+
+/* scene-nav-info 숨기기 */
+.graphIndex :global(.scene-nav-info) {
+    display: none !important;
+}
+
+/* 또는 */
+.graphIndex div[class*="scene-nav-info"] {
+    display: none !important;
 }
