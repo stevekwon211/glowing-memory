@@ -4,7 +4,13 @@ import { useState, useEffect, useRef } from "react";
 import styles from "./page.module.css";
 import { contentItems } from "../data/content";
 import { writingLinks } from "../data/writings";
-import GraphIndex from "../components/GraphIndex";
+import dynamic from "next/dynamic";
+
+// GraphIndex를 클라이언트 사이드에서만 로드
+const GraphIndex = dynamic(() => import("../components/GraphIndex"), {
+    ssr: false,
+    loading: () => <div style={{ width: "100%", height: "100%", background: "#EFEFEF", minHeight: "600px" }}></div>,
+});
 
 export default function Home() {
     const [selectedCategory, setSelectedCategory] = useState<string | null>(null);

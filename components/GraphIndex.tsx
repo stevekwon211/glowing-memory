@@ -1,3 +1,5 @@
+"use client";
+
 import { useEffect, useRef, useState, useCallback } from "react";
 import * as THREE from "three";
 import ForceGraph3D from "3d-force-graph";
@@ -58,6 +60,12 @@ interface TooltipContent {
     type: "content" | "writing" | "project" | "root" | "category";
 }
 
+// modalContent의 타입을 수정
+interface ModalState {
+    isOpen: boolean;
+    content: (TooltipContent & { type: "content" | "writing" | "project" }) | null;
+}
+
 // 타입 정의 추가
 interface LinkObject {
     source: string;
@@ -65,13 +73,15 @@ interface LinkObject {
     visible?: boolean;
 }
 
+// Three.js 관련 타입 수정
 interface ThreeMesh extends THREE.Mesh {
     __data?: GraphNode;
+    material: THREE.MeshStandardMaterial;
 }
 
-interface ThreeObject {
+interface ThreeObject extends THREE.Object3D {
     type: string;
-    material: THREE.Material;
+    material?: THREE.MeshStandardMaterial;
     __data?: GraphNode;
 }
 
@@ -94,13 +104,13 @@ interface ForceGraphMethods {
 }
 
 // GraphRef 타입 수정
-interface GraphRef {
+interface GraphRef extends ForceGraphMethods {
     current: ForceGraphMethods | null;
 }
 
 const GraphIndex = ({ selectedCategory, selectedYear, selectedItem }: Props) => {
     const containerRef = useRef<HTMLDivElement>(null);
-    const graphRef = useRef<GraphRef | null>(null);
+    const graphRef = useRef<ForceGraphMethods | null>(null);
     const hoveredNodeRef = useRef<GraphNode | null>(null);
     const mousePositionRef = useRef({ x: 0, y: 0 });
     const [tooltip, setTooltip] = useState<{
@@ -114,10 +124,7 @@ const GraphIndex = ({ selectedCategory, selectedYear, selectedItem }: Props) => 
         x: 0,
         y: 0,
     });
-    const [modalContent, setModalContent] = useState<{
-        isOpen: boolean;
-        content: TooltipContent | null;
-    }>({
+    const [modalContent, setModalContent] = useState<ModalState>({
         isOpen: false,
         content: null,
     });
@@ -514,7 +521,7 @@ const GraphIndex = ({ selectedCategory, selectedYear, selectedItem }: Props) => 
                                 isOpen: true,
                                 content: {
                                     type: "content",
-                                    title: node.data?.title ?? "",
+                                    title: node.data?.title || "",
                                     imageUrl: node.data?.imageUrl,
                                     date: node.data?.date,
                                 },
@@ -525,7 +532,7 @@ const GraphIndex = ({ selectedCategory, selectedYear, selectedItem }: Props) => 
                                 isOpen: true,
                                 content: {
                                     type: "writing",
-                                    title: node.data?.title ?? "",
+                                    title: node.data?.title || "",
                                     url: node.data?.url,
                                     date: node.data?.date,
                                 },
@@ -536,7 +543,7 @@ const GraphIndex = ({ selectedCategory, selectedYear, selectedItem }: Props) => 
                                 isOpen: true,
                                 content: {
                                     type: "project",
-                                    title: node.data?.title ?? "",
+                                    title: node.data?.title || "",
                                     imageUrl: node.data?.imageUrl,
                                     description:
                                         typeof node.data?.description === "string"
@@ -556,9 +563,14 @@ const GraphIndex = ({ selectedCategory, selectedYear, selectedItem }: Props) => 
                     containerRef.current.style.cursor = node ? "pointer" : "default";
                 }
 
-                const allNodes = graphRef.current
-                    .scene()
-                    .children.filter((obj: ThreeObject) => obj.type === "Mesh") as ThreeMesh[];
+                // graphRef.current가 존재하는지 확인
+                if (!graphRef.current) return;
+
+                const scene = graphRef.current.scene();
+                const allNodes = scene.children.filter((obj): obj is ThreeMesh => {
+                    const meshObj = obj as ThreeObject;
+                    return meshObj.type === "Mesh" && meshObj.material !== undefined;
+                });
 
                 allNodes.forEach((obj: ThreeMesh) => {
                     const nodeData = obj.__data;
@@ -566,17 +578,20 @@ const GraphIndex = ({ selectedCategory, selectedYear, selectedItem }: Props) => 
                         const isHovered = node?.id === nodeData.id;
                         const isSelected = isNodeSelected(nodeData);
 
+                        // material을 MeshStandardMaterial로 타입 단언
+                        const material = obj.material as THREE.MeshStandardMaterial;
+
                         // 선택된 노드는 항상 강조 색상 유지
                         if (isSelected) {
-                            obj.material.color.set("#F3ECC2");
-                            obj.material.emissive.set("#793315");
-                            obj.material.emissiveIntensity = 0.5;
+                            material.color.set("#F3ECC2");
+                            material.emissive.set("#793315");
+                            material.emissiveIntensity = 0.5;
                         }
                         // 선택되지 않은 노드만 호버 효과 적용
                         else {
-                            obj.material.color.set(isHovered ? "#F3ECC2" : "#3C3C3C");
-                            obj.material.emissive.set(isHovered ? "#793315" : "#3C3C3C");
-                            obj.material.emissiveIntensity = isHovered ? 0.5 : 0;
+                            material.color.set(isHovered ? "#F3ECC2" : "#3C3C3C");
+                            material.emissive.set(isHovered ? "#793315" : "#3C3C3C");
+                            material.emissiveIntensity = isHovered ? 0.5 : 0;
                         }
                     }
                 });
@@ -603,25 +618,28 @@ const GraphIndex = ({ selectedCategory, selectedYear, selectedItem }: Props) => 
                             switch (node.group) {
                                 case "taste":
                                     tooltipContent = {
-                                        title: node.data.title || "",
-                                        imageUrl: node.data.imageUrl,
-                                        date: node.data.date,
+                                        title: node.data?.title || "",
+                                        imageUrl: node.data?.imageUrl,
+                                        date: node.data?.date,
                                         type: "content",
                                     };
                                     break;
                                 case "writing":
                                     tooltipContent = {
-                                        title: node.data.title,
-                                        date: node.data.date,
+                                        title: node.data?.title || "",
+                                        date: node.data?.date,
                                         type: "writing",
                                     };
                                     break;
                                 case "artifact":
                                     tooltipContent = {
-                                        title: node.data.title,
-                                        imageUrl: node.data.imageUrl,
-                                        year: node.data.year,
-                                        description: node.data.description,
+                                        title: node.data?.title || "",
+                                        imageUrl: node.data?.imageUrl,
+                                        year: node.data?.year,
+                                        description:
+                                            typeof node.data?.description === "string"
+                                                ? { ko: node.data.description }
+                                                : node.data?.description,
                                         type: "project",
                                     };
                                     break;

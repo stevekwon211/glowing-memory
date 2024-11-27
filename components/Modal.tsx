@@ -1,21 +1,25 @@
+"use client";
+
 import Image from "next/image";
 import { useEffect } from "react";
+
+interface ModalContent {
+    type: "writing" | "content" | "project";
+    title?: string;
+    imageUrl?: string;
+    url?: string;
+    description?: {
+        en?: string;
+        ko?: string;
+    };
+    date?: string;
+    year?: string;
+}
 
 interface ModalProps {
     isOpen: boolean;
     onClose: () => void;
-    content: {
-        type: "taste" | "writing" | "artifact";
-        title?: string;
-        imageUrl?: string;
-        url?: string;
-        description?: {
-            en?: string;
-            ko?: string;
-        };
-        date?: string;
-        year?: string;
-    };
+    content: ModalContent | null;
 }
 
 const Modal = ({ isOpen, onClose, content }: ModalProps) => {
@@ -28,13 +32,13 @@ const Modal = ({ isOpen, onClose, content }: ModalProps) => {
     }, [onClose]);
 
     useEffect(() => {
-        if (isOpen && content.type === "writing" && content.url) {
+        if (isOpen && content?.type === "writing" && content?.url) {
             window.open(content.url, "_blank");
             onClose();
         }
     }, [isOpen, content, onClose]);
 
-    if (!isOpen || content.type === "writing") return null;
+    if (!isOpen || content?.type === "writing") return null;
 
     return (
         <div
@@ -68,7 +72,7 @@ const Modal = ({ isOpen, onClose, content }: ModalProps) => {
                 onClick={(e) => e.stopPropagation()}
             >
                 {/* Media Section */}
-                {content.imageUrl && (
+                {content?.imageUrl && (
                     <div
                         style={{
                             position: "relative",
@@ -103,7 +107,7 @@ const Modal = ({ isOpen, onClose, content }: ModalProps) => {
                         minWidth: "200px",
                     }}
                 >
-                    {content.title && (
+                    {content?.title && (
                         <h2
                             style={{
                                 margin: 0,
@@ -115,7 +119,7 @@ const Modal = ({ isOpen, onClose, content }: ModalProps) => {
                             {content.title}
                         </h2>
                     )}
-                    {content.description?.ko && (
+                    {content?.description?.ko && (
                         <p
                             style={{
                                 margin: 0,
@@ -127,7 +131,7 @@ const Modal = ({ isOpen, onClose, content }: ModalProps) => {
                             {content.description.ko}
                         </p>
                     )}
-                    {(content.date || content.year) && (
+                    {(content?.date || content?.year) && (
                         <p
                             style={{
                                 margin: 0,
