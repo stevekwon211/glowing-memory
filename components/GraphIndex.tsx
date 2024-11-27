@@ -72,9 +72,14 @@ interface ThreeObject {
     __data?: GraphNode;
 }
 
+interface GraphRef {
+    scene: () => THREE.Scene;
+    _destructor: () => void;
+}
+
 const GraphIndex = ({ selectedCategory, selectedYear, selectedItem }: Props) => {
     const containerRef = useRef<HTMLDivElement>(null);
-    const graphRef = useRef<any>(null);
+    const graphRef = useRef<GraphRef>(null);
     const hoveredNodeRef = useRef<GraphNode | null>(null);
     const mousePositionRef = useRef({ x: 0, y: 0 });
     const [tooltip, setTooltip] = useState<{
@@ -90,7 +95,7 @@ const GraphIndex = ({ selectedCategory, selectedYear, selectedItem }: Props) => 
     });
     const [modalContent, setModalContent] = useState<{
         isOpen: boolean;
-        content: any;
+        content: TooltipContent | null;
     }>({
         isOpen: false,
         content: null,

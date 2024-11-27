@@ -57,56 +57,7 @@ export default function Home() {
         return () => frameElement.removeEventListener("scroll", handleScroll);
     }, [selectedCategory, selectedYear, currentContentIndex, filteredItems.length]);
 
-    const renderSelectedItem = () => {
-        if (selectedCategory === "Taste" || (!selectedCategory && selectedYear)) {
-            return (
-                <div className={styles.selectedItemFrame} ref={selectedItemFrameRef}>
-                    {filteredItems.map((item, index) => (
-                        <div key={index} className={styles.selectedItemContent}>
-                            <div className={styles.imageWrapper}>
-                                {item.type === "video" && item.videoUrl ? (
-                                    <video className={styles.mediaContent} autoPlay loop muted playsInline>
-                                        <source src={item.videoUrl} type="video/mp4" />
-                                        Your browser does not support the video tag.
-                                    </video>
-                                ) : (
-                                    <Image
-                                        src={item.imageUrl}
-                                        alt={item.description}
-                                        width={0}
-                                        height={0}
-                                        sizes="(max-width: 768px) 100vw, 50vw"
-                                        style={{
-                                            width: "auto",
-                                            height: "auto",
-                                            maxWidth: "100%",
-                                            maxHeight: "calc(100vh - 4rem)",
-                                            objectFit: "contain",
-                                            margin: 0,
-                                        }}
-                                        quality={75}
-                                    />
-                                )}
-                            </div>
-                            <p className={styles.itemDescription}>{item.description}</p>
-                        </div>
-                    ))}
-                </div>
-            );
-        } else if (selectedCategory === "Writing") {
-            const filteredWritings = writingLinks.filter((item) =>
-                selectedYear ? item.date.startsWith(selectedYear) : true
-            );
-            return (
-                <div className={styles.selectedItemFrame}>
-                    <WritingList items={filteredWritings} />
-                </div>
-            );
-        } else if (selectedCategory === "Artifact") {
-            return null;
-        }
-        return null;
-    };
+    // const renderSelectedItem = () => { ... };
 
     const getAvailableYears = () => {
         if (selectedCategory === "Taste") {
