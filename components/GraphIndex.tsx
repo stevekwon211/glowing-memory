@@ -74,17 +74,34 @@ interface ThreeObject {
     __data?: GraphNode;
 }
 
-interface GraphRef {
+// ForceGraph3D 타입 정의 수정
+type ForceGraphInstance = ReturnType<typeof ForceGraph3D>;
+
+interface ForceGraphMethods {
+    graphData: (data: { nodes: GraphNode[]; links: GraphLink[] }) => any;
+    nodeLabel: (node: any) => string;
+    nodeVisibility: (node: any) => boolean;
+    linkVisibility: (link: any) => boolean;
+    nodeThreeObject: (node: any) => THREE.Mesh;
+    onNodeClick: (callback: (node: any) => void) => any;
+    onNodeHover: (callback: (node: any, prev: any) => void) => any;
+    linkColor: (link: any) => string;
+    backgroundColor: (color: string) => any;
+    cameraPosition: (position: { x: number; y: number; z: number }) => any;
+    width: (width: number) => any;
+    height: (height: number) => any;
     scene: () => THREE.Scene;
     _destructor: () => void;
 }
 
-// ForceGraph3D 타입 정의 추가
-type ForceGraphInstance = ReturnType<typeof ForceGraph3D>;
+// GraphRef 타입 수정
+interface GraphRef extends ForceGraphMethods {
+    current: ForceGraphMethods | null;
+}
 
 const GraphIndex = ({ selectedCategory, selectedYear, selectedItem }: Props) => {
     const containerRef = useRef<HTMLDivElement>(null);
-    const graphRef = useRef<GraphRef>(null);
+    const graphRef = useRef<GraphRef | null>(null);
     const hoveredNodeRef = useRef<GraphNode | null>(null);
     const mousePositionRef = useRef({ x: 0, y: 0 });
     const [tooltip, setTooltip] = useState<{
@@ -110,7 +127,7 @@ const GraphIndex = ({ selectedCategory, selectedYear, selectedItem }: Props) => 
     const graphDataRef = useRef<{ nodes: GraphNode[]; links: GraphLink[] }>({ nodes: [], links: [] });
 
     // ForceGraph 인스턴스를 저장할 ref 수정
-    const graphInstanceRef = useRef<ForceGraphInstance | null>(null);
+    const graphInstanceRef = useRef<ForceGraphMethods | null>(null);
 
     // 마우스 위치 추적을 위한 이벤트 리스너
     useEffect(() => {
@@ -389,9 +406,9 @@ const GraphIndex = ({ selectedCategory, selectedYear, selectedItem }: Props) => 
             const graphData = createGraphData();
             graphDataRef.current = graphData;
 
-            const Graph = ForceGraph3D()(currentContainer);
+            const Graph = ForceGraph3D()(currentContainer) as unknown as ForceGraphMethods;
             graphInstanceRef.current = Graph;
-            graphRef.current = Graph;
+            graphRef.current = Graph as unknown as GraphRef;
 
             // 기본 설정
             Graph.backgroundColor("#EFEFEF").cameraPosition({ x: 0, y: 0, z: 600 });
