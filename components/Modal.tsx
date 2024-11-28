@@ -14,6 +14,7 @@ interface ModalContent {
     };
     date?: string;
     year?: string;
+    projectUrl?: string;
 }
 
 interface ModalProps {
@@ -61,13 +62,13 @@ const Modal = ({ isOpen, onClose, content }: ModalProps) => {
                     backgroundColor: "#EFEFEF",
                     border: "1px solid #DCDCDC",
                     padding: "20px",
-                    width: "fit-content",
-                    maxWidth: "800px",
+                    maxWidth: "90vw",
                     maxHeight: "90vh",
                     overflow: "auto",
                     display: "flex",
                     flexDirection: "column",
                     gap: "20px",
+                    width: "fit-content",
                 }}
                 onClick={(e) => e.stopPropagation()}
             >
@@ -76,21 +77,24 @@ const Modal = ({ isOpen, onClose, content }: ModalProps) => {
                     <div
                         style={{
                             position: "relative",
-                            width: "fit-content",
-                            maxWidth: "100%",
+                            width: "auto",
+                            height: "auto",
                             margin: "0 auto",
+                            display: "flex",
+                            justifyContent: "center",
+                            alignItems: "center",
                         }}
                     >
                         <Image
                             src={content.imageUrl}
                             alt={content.title || ""}
-                            width={600}
-                            height={400}
+                            width={800}
+                            height={800}
                             style={{
+                                maxWidth: "80vw",
+                                maxHeight: "70vh",
                                 width: "auto",
                                 height: "auto",
-                                maxWidth: "100%",
-                                maxHeight: "60vh",
                                 objectFit: "contain",
                             }}
                         />
@@ -103,44 +107,81 @@ const Modal = ({ isOpen, onClose, content }: ModalProps) => {
                         display: "flex",
                         flexDirection: "column",
                         gap: "12px",
-                        width: "fit-content",
-                        minWidth: "200px",
+                        maxWidth: content?.imageUrl ? "800px" : "500px",
+                        width: "100%",
                     }}
                 >
-                    {content?.title && (
-                        <h2
-                            style={{
-                                margin: 0,
-                                color: "#0C0C0C",
-                                fontSize: "20px",
-                                width: "fit-content",
-                            }}
-                        >
-                            {content.title}
-                        </h2>
-                    )}
+                    <div
+                        style={{
+                            display: "flex",
+                            justifyContent: "space-between",
+                            alignItems: "center",
+                            gap: "12px",
+                        }}
+                    >
+                        <div style={{ display: "flex", alignItems: "flex-end", gap: "12px" }}>
+                            {content?.title && (
+                                <h2
+                                    style={{
+                                        margin: 0,
+                                        color: "#0C0C0C",
+                                        fontSize: "20px",
+                                        wordBreak: "break-word",
+                                    }}
+                                >
+                                    {content.title}
+                                </h2>
+                            )}
+                            {(content?.date || content?.year) && (
+                                <p
+                                    style={{
+                                        margin: 0,
+                                        color: "#3C3C3C",
+                                        fontSize: "12px",
+                                        whiteSpace: "nowrap",
+                                        paddingBottom: "4px",
+                                    }}
+                                >
+                                    {content.date || content.year}
+                                </p>
+                            )}
+                        </div>
+                        {content?.projectUrl && (
+                            <a
+                                href={content.projectUrl}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                style={{
+                                    margin: 0,
+                                    color: "#793315",
+                                    fontSize: "14px",
+                                    textDecoration: "underline",
+                                    fontWeight: "600",
+                                    cursor: "pointer",
+                                    whiteSpace: "nowrap",
+                                }}
+                                onMouseEnter={(e) => {
+                                    e.currentTarget.style.opacity = "0.8";
+                                }}
+                                onMouseLeave={(e) => {
+                                    e.currentTarget.style.opacity = "1";
+                                }}
+                            >
+                                Link
+                            </a>
+                        )}
+                    </div>
                     {content?.description?.ko && (
                         <p
                             style={{
                                 margin: 0,
                                 color: "#3C3C3C",
                                 fontSize: "14px",
-                                width: "fit-content",
+                                wordBreak: "break-word",
+                                whiteSpace: "pre-wrap",
                             }}
                         >
                             {content.description.ko}
-                        </p>
-                    )}
-                    {(content?.date || content?.year) && (
-                        <p
-                            style={{
-                                margin: 0,
-                                color: "#3C3C3C",
-                                fontSize: "12px",
-                                width: "fit-content",
-                            }}
-                        >
-                            {content.date || content.year}
                         </p>
                     )}
                 </div>

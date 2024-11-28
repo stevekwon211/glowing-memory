@@ -24,6 +24,7 @@ interface NodeData {
               ko?: string;
           };
     url?: string;
+    projectUrl?: string;
 }
 
 interface GraphNode {
@@ -57,6 +58,7 @@ interface TooltipContent {
         ko?: string;
     };
     url?: string;
+    projectUrl?: string;
     type: "content" | "writing" | "project" | "root" | "category";
 }
 
@@ -196,14 +198,14 @@ const GraphIndex = ({ selectedCategory, selectedYear, selectedItem }: Props) => 
             name: "About me",
             group: "root",
             level: "top",
-            val: 75,
+            val: 60,
         });
 
         // Add root nodes and link them to 'About me'
         const rootNodes = [
-            { id: "taste", name: "Taste", group: "taste", level: "root" as const, val: 50 },
-            { id: "writing", name: "Writing", group: "writing", level: "root" as const, val: 50 },
-            { id: "artifact", name: "Artifact", group: "artifact", level: "root" as const, val: 50 },
+            { id: "taste", name: "Taste", group: "taste", level: "root" as const, val: 40 },
+            { id: "writing", name: "Writing", group: "writing", level: "root" as const, val: 40 },
+            { id: "artifact", name: "Artifact", group: "artifact", level: "root" as const, val: 40 },
         ];
         nodes.push(...rootNodes);
         rootNodes.forEach((node) => {
@@ -219,7 +221,7 @@ const GraphIndex = ({ selectedCategory, selectedYear, selectedItem }: Props) => 
                 name: category,
                 group: "taste",
                 level: "category",
-                val: 40,
+                val: 20,
             });
             links.push({ source: "taste", target: categoryId });
 
@@ -251,7 +253,7 @@ const GraphIndex = ({ selectedCategory, selectedYear, selectedItem }: Props) => 
                 name: category,
                 group: "writing",
                 level: "category",
-                val: 40,
+                val: 20,
             });
             links.push({ source: "writing", target: categoryId });
 
@@ -280,7 +282,7 @@ const GraphIndex = ({ selectedCategory, selectedYear, selectedItem }: Props) => 
                 name: category,
                 group: "artifact",
                 level: "category",
-                val: 40,
+                val: 20,
             });
             links.push({ source: "artifact", target: categoryId });
 
@@ -464,10 +466,10 @@ const GraphIndex = ({ selectedCategory, selectedYear, selectedItem }: Props) => 
                         geometry = new THREE.OctahedronGeometry(node.val / 4);
                         break;
                     case "category":
-                        geometry = new THREE.BoxGeometry(node.val / 4, node.val / 4, node.val / 4);
+                        geometry = new THREE.TetrahedronGeometry(node.val / 4);
                         break;
                     default:
-                        geometry = new THREE.TetrahedronGeometry(node.val / 6);
+                        geometry = new THREE.BoxGeometry(node.val / 6, node.val / 6, node.val / 6);
                 }
 
                 const isHovered = hoveredNodeRef.current?.id === node.id;
@@ -550,6 +552,7 @@ const GraphIndex = ({ selectedCategory, selectedYear, selectedItem }: Props) => 
                                             ? { ko: node.data.description }
                                             : node.data?.description,
                                     year: node.data?.year,
+                                    projectUrl: node.data?.projectUrl,
                                 },
                             });
                             break;
@@ -602,6 +605,11 @@ const GraphIndex = ({ selectedCategory, selectedYear, selectedItem }: Props) => 
 
                     switch (node.level) {
                         case "top":
+                            tooltipContent = {
+                                title: "hi :)",
+                                type: "root",
+                            };
+                            break;
                         case "root":
                             tooltipContent = {
                                 title: node.name,
