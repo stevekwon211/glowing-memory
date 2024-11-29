@@ -6,13 +6,20 @@ import { contentItems } from "../data/content";
 import { writingLinks } from "../data/writings";
 import dynamic from "next/dynamic";
 import { createPortal } from "react-dom";
+import Modal from "../components/Modal";
 
 // 노드 타입 정의
 interface Node {
     id: string;
     title: string;
-    description?: string;
+    description?: string | { en?: string; ko?: string };
     url?: string;
+    imageUrl?: string;
+    date?: string;
+    year?: string;
+    category?: string | string[];
+    group?: string;
+    projectUrl?: string;
 }
 
 // GraphIndex 컴포넌트의 Props 타입 정의
@@ -21,7 +28,8 @@ interface GraphIndexProps {
     selectedItem: null;
     selectedCategory: string | null;
     selectedYear: string | null;
-    onNodeClick?: (node: Node) => void;
+    onNodeClick: (node: Node) => void;
+    isMobile: boolean;
 }
 
 const GraphIndex = dynamic(() => import("../components/GraphIndex"), {
@@ -228,27 +236,6 @@ export default function Home() {
         return () => document.removeEventListener("mousedown", handleClickOutside);
     }, []);
 
-    const MobileNodeInfo = () => {
-        if (!selectedNode) return null;
-
-        return (
-            <div className={styles.mobileNodeInfo}>
-                <div className={styles.mobileNodeInfoHeader}>
-                    <h3>{selectedNode.title}</h3>
-                    <button className={styles.closeButton} onClick={() => setSelectedNode(null)}>
-                        ✕
-                    </button>
-                </div>
-                {selectedNode.description && <p>{selectedNode.description}</p>}
-                {selectedNode.url && (
-                    <button className={styles.linkButton} onClick={() => window.open(selectedNode.url, "_blank")}>
-                        링크 열기
-                    </button>
-                )}
-            </div>
-        );
-    };
-
     return (
         <div className={styles.container}>
             <div className={styles.topSection}>
@@ -269,20 +256,38 @@ export default function Home() {
                             selectedItem={null}
                             selectedCategory={selectedCategory}
                             selectedYear={selectedYear}
+                            isMobile={isMobile}
                             onNodeClick={(node: Node) => {
-                                if (isMobile) {
-                                    setSelectedNode(selectedNode?.id === node.id ? null : node);
-                                } else {
-                                    if (node.url) {
-                                        window.open(node.url, "_blank");
-                                    }
-                                }
+                                setSelectedNode(node);
                             }}
                         />
                     </div>
                 </div>
             </div>
-            {mounted && isMobile && createPortal(<MobileNodeInfo />, document.body)}
+            {mounted &&
+                createPortal(
+                    <Modal
+                        isOpen={!!selectedNode}
+                        onClose={() => setSelectedNode(null)}
+                        content={{
+                            type:
+                                selectedNode?.group === "artifact"
+                                    ? "artifact"
+                                    : selectedNode?.group === "writing"
+                                    ? "writing"
+                                    : "content",
+                            title: selectedNode?.title,
+                            imageUrl: selectedNode?.imageUrl,
+                            description: selectedNode?.description,
+                            date: selectedNode?.date,
+                            year: selectedNode?.year,
+                            url: selectedNode?.url,
+                            category: selectedNode?.category,
+                            projectUrl: selectedNode?.projectUrl,
+                        }}
+                    />,
+                    document.body
+                )}
         </div>
     );
 }
