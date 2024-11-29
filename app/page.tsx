@@ -1,24 +1,60 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import styles from "./page.module.css";
 import { contentItems } from "../data/content";
 import { writingLinks } from "../data/writings";
 import dynamic from "next/dynamic";
+import { createPortal } from "react-dom";
 
-// GraphIndex를 클라이언트 사이드에서만 로드
+// 노드 타입 정의
+interface Node {
+    id: string;
+    title: string;
+    description?: string;
+    url?: string;
+}
+
+// GraphIndex 컴포넌트의 Props 타입 정의
+interface GraphIndexProps {
+    onItemSelect: () => void;
+    selectedItem: null;
+    selectedCategory: string | null;
+    selectedYear: string | null;
+    onNodeClick?: (node: Node) => void;
+}
+
 const GraphIndex = dynamic(() => import("../components/GraphIndex"), {
     ssr: false,
     loading: () => <div style={{ width: "100%", height: "100%", background: "#EFEFEF", minHeight: "600px" }}></div>,
-});
+}) as React.ComponentType<GraphIndexProps>; // 타입 지정
 
 export default function Home() {
     const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
     const [selectedYear, setSelectedYear] = useState<string | null>(null);
     const [currentContentIndex, setCurrentContentIndex] = useState(0);
     const selectedItemFrameRef = useRef<HTMLDivElement>(null);
+    const [isCategoryDropdownOpen, setIsCategoryDropdownOpen] = useState(false);
+    const [isYearDropdownOpen, setIsYearDropdownOpen] = useState(false);
+    const [isMobile, setIsMobile] = useState(false);
+    const [selectedNode, setSelectedNode] = useState<Node | null>(null);
+    const [mounted, setMounted] = useState(false);
 
-    const handleCategoryClick = (category: string) => {
+    useEffect(() => {
+        const checkMobile = () => {
+            setIsMobile(window.innerWidth <= 768);
+        };
+
+        checkMobile();
+        window.addEventListener("resize", checkMobile);
+        return () => window.removeEventListener("resize", checkMobile);
+    }, []);
+
+    useEffect(() => {
+        setMounted(true);
+    }, []);
+
+    const handleCategoryClick = useCallback((category: string) => {
         if (category === "Taste" || category === "Writing" || category === "Artifact") {
             setSelectedCategory(category);
             setSelectedYear(null);
@@ -26,12 +62,14 @@ export default function Home() {
         } else {
             setSelectedCategory(null);
         }
-    };
+        setIsCategoryDropdownOpen(false);
+    }, []);
 
-    const handleYearClick = (year: string) => {
+    const handleYearClick = useCallback((year: string) => {
         setSelectedYear(year);
         setCurrentContentIndex(0);
-    };
+        setIsYearDropdownOpen(false);
+    }, []);
 
     const filteredItems = contentItems
         .filter((item) => {
@@ -78,65 +116,152 @@ export default function Home() {
         return ["2025", "2024", "2023", "2022", "2021", "2020", "2019", "2018"];
     };
 
+    const renderCategories = () => {
+        if (isMobile) {
+            return (
+                <div className={styles.categoriesFrame}>
+                    <button
+                        className={styles.dropdownButton}
+                        onClick={() => setIsCategoryDropdownOpen(!isCategoryDropdownOpen)}
+                    >
+                        {selectedCategory || "Category"}
+                    </button>
+                    {isCategoryDropdownOpen && (
+                        <div className={styles.dropdownContent}>
+                            {["Taste", "Writing", "Artifact"].map((category) => (
+                                <div
+                                    key={category}
+                                    className={`${styles.category} ${
+                                        selectedCategory === category ? styles.active : ""
+                                    }`}
+                                    onClick={() => handleCategoryClick(category)}
+                                >
+                                    {category}
+                                </div>
+                            ))}
+                        </div>
+                    )}
+                </div>
+            );
+        }
+
+        return (
+            <div className={styles.categoriesFrame}>
+                <div
+                    className={`${styles.category} ${selectedCategory === "Taste" ? styles.active : ""}`}
+                    onClick={() => handleCategoryClick("Taste")}
+                >
+                    Taste
+                </div>
+                <div
+                    className={`${styles.category} ${selectedCategory === "Writing" ? styles.active : ""}`}
+                    onClick={() => handleCategoryClick("Writing")}
+                >
+                    Writing
+                </div>
+                <div
+                    className={`${styles.category} ${selectedCategory === "Artifact" ? styles.active : ""}`}
+                    onClick={() => handleCategoryClick("Artifact")}
+                >
+                    Artifact
+                </div>
+            </div>
+        );
+    };
+
+    const renderYears = () => {
+        const years = getAvailableYears();
+
+        if (isMobile) {
+            return (
+                <div className={styles.yearsFrame}>
+                    <button
+                        className={styles.dropdownButton}
+                        onClick={() => setIsYearDropdownOpen(!isYearDropdownOpen)}
+                    >
+                        {selectedYear || "Year"}
+                    </button>
+                    {isYearDropdownOpen && (
+                        <div className={styles.dropdownContent}>
+                            {years.map((year) => (
+                                <div
+                                    key={year}
+                                    className={`${styles.year} ${selectedYear === year ? styles.active : ""}`}
+                                    onClick={() => handleYearClick(year)}
+                                >
+                                    {year}
+                                </div>
+                            ))}
+                        </div>
+                    )}
+                </div>
+            );
+        }
+
+        return (
+            <div className={styles.yearsFrame}>
+                {getAvailableYears().map((year) => (
+                    <div
+                        key={year}
+                        className={`${styles.year} ${selectedYear === year ? styles.active : ""}`}
+                        onClick={() => handleYearClick(year)}
+                    >
+                        {year}
+                    </div>
+                ))}
+            </div>
+        );
+    };
+
+    useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            const target = event.target as HTMLElement;
+            if (!target.closest(`.${styles.categoriesFrame}`)) {
+                setIsCategoryDropdownOpen(false);
+            }
+            if (!target.closest(`.${styles.yearsFrame}`)) {
+                setIsYearDropdownOpen(false);
+            }
+        };
+
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => document.removeEventListener("mousedown", handleClickOutside);
+    }, []);
+
+    const MobileNodeInfo = () => {
+        if (!selectedNode) return null;
+
+        return (
+            <div className={styles.mobileNodeInfo}>
+                <div className={styles.mobileNodeInfoHeader}>
+                    <h3>{selectedNode.title}</h3>
+                    <button className={styles.closeButton} onClick={() => setSelectedNode(null)}>
+                        ✕
+                    </button>
+                </div>
+                {selectedNode.description && <p>{selectedNode.description}</p>}
+                {selectedNode.url && (
+                    <button className={styles.linkButton} onClick={() => window.open(selectedNode.url, "_blank")}>
+                        링크 열기
+                    </button>
+                )}
+            </div>
+        );
+    };
+
     return (
         <div className={styles.container}>
-            <div
-                className={styles.topSection}
-                style={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    width: "fit-content",
-                    height: "100%",
-                }}
-            >
+            <div className={styles.topSection}>
                 <div className={styles.nameFrame}>
                     <div className={styles.name}>Kwon Doeon</div>
                 </div>
-                <div className={styles.categoriesFrame}>
-                    <div
-                        className={`${styles.category} ${selectedCategory === "Taste" ? styles.active : ""}`}
-                        onClick={() => handleCategoryClick("Taste")}
-                    >
-                        Taste
-                    </div>
-                    <div
-                        className={`${styles.category} ${selectedCategory === "Writing" ? styles.active : ""}`}
-                        onClick={() => handleCategoryClick("Writing")}
-                    >
-                        Writing
-                    </div>
-                    <div
-                        className={`${styles.category} ${selectedCategory === "Artifact" ? styles.active : ""}`}
-                        onClick={() => handleCategoryClick("Artifact")}
-                    >
-                        Artifact
-                    </div>
-                </div>
-                <div className={styles.yearsFrame}>
-                    {getAvailableYears().map((year) => (
-                        <div
-                            key={year}
-                            className={`${styles.year} ${selectedYear === year ? styles.active : ""}`}
-                            onClick={() => handleYearClick(year)}
-                        >
-                            {year}
-                        </div>
-                    ))}
-                </div>
-                <div
-                    className={styles.infoFrame}
-                    style={{
-                        height: "100%",
-                        display: "flex",
-                        flexDirection: "column",
-                        justifyContent: "flex-end",
-                    }}
-                >
+                {renderCategories()}
+                {renderYears()}
+                <div className={styles.infoFrame}>
                     <div className={styles.info}>Info</div>
                 </div>
             </div>
             <div className={styles.bottomSection}>
-                {/* {renderSelectedItem()} */}
                 <div className={styles.contentFrame}>
                     <div className={styles.graphIndex}>
                         <GraphIndex
@@ -144,10 +269,20 @@ export default function Home() {
                             selectedItem={null}
                             selectedCategory={selectedCategory}
                             selectedYear={selectedYear}
+                            onNodeClick={(node: Node) => {
+                                if (isMobile) {
+                                    setSelectedNode(selectedNode?.id === node.id ? null : node);
+                                } else {
+                                    if (node.url) {
+                                        window.open(node.url, "_blank");
+                                    }
+                                }
+                            }}
                         />
                     </div>
                 </div>
             </div>
+            {mounted && isMobile && createPortal(<MobileNodeInfo />, document.body)}
         </div>
     );
 }
