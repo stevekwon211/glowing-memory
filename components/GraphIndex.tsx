@@ -7,7 +7,6 @@ import Image from "next/image";
 import { contentItems } from "@/data/content";
 import { writingLinks } from "@/data/writings";
 import { projects } from "@/data/projects";
-import Modal from "./Modal";
 
 // 타입 정의 개선
 interface NodeData {
@@ -25,6 +24,8 @@ interface NodeData {
           };
     url?: string;
     projectUrl?: string;
+    group?: string;
+    level?: string;
 }
 
 interface GraphNode {
@@ -44,8 +45,9 @@ interface GraphLink {
 interface Props {
     selectedCategory?: string | null;
     selectedYear?: string | null;
-    selectedItem?: NodeData | null;
     onItemSelect?: (item: NodeData) => void;
+    onNodeClick: (node: NodeData) => void;
+    isMobile: boolean;
 }
 
 interface TooltipContent {
@@ -60,12 +62,6 @@ interface TooltipContent {
     url?: string;
     projectUrl?: string;
     type: "content" | "writing" | "project" | "root" | "category";
-}
-
-// modalContent의 타입을 수정
-interface ModalState {
-    isOpen: boolean;
-    content: (TooltipContent & { type: "content" | "writing" | "project" }) | null;
 }
 
 // 타입 정의 추가
@@ -110,7 +106,7 @@ interface GraphRef extends ForceGraphMethods {
     current: ForceGraphMethods | null;
 }
 
-const GraphIndex = ({ selectedCategory, selectedYear, selectedItem }: Props) => {
+const GraphIndex = ({ selectedCategory, selectedYear, onNodeClick, isMobile }: Props) => {
     const containerRef = useRef<HTMLDivElement>(null);
     const graphRef = useRef<ForceGraphMethods | null>(null);
     const hoveredNodeRef = useRef<GraphNode | null>(null);
@@ -125,10 +121,6 @@ const GraphIndex = ({ selectedCategory, selectedYear, selectedItem }: Props) => 
         content: null,
         x: 0,
         y: 0,
-    });
-    const [modalContent, setModalContent] = useState<ModalState>({
-        isOpen: false,
-        content: null,
     });
 
     // 그래프 데이터를 저장할 ref 추가
@@ -198,14 +190,14 @@ const GraphIndex = ({ selectedCategory, selectedYear, selectedItem }: Props) => 
             name: "About me",
             group: "root",
             level: "top",
-            val: 60,
+            val: 45,
         });
 
         // Add root nodes and link them to 'About me'
         const rootNodes = [
-            { id: "taste", name: "Taste", group: "taste", level: "root" as const, val: 40 },
-            { id: "writing", name: "Writing", group: "writing", level: "root" as const, val: 40 },
-            { id: "artifact", name: "Artifact", group: "artifact", level: "root" as const, val: 40 },
+            { id: "taste", name: "Taste", group: "taste", level: "root" as const, val: 30 },
+            { id: "writing", name: "Writing", group: "writing", level: "root" as const, val: 30 },
+            { id: "artifact", name: "Artifact", group: "artifact", level: "root" as const, val: 30 },
         ];
         nodes.push(...rootNodes);
         rootNodes.forEach((node) => {
@@ -221,7 +213,7 @@ const GraphIndex = ({ selectedCategory, selectedYear, selectedItem }: Props) => 
                 name: category,
                 group: "taste",
                 level: "category",
-                val: 20,
+                val: 30,
             });
             links.push({ source: "taste", target: categoryId });
 
@@ -234,7 +226,7 @@ const GraphIndex = ({ selectedCategory, selectedYear, selectedItem }: Props) => 
                         name: item.title || `Content ${item.id}`,
                         group: "taste",
                         level: "item",
-                        val: 30,
+                        val: 50,
                         data: {
                             ...item,
                             description: item.description ? { ko: item.description } : undefined,
@@ -253,7 +245,7 @@ const GraphIndex = ({ selectedCategory, selectedYear, selectedItem }: Props) => 
                 name: category,
                 group: "writing",
                 level: "category",
-                val: 20,
+                val: 30,
             });
             links.push({ source: "writing", target: categoryId });
 
@@ -266,7 +258,7 @@ const GraphIndex = ({ selectedCategory, selectedYear, selectedItem }: Props) => 
                         name: item.title,
                         group: "writing",
                         level: "item",
-                        val: 30,
+                        val: 50,
                         data: item,
                     });
                     links.push({ source: categoryId, target: `writing-${item.id}` });
@@ -282,7 +274,7 @@ const GraphIndex = ({ selectedCategory, selectedYear, selectedItem }: Props) => 
                 name: category,
                 group: "artifact",
                 level: "category",
-                val: 20,
+                val: 30,
             });
             links.push({ source: "artifact", target: categoryId });
 
@@ -290,16 +282,23 @@ const GraphIndex = ({ selectedCategory, selectedYear, selectedItem }: Props) => 
             projects
                 .filter((item) => item.category === category)
                 .forEach((item) => {
+                    const nodeData = {
+                        id: item.id.toString(),
+                        title: item.title,
+                        description: item.description,
+                        imageUrl: item.imageUrl,
+                        year: item.year,
+                        projectUrl: item.projectUrl,
+                        category: item.category,
+                    };
+
                     nodes.push({
                         id: `project-${item.id}`,
                         name: item.title,
                         group: "artifact",
                         level: "item",
-                        val: 30,
-                        data: {
-                            ...item,
-                            id: item.id.toString(),
-                        },
+                        val: 50,
+                        data: nodeData,
                     });
                     links.push({ source: categoryId, target: `project-${item.id}` });
                 });
@@ -433,7 +432,7 @@ const GraphIndex = ({ selectedCategory, selectedYear, selectedItem }: Props) => 
                 graphInstanceRef.current = null;
             }
         };
-    }, []); // 빈 의존성 배열로 초기 설정은 한 번만 실행
+    }, [selectedCategory, selectedYear, isMobile]);
 
     // 데이터 업데이트를 위한 useEffect
     useEffect(() => {
@@ -442,6 +441,16 @@ const GraphIndex = ({ selectedCategory, selectedYear, selectedItem }: Props) => 
         const Graph = graphInstanceRef.current;
         const graphData = createGraphData();
         graphDataRef.current = graphData;
+
+        const handleNodeClick = (node: GraphNode) => {
+            if (node.level === "item" && node.data) {
+                onNodeClick({
+                    ...node.data,
+                    group: node.group,
+                    level: node.level,
+                });
+            }
+        };
 
         Graph.graphData(graphData)
             .linkColor((_link: LinkObject) => "#3C3C3C")
@@ -486,7 +495,7 @@ const GraphIndex = ({ selectedCategory, selectedYear, selectedItem }: Props) => 
                         };
                     }
 
-                    // 선택되지 않은 노드만 호버 효과 적용
+                    // 선택되지 않은 노만 호버 효과 적용
                     if (isHovered) {
                         return {
                             color: "#F3ECC2",
@@ -510,55 +519,12 @@ const GraphIndex = ({ selectedCategory, selectedYear, selectedItem }: Props) => 
                     metalness: 0.5,
                     roughness: 0.5,
                     transparent: true,
-                    opacity: selectedItem?.id === node.id ? 0.8 : 1,
+                    opacity: 1,
                 });
 
                 return new THREE.Mesh(geometry, material);
             })
-            .onNodeClick((node: GraphNode) => {
-                if (node.level === "item" && node.data) {
-                    switch (node.group) {
-                        case "taste":
-                            setModalContent({
-                                isOpen: true,
-                                content: {
-                                    type: "content",
-                                    title: node.data?.title || "",
-                                    imageUrl: node.data?.imageUrl,
-                                    date: node.data?.date,
-                                },
-                            });
-                            break;
-                        case "writing":
-                            setModalContent({
-                                isOpen: true,
-                                content: {
-                                    type: "writing",
-                                    title: node.data?.title || "",
-                                    url: node.data?.url,
-                                    date: node.data?.date,
-                                },
-                            });
-                            break;
-                        case "artifact":
-                            setModalContent({
-                                isOpen: true,
-                                content: {
-                                    type: "project",
-                                    title: node.data?.title || "",
-                                    imageUrl: node.data?.imageUrl,
-                                    description:
-                                        typeof node.data?.description === "string"
-                                            ? { ko: node.data.description }
-                                            : node.data?.description,
-                                    year: node.data?.year,
-                                    projectUrl: node.data?.projectUrl,
-                                },
-                            });
-                            break;
-                    }
-                }
-            })
+            .onNodeClick(handleNodeClick)
             .onNodeHover((node: GraphNode | null) => {
                 hoveredNodeRef.current = node;
 
@@ -679,7 +645,7 @@ const GraphIndex = ({ selectedCategory, selectedYear, selectedItem }: Props) => 
         return () => {
             window.removeEventListener("resize", handleResize);
         };
-    }, [selectedCategory, selectedYear, selectedItem, isNodeSelected, shouldNodeBeVisible]);
+    }, [selectedCategory, selectedYear, isMobile, onNodeClick, isNodeSelected, shouldNodeBeVisible]);
 
     return (
         <div
@@ -815,11 +781,6 @@ const GraphIndex = ({ selectedCategory, selectedYear, selectedItem }: Props) => 
                     )}
                 </div>
             )}
-            <Modal
-                isOpen={modalContent.isOpen}
-                onClose={() => setModalContent({ isOpen: false, content: null })}
-                content={modalContent.content}
-            />
         </div>
     );
 };

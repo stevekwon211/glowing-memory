@@ -1,90 +1,4 @@
-/* 폰트 import */
-@import url("https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&display=swap");
-
-/* 기본 폰트 설정 */
-.default,
-.project,
-.description,
-.projectTitle,
-.modalContent {
-    font-family: "Manrope", sans-serif;
-    font-size: 12px;
-    line-height: 1.5;
-}
-
-/* 제목 스타일 */
-.h1 {
-    font-size: 24px;
-    line-height: 1.2;
-    margin-bottom: 12px;
-}
-
-.h2 {
-    font-size: 18px;
-    line-height: 1.3;
-    margin-bottom: 12px;
-}
-
-.h3 {
-    font-size: 14px;
-    line-height: 1.4;
-    margin-bottom: 12px;
-}
-
-/* 단락 스타일 */
-.paragraph {
-    margin-bottom: 12px;
-}
-
-/* 버티컬 리듬을 위한 마진 설정 */
-.verticalRhythm > * + * {
-    margin-top: 12px;
-}
-
-/* 반응형 폰트 크기 */
-@media (max-width: 768px) {
-    .ahLanding {
-        font-size: 12px;
-    }
-
-    .h1 {
-        font-size: 12px;
-    }
-
-    .h2 {
-        font-size: 12px;
-    }
-
-    .h3 {
-        font-size: 12px;
-    }
-
-    .featured {
-        flex-direction: column;
-        height: 100vh;
-    }
-
-    .contentWrapper {
-        flex-direction: column;
-    }
-
-    .featuredColumn {
-        width: 100%;
-        height: auto;
-        min-height: 0;
-    }
-
-    .subMenuColumn {
-        position: absolute;
-        top: 0;
-        right: 0;
-        width: 50%;
-        height: 100%;
-        justify-content: center;
-    }
-}
-
-/* 새로운 레이아웃 스타일 */
+/* 기본 스타일 */
 .container {
     width: 100%;
     height: 100vh;
@@ -110,11 +24,9 @@
 .nameFrame,
 .categoriesFrame,
 .yearsFrame,
-.emptyFrame,
 .infoFrame {
     flex: 1;
-    padding: 0.625rem;
-    padding-left: 0;
+    padding: 0;
     background-color: #efefef;
 }
 
@@ -126,13 +38,17 @@
     font-weight: normal;
     color: #3c3c3c;
     text-align: left;
+    cursor: pointer;
 }
 
-.categoriesFrame,
-.yearsFrame {
-    display: flex;
-    flex-direction: column;
-    gap: 0.625rem;
+.category:hover,
+.year:hover {
+    color: #0c0c0c;
+}
+
+.category.active,
+.year.active {
+    color: #0c0c0c;
 }
 
 .bottomSection {
@@ -143,549 +59,61 @@
     overflow: hidden;
 }
 
-/* Chrome, Safari and Opera */
-.bottomSection::-webkit-scrollbar {
-    display: none;
-}
-
-.selectedItemFrame {
-    flex: 1;
-    overflow-y: scroll;
-    background-color: white;
-    height: 100%;
-    position: relative;
-    scroll-snap-type: y mandatory;
-    scroll-behavior: smooth;
-    padding: 0;
-}
-
-.selectedItemContent {
-    height: 100%;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    justify-content: flex-start;
-    scroll-snap-align: start;
-    scroll-snap-stop: always;
-    position: relative;
-    padding: 2rem 1rem 2rem 0;
-}
-
-.imageWrapper {
-    position: relative;
-    width: auto;
-    height: auto;
-    display: flex;
-    align-items: flex-start;
-    justify-content: flex-start;
-    margin-right: auto;
-}
-
-.mediaContent {
-    max-width: 100%;
-    max-height: calc(100vh - 4rem);
-    object-fit: contain;
-    margin: 0;
-}
-
-.itemDescription {
-    position: absolute;
-    bottom: 1rem;
-    left: 1rem;
-    right: 1rem;
-    text-align: center;
-    padding: 0.5rem;
-    background: rgba(255, 255, 255, 0.9);
-    font-size: 12px;
-    line-height: 1.5;
-}
-
-/* 스크롤 관련 스타일 */
-.selectedItemFrame {
-    scroll-snap-type: y mandatory;
-    scroll-behavior: smooth;
-}
-
-.selectedItemContent {
-    scroll-snap-align: start;
-    scroll-snap-stop: always;
-}
-
-.contentFrame {
-    background-color: #efefef;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 24px;
-    flex: 1;
-    height: 100%;
-    width: 100%;
-    overflow: hidden;
-}
-
-.description,
 .graphIndex {
     width: 100%;
     height: 100%;
     background: #efefef;
-    border-radius: 4px;
-    overflow: hidden;
     position: relative;
-    flex: 1;
     display: flex;
     align-items: center;
     justify-content: center;
 }
 
-.infoFrame {
-    flex: 1;
-    padding: 0.625rem;
-    padding-left: 0;
-    background-color: #efefef;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
-    align-items: flex-start;
-    height: 100%;
+.graphIndex :global(.scene-nav-info) {
+    display: none !important;
 }
 
-.featured {
-    display: flex;
-    flex-direction: column;
-    height: 100vh;
-    width: 100%;
-    position: relative;
-    overflow: hidden;
-    z-index: 1; /* 배경 이미지가 다른 요소 위에 오도록 설정 */
+.graphIndex :global([class*="scene-nav-info"]) {
+    display: none !important;
 }
 
-.contentWrapper {
-    display: flex;
-    flex: 1;
-    position: relative;
-    z-index: 2;
-    flex-direction: row;
-}
-
-.featuredColumn {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
-    padding: 12px;
-    overflow: visible;
-}
-
-.featuredColumn:first-child {
-    flex: 0 0 auto;
-    width: auto;
-    min-width: 300px;
-    max-width: 50%;
-    justify-content: space-between;
-}
-
-.logoContainer {
-    display: flex;
-    justify-content: flex-start;
-    align-items: flex-start;
-    padding-top: 20px;
-}
-
-.logo {
-    width: auto;
-    height: auto;
-    object-fit: contain;
-}
-
-.description {
-    padding: 12px;
-    margin-left: 36px;
-    margin-right: 36px;
-    overflow-x: auto;
-    white-space: nowrap;
-    overflow: visible;
-}
-
-.myMasonryGrid {
-    display: flex;
-    margin-left: -12px; /* gutter size offset */
-    width: auto;
-}
-
-.myMasonryGridColumn {
-    padding-right: 12px; /* gutter size */
-    background-clip: padding-box;
-}
-
-.card {
-    background-color: #efefef;
-    border-radius: 0px;
-    margin-bottom: 20px;
-    overflow: hidden;
-    border: 1px solid #3c3c3c;
-    width: 100%; /* 카드가 컬럼 너비에 맞게 조정되도록 */
-}
-
-.cardImage {
-    width: 100%;
-    height: auto;
-    object-fit: cover;
-}
-
-.card h3 {
-    font-size: 12px;
-    margin: 12px 12px 6px;
-    color: #0c0c0c;
-    font-weight: 300; /* Changed from normal to 200 */
-}
-
-.card p {
-    font-size: 12px;
-    margin: 6px 12px 12px 12px;
-    color: #3c3c3c;
-    font-weight: 300; /* Added font-weight: 200 */
-}
-
-/* 카드 호버 효과 제거 */
-.card:hover {
-    transform: none;
-}
-
-/* Learn More 링크 스일 제거 */
-.cardLink {
-    display: none;
-}
-
-/* 배경 이미지 설정 */
-.backgroundImage {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-image: url("/image/img-11.JPG");
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    z-index: 0;
-}
-
-/* 콘텐츠 오버레이 */
-.contentOverlay {
-    position: relative;
-    width: 100%;
-    min-height: 100vh;
-    z-index: 1;
-}
-
-.centerColumnHeader {
-    font-family: "Manrope", sans-serif;
-    font-size: 32px;
-    color: #fff;
-    font-weight: 600;
-    text-align: center;
-    width: 100%;
-    padding: 16px 0;
-}
-
-.backgroundContainer {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: -1; /* 배경 이미지를 컨텐츠 뒤로 보냄 */
-    transition: filter 0.3s ease;
-}
-
-.backgroundContainer.blurred {
-    filter: blur(10px);
-}
-
-.backgroundItem {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    opacity: 0;
-    transition: opacity 0.5s ease;
-}
-
-.backgroundItem.active {
-    opacity: 1;
-}
-
-.projectIframe {
-    width: 100%;
-    height: 100%;
-    border: none;
-    pointer-events: all; /* iframe 클릭 가능하게 변경 */
-}
-
-.footerColumn a {
-    color: inherit;
-    text-decoration: none;
-}
-
-.footerColumn a:hover {
-    text-decoration: underline;
-}
-
-.cardVideo {
-    width: 100%;
-    height: auto;
-    object-fit: cover;
-}
-
-.horizontalScrollContainer {
-    display: flex;
-    overflow-x: auto;
-    overflow-y: hidden;
-    scroll-snap-type: x mandatory;
-    -webkit-overflow-scrolling: touch;
-    padding-bottom: 20px;
-    width: 100%;
-    scrollbar-width: none; /* Firefox */
-    -ms-overflow-style: none; /* Internet Explorer 10+ */
-}
-
-.horizontalScrollContainer::-webkit-scrollbar {
-    display: none; /* Chrome, Safari, and Opera */
-}
-
-.column {
-    flex: 0 0 auto;
-    width: 300px;
-    margin-right: 20px;
-    scroll-snap-align: start;
-}
-
-.headerText {
-    font-family: "Manrope", sans-serif;
-    font-size: 24px;
-    color: #fff;
-    font-weight: 600;
-    position: absolute;
-    top: 16px;
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 10;
-    text-align: center;
-    width: 100%;
-    padding: 12px 0;
-}
-
-.videoError {
-    width: 100%;
-    height: 200px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: #f8f8f8;
-    color: #666;
-    font-size: 14px;
-}
-
-.noOverflow {
-    height: 100vh;
-    overflow: hidden;
-}
-
-.scrollContainer {
-    height: 100%;
-    overflow-y: auto;
-    overflow-x: hidden;
-    scrollbar-width: none; /* Firefox */
-    -ms-overflow-style: none; /* IE and Edge */
-}
-
-.scrollContainer::-webkit-scrollbar {
-    display: none; /* Chrome, Safari, and Opera */
-}
-
-.pageWrapper {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    overflow: hidden;
-}
-
-.container {
-    height: 100%;
-    overflow: hidden;
-}
-
-@media (min-width: 768px) {
-    .mobileContentWrapper {
-        flex-direction: row;
-    }
-}
-
-.featuredColumn {
-    width: 100%;
-}
-
-@media (min-width: 768px) {
-    .featuredColumn {
-        width: 33.33%;
-    }
-}
-
-.featuredColumn {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
-    padding: 12px;
-    overflow: visible;
-}
-
-@media (max-width: 768px) {
-    .featuredColumn {
-        height: auto;
-        min-height: 50vh;
-    }
-}
-
-.subMenuColumn {
-    justify-content: flex-start;
-}
-
-@media (max-width: 768px) {
-    .subMenuColumn {
-        height: auto;
-        min-height: 0;
-    }
-}
-
-.contentWrapper {
-    display: flex;
-    flex: 1;
-    position: relative;
-    z-index: 2;
-    flex-direction: row;
-}
-
-.featuredColumn {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
-    padding: 12px;
-    overflow: visible;
-}
-
-.featuredColumn:first-child {
-    flex: 0 0 auto;
-    width: auto;
-    min-width: 300px;
-    max-width: 50%;
-    justify-content: space-between;
-}
-
-@media (max-width: 768px) {
-    .contentWrapper {
-        flex-direction: row;
-        justify-content: flex-start; /* 왼쪽 정렬 */
-    }
-
-    .featuredColumn {
-        flex: 0 0 auto; /* flex-grow: 0, flex-shrink: 0, flex-basis: auto */
-        width: auto; /* 내용에 맞게 너비 조정 */
-        min-width: 0; /* 최소 너비 제거 */
-        max-width: none; /* 최대 너비 제한 제거 */
-    }
-
-    .featuredColumn:first-child {
-        min-width: 0; /* 최소 너비 제거 */
-        max-width: none; /* 최대 너비 제한 제거 */
-    }
-
-    .subMenuColumn {
-        position: relative; /* absolute 대신 relative 사용 */
-        top: auto;
-        right: auto;
-        width: auto;
-        height: auto;
-        justify-content: flex-start;
-    }
-}
-
-.category {
-    cursor: pointer;
-    transition: color 0.3s ease;
-}
-
-.category:hover {
-    color: #0c0c0c;
-}
-
-.category.active {
-    color: #0c0c0c;
-    font-weight: 500;
-}
-
-/* 스크롤바 숨기기 */
-.selectedItemFrame {
-    scrollbar-width: none;
-    -ms-overflow-style: none;
-}
-
-.selectedItemFrame::-webkit-scrollbar {
-    display: none;
-}
-
-/* 기존 스타일은 유지하고 모바일 관련 스타일만 추가/수정합니다 */
-
+/* 모바일 스타일 */
 @media (max-width: 768px) {
     .container {
         flex-direction: column;
         height: 100vh;
         overflow: hidden;
-        padding: 16px;
+        padding: 0;
     }
 
     .topSection {
         flex-direction: column;
         width: 100%;
         height: auto;
-        min-height: auto;
-        padding: 0;
-        margin-bottom: 16px;
+        padding: 16px;
+        gap: 12px;
         border-right: none;
         border-bottom: 1px solid #dcdcdc;
-        gap: 12px;
     }
 
-    /* 이름 프임 */
     .nameFrame {
         width: 100%;
-        padding: 8px 0;
-        margin: 0;
-        background-color: #efefef;
+        padding: 0;
+        margin-bottom: 8px;
     }
 
-    .name {
-        font-size: 12px;
-        color: #3c3c3c;
-    }
-
-    /* 카테고리 프레임 */
-    .categoriesFrame {
+    .categoriesFrame,
+    .yearsFrame {
         width: 100%;
         padding: 0;
         position: relative;
-        background-color: #efefef;
+        background: none;
     }
 
     .dropdownButton {
         width: 100%;
-        background: rgba(255, 255, 255, 0.95);
+        padding: 0;
+        background: #efefef;
         border: none;
         text-align: left;
         font-size: 12px;
@@ -695,6 +123,7 @@
         justify-content: space-between;
         align-items: center;
         box-shadow: none;
+        margin-bottom: 8px;
     }
 
     .dropdownContent {
@@ -702,8 +131,8 @@
         top: calc(100% + 4px);
         left: 0;
         width: 100%;
-        background: rgba(255, 255, 255, 0.95);
-        border: none;
+        background: #efefef;
+        border: 1px solid #dcdcdc;
         box-shadow: none;
         z-index: 1000;
         max-height: 200px;
@@ -718,45 +147,24 @@
         cursor: pointer;
     }
 
-    .categoriesFrame,
-    .yearsFrame {
-        width: 100%;
-        padding: 0;
-        position: relative;
-        background: none;
+    .category:hover,
+    .year:hover {
+        color: #0c0c0c;
     }
 
     .category.active,
     .year.active {
         color: #0c0c0c;
-        font-weight: 500;
-        background: rgba(0, 0, 0, 0.05);
     }
 
-    .category:hover,
-    .year:hover {
-        background: rgba(0, 0, 0, 0.05);
-    }
-
-    /* 연도 프레임 */
-    .yearsFrame {
-        width: 100%;
-        padding: 0;
-        position: relative;
-        background-color: #efefef;
-    }
-
-    /* Info 프레임 */
     .infoFrame {
         display: none;
     }
 
-    /* 하단 섹션 */
     .bottomSection {
         flex: 1;
         width: 100%;
-        height: calc(100vh - 200px);
-        min-height: 400px;
+        height: calc(100vh - 160px);
         overflow: hidden;
     }
 
@@ -766,386 +174,39 @@
         width: 100%;
     }
 
-    .graphIndex {
-        width: 100% !important;
-        height: 100% !important;
-        position: relative;
-    }
-
-    /* GraphIndex 내부 요소들 크기 조정 */
-    .graphIndex > div {
-        width: 100% !important;
-        height: 100% !important;
-    }
-
-    .graphIndex canvas {
-        width: 100% !important;
-        height: 100% !important;
-    }
-
-    /* 드롭다운 메뉴 아이템 스타일 */
-    .category,
-    .year {
-        padding: 8px;
-        font-size: 12px;
-        color: #3c3c3c;
-        cursor: pointer;
-    }
-
-    .category:hover,
-    .year:hover {
-        background-color: #f5f5f5;
-    }
-
-    .category.active,
-    .year.active {
-        color: #0c0c0c;
-        font-weight: 500;
+    /* 모바일 모달 스타일 */
+    .modalContent {
+        max-width: 100vw;
+        margin: 16px;
     }
 }
 
-/* Image 컴포넌트 스타일 수정 */
-@media (max-width: 768px) {
-    .selectedItemContent img {
-        max-width: 100% !important;
-        height: auto !important;
-        width: auto !important;
-    }
-}
-
-.year {
+/* 모바일 툴팁과 모달 스타일 */
+.mobileTooltip {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(255, 255, 255, 0.95);
+    padding: 12px 16px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    max-width: 80%;
+    text-align: center;
     cursor: pointer;
-    transition: color 0.3s ease;
+    animation: fadeIn 0.2s ease;
 }
 
-.year:hover {
-    color: #0c0c0c;
-}
-
-.year.active {
-    color: #0c0c0c;
-    font-weight: 500;
-}
-
-/* 기본 info 스타일 */
-.info {
+.mobileTooltip h4 {
     font-size: 12px;
-    font-weight: normal;
+    margin: 0 0 4px 0;
+    color: #0c0c0c;
+}
+
+.mobileTooltip p {
+    font-size: 12px;
+    margin: 0;
     color: #3c3c3c;
-    text-align: left !important;
-}
-
-/* 기본 infoFrame 스타일 */
-.infoFrame {
-    flex: 1;
-    padding: 0;
-    background-color: #efefef;
-    display: flex;
-    justify-content: flex-start;
-}
-
-/* 모바일 스타일 - 파일 맨 아래에 위치하도록 이동 */
-@media (max-width: 768px) {
-    .info {
-        /* Remove text-align override since it's already left-aligned */
-    }
-
-    .infoFrame {
-        padding: 0;
-        background-color: #efefef;
-    }
-
-    .contentFrame {
-        background: #efefef;
-    }
-}
-
-/* scene-nav-info 숨기기 */
-.graphIndex :global(.scene-nav-info) {
-    display: none !important;
-}
-
-/* 또는 */
-.graphIndex div[class*="scene-nav-info"] {
-    display: none !important;
-}
-
-@media (max-width: 768px) {
-    .container {
-        padding: 1rem;
-    }
-
-    .topSection {
-        flex-direction: column;
-        width: 100%;
-        gap: 1rem;
-    }
-
-    .nameFrame {
-        width: 100%;
-    }
-
-    .categoriesFrame,
-    .yearsFrame {
-        position: relative;
-        width: 100%;
-    }
-
-    .dropdownButton {
-        width: 100%;
-
-        background: transparent;
-        border: 1px solid #000;
-        text-align: left;
-        cursor: pointer;
-    }
-
-    .dropdownContent {
-        position: absolute;
-        top: 100%;
-        left: 0;
-        width: 100%;
-        background: white;
-        border: 1px solid #000;
-        max-height: 200px;
-        overflow-y: auto;
-        z-index: 1000;
-    }
-
-    .category,
-    .year {
-        padding: 0.5rem;
-        cursor: pointer;
-    }
-
-    .bottomSection {
-        margin-top: 1rem;
-        height: calc(100vh - 200px);
-    }
-
-    .graphIndex {
-        width: 100%;
-        height: 100%;
-    }
-}
-
-.graphIndex {
-    width: 100%;
-    height: 100%;
-    background: #efefef;
-    border-radius: 4px;
-    position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-/* GraphIndex 내부의 canvas와 div 요소들이 컨테이너에 맞게 조정되도록 */
-.graphIndex > div {
-    width: 100% !important;
-    height: 100% !important;
-}
-
-.graphIndex canvas {
-    width: 100% !important;
-    height: 100% !important;
-}
-
-@media (max-width: 768px) {
-    .container {
-        flex-direction: column;
-        height: 100vh;
-        overflow: hidden;
-    }
-
-    .topSection {
-        flex-direction: column;
-        width: 100%;
-        padding: 16px;
-        height: auto;
-        min-height: auto;
-        border-right: none;
-    }
-
-    .bottomSection {
-        flex: 1;
-        height: calc(100vh - 200px); /* topSection의 대략적인 높이를 뺀 값 */
-        min-height: 400px; /* 최소 높이 설정 */
-        overflow: hidden;
-    }
-
-    .contentFrame {
-        padding: 16px;
-        height: 100%;
-    }
-
-    .graphIndex {
-        width: 100%;
-        height: 100%;
-    }
-}
-
-@media (max-width: 768px) {
-    .container {
-        flex-direction: column;
-        height: 100vh;
-        overflow: hidden;
-        padding: 0;
-    }
-
-    .topSection {
-        flex-direction: column;
-        width: 100%;
-        height: auto;
-        padding: 16px;
-        gap: 12px;
-        border-right: none;
-        border-bottom: 1px solid #dcdcdc;
-    }
-
-    /* name 프레임 */
-    .nameFrame {
-        width: 100%;
-        padding: 0;
-        margin-bottom: 8px;
-    }
-
-    /* 카테고리 프레임 */
-    .categoriesFrame {
-        width: 100%;
-        padding: 0;
-    }
-
-    .dropdownButton {
-        width: 100%;
-        margin-bottom: 8px;
-        background-color: #efefef;
-        border: none;
-        text-align: left;
-        font-size: 12px;
-        color: #3c3c3c;
-        cursor: pointer;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
-
-    .dropdownButton::after {
-        content: "▼";
-        font-size: 8px;
-        margin-left: 8px;
-    }
-
-    .dropdownContent {
-        position: absolute;
-        top: 100%;
-        left: 0;
-        width: 100%;
-        background-color: #efefef;
-        border: 1px solid #dcdcdc;
-        border-top: none;
-        z-index: 1000;
-        max-height: 200px;
-        overflow-y: auto;
-    }
-
-    .category,
-    .year {
-        padding: 8px;
-        font-size: 12px;
-        color: #3c3c3c;
-        cursor: pointer;
-    }
-
-    .category:hover,
-    .year:hover {
-        background-color: #f5f5f5;
-    }
-
-    .category.active,
-    .year.active {
-        color: #0c0c0c;
-        font-weight: 500;
-    }
-
-    /* 연도 프레임 */
-    .yearsFrame {
-        width: 100%;
-        padding: 0;
-        position: relative;
-    }
-
-    /* Info 프레임 숨기기 */
-    .infoFrame {
-        display: none;
-    }
-
-    /* 하단 섹션 */
-    .bottomSection {
-        flex: 1;
-        width: 100%;
-        height: calc(100vh - 160px); /* topSection 높이를 뺀 나머지 */
-        overflow: hidden;
-    }
-
-    .contentFrame {
-        padding: 16px;
-        height: 100%;
-        width: 100%;
-    }
-
-    .graphIndex {
-        width: 100% !important;
-        height: 100% !important;
-        position: relative;
-    }
-
-    /* GraphIndex 내부 요소들 크기 조정 */
-    .graphIndex > div {
-        width: 100% !important;
-        height: 100% !important;
-    }
-
-    .graphIndex canvas {
-        width: 100% !important;
-        height: 100% !important;
-    }
-}
-
-/* 스크롤바 스타일링 */
-.dropdownContent::-webkit-scrollbar {
-    width: 4px;
-}
-
-.dropdownContent::-webkit-scrollbar-track {
-    background: #f1f1f1;
-}
-
-.dropdownContent::-webkit-scrollbar-thumb {
-    background: #888;
-    border-radius: 0;
-}
-
-.dropdownContent::-webkit-scrollbar-thumb:hover {
-    background: #555;
-}
-
-@media (max-width: 768px) {
-    .nodeLabel {
-        display: block !important;
-        font-size: 10px;
-        color: #3c3c3c;
-        position: absolute;
-        bottom: -16px;
-        left: 50%;
-        transform: translateX(-50%);
-        white-space: nowrap;
-    }
-
-    .graphIndex {
-        /* 노드 라벨을 위한 여백 확보 */
-        padding-bottom: 20px;
-    }
 }
 
 .mobileNodeInfo {
@@ -1167,37 +228,15 @@
     margin-bottom: 12px;
 }
 
-.mobileNodeInfoHeader h3 {
-    font-size: 12px;
-    margin: 0;
-    color: #0c0c0c;
-}
-
-.mobileNodeInfoHeader p {
-    font-size: 12px;
-    margin: 0;
-    color: #3c3c3c;
-}
-
 .closeButton {
     background: none;
     border: none;
     padding: 8px;
     cursor: pointer;
     color: #3c3c3c;
-    font-size: 16px;
+    font-size: 12px;
 }
 
-@keyframes slideUp {
-    from {
-        transform: translateY(100%);
-    }
-    to {
-        transform: translateY(0);
-    }
-}
-
-/* 링크 버튼 스타일 추가 */
 .linkButton {
     width: 100%;
     padding: 8px;
@@ -1209,6 +248,53 @@
     cursor: pointer;
 }
 
-.linkButton:hover {
-    background: #e0e0e0;
+/* 애니메이션 */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translate(-50%, 10px);
+    }
+    to {
+        opacity: 1;
+        transform: translate(-50%, 0);
+    }
+}
+
+@keyframes slideUp {
+    from {
+        transform: translateY(100%);
+    }
+    to {
+        transform: translateY(0);
+    }
+}
+
+/* 모달 스타일 수정 */
+.modalContent {
+    background-color: #efefef;
+    border: 1px solid #dcdcdc;
+    padding: 20px;
+    max-height: 90vh;
+    overflow: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: fit-content;
+}
+
+.modalImageContainer {
+    position: relative;
+    width: auto;
+    height: auto;
+    margin: 0 auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.modalImage {
+    width: auto;
+    height: auto;
+    max-height: 70vh;
+    object-fit: contain;
 }
