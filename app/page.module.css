@@ -53,7 +53,7 @@
     display: flex;
     align-items: center;
     gap: 12px;
-    margin-bottom: 6px;
+    margin-bottom: 12px;
 }
 
 .itemTitle {
@@ -76,6 +76,17 @@
     font-size: 12px;
     color: #3c3c3c;
     line-height: 1.5;
+    max-height: 0;
+    overflow: hidden;
+    padding: 0;
+    margin: 0;
+    opacity: 0;
+}
+
+.itemDescription.expanded {
+    max-height: 1000px;
+    padding: 12px 0 0 2px;
+    opacity: 1;
 }
 
 .centerSection {
@@ -188,6 +199,58 @@
         width: 100%;
         height: auto;
     }
+
+    .itemListRow {
+        padding: 12px;
+    }
+
+    .itemListContent {
+        flex-direction: column;
+        gap: 12px;
+        align-items: flex-start;
+    }
+
+    .itemListThumbnail {
+        width: 100%;
+        height: auto;
+        aspect-ratio: 1;
+        display: flex;
+        justify-content: flex-start;
+    }
+
+    .itemListThumbnail img,
+    .itemListThumbnail video {
+        width: auto;
+        height: 100%;
+        object-fit: contain;
+        object-position: left;
+    }
+
+    .itemListInfo {
+        width: 100%;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 6px;
+    }
+
+    .itemListTitle {
+        width: 100%;
+    }
+
+    .itemListMeta {
+        width: 100%;
+    }
+
+    .itemDescription.expanded {
+        padding: 12px 0 0 0;
+    }
+    .itemListContent {
+        display: flex;
+        align-items: left;
+        gap: 12px;
+        width: 100%;
+        cursor: pointer;
+    }
 }
 
 @media (max-width: 425px) {
@@ -224,6 +287,29 @@
     .writingInfo span:first-child {
         display: none;
     }
+
+    .itemListRow {
+        padding: 12px;
+    }
+
+    .itemListMeta span:first-child {
+        display: none;
+    }
+
+    .itemListThumbnail img,
+    .itemListThumbnail video {
+        width: auto;
+        height: 100%;
+        object-fit: contain;
+        object-position: left;
+    }
+    .itemListContent {
+        display: flex;
+        align-items: left;
+        gap: 12px;
+        width: 100%;
+        cursor: pointer;
+    }
 }
 
 @media (max-width: 375px) {
@@ -259,6 +345,25 @@
     .writingInfo span:first-child {
         display: none;
     }
+
+    .itemListRow {
+        padding: 12px;
+    }
+
+    .itemListThumbnail img,
+    .itemListThumbnail video {
+        width: auto;
+        height: 100%;
+        object-fit: contain;
+        object-position: left;
+    }
+    .itemListContent {
+        display: flex;
+        align-items: left;
+        gap: 12px;
+        width: 100%;
+        cursor: pointer;
+    }
 }
 
 @media (max-width: 320px) {
@@ -293,6 +398,17 @@
     }
     .writingInfo span:first-child {
         display: none;
+    }
+
+    .itemListRow {
+        padding: 12px;
+    }
+    .itemListContent {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        width: 100%;
+        cursor: pointer;
     }
 }
 
@@ -549,4 +665,93 @@
 
 .aboutLink:hover::after {
     width: 100%;
+}
+
+.itemList {
+    width: 100%;
+    height: 100%;
+    overflow-y: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+.itemList::-webkit-scrollbar {
+    display: none;
+}
+
+.itemListRow {
+    display: flex;
+    flex-direction: column;
+    padding: 12px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.itemListContent {
+    display: flex;
+    gap: 12px;
+    width: 100%;
+    cursor: pointer;
+}
+
+.itemDescription {
+    max-height: 0;
+    overflow: hidden;
+
+    padding: 0;
+    margin: 0;
+    opacity: 0;
+}
+
+.itemDescription.expanded {
+    max-height: 1000px;
+    opacity: 1;
+}
+
+.itemListThumbnail {
+    width: 320px;
+    height: 320px;
+    flex-shrink: 0;
+    overflow: hidden;
+}
+
+.itemListThumbnail img,
+.itemListThumbnail video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.itemListInfo {
+    flex: 1;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    min-width: 0;
+}
+
+.itemListTitle {
+    font-size: 12px;
+    color: #3c3c3c;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.itemListMeta {
+    display: flex;
+    gap: 12px;
+    font-size: 12px;
+    color: #3c3c3c;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+.descriptionContent {
+    font-size: 12px;
+    color: #3c3c3c;
+    line-height: 1.5;
+    white-space: pre-line;
+    word-break: keep-all;
+    margin-bottom: 12px;
 }

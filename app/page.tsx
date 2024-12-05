@@ -44,6 +44,8 @@ export default function Home() {
     const animationRef = useRef<number>();
     const [touchStart, setTouchStart] = useState(0);
     const [touchEnd, setTouchEnd] = useState(0);
+    const [isListView, setIsListView] = useState(true);
+    const [expandedItems, setExpandedItems] = useState<Set<string>>(new Set());
 
     const handleMouseDown = (e: React.MouseEvent) => {
         e.preventDefault();
@@ -276,10 +278,20 @@ export default function Home() {
     const handleCategoryClick = (category: string) => {
         setSelectedCategory(category);
         setShowAbout(false);
+        setIsListView(true);
+        setSelectedItem(null);
     };
 
     const handleItemClick = (item: ContentItem) => {
-        setSelectedItem(item);
+        setExpandedItems((prev) => {
+            const newSet = new Set(prev);
+            if (newSet.has(item.id)) {
+                newSet.delete(item.id);
+            } else {
+                newSet.add(item.id);
+            }
+            return newSet;
+        });
     };
 
     const handleAboutClick = () => {
@@ -316,7 +328,7 @@ export default function Home() {
     return (
         <div className={styles.container}>
             <div className={styles.contentContainer}>
-                <div className={`${styles.mediaSection} ${selectedCategory === "Writing" ? styles.writing : ""}`}>
+                <div className={`${styles.mediaSection} ${selectedCategory ? styles.writing : ""}`}>
                     {showAbout ? (
                         <div className={styles.aboutContent}>
                             <div className={styles.aboutImageContainer}>
@@ -392,67 +404,20 @@ export default function Home() {
                                 </div>
                             ))}
                         </div>
-                    ) : (
-                        <>
-                            <div
-                                className={styles.mediaFrame}
-                                onTouchStart={handleImageTouchStart}
-                                onTouchMove={handleImageTouchMove}
-                                onTouchEnd={handleImageTouchEnd}
-                            >
-                                {selectedItem?.imageUrl && (
-                                    <Image
-                                        src={selectedItem.imageUrl}
-                                        alt={selectedItem.title}
-                                        width={0}
-                                        height={0}
-                                        sizes="100vh"
-                                        style={{
-                                            maxWidth: "100%",
-                                            width: "auto",
-                                            objectFit: "contain",
-                                        }}
-                                        priority
-                                        loading="eager"
-                                        quality={75}
-                                    />
-                                )}
-                                {!selectedItem?.imageUrl && selectedItem?.videoUrl && (
-                                    <video
-                                        src={selectedItem.videoUrl}
-                                        autoPlay
-                                        loop
-                                        muted
-                                        playsInline
-                                        width={0}
-                                        height={0}
-                                        style={{
-                                            maxWidth: "100%",
-                                            height: "100%",
-                                            width: "auto",
-                                            objectFit: "contain",
-                                        }}
-                                    />
-                                )}
-                            </div>
-                            {(selectedCategory === "Taste" || selectedCategory === "Artifact") && (
-                                <div className={styles.sidebar}>
-                                    {getCategoryItems().map((item) => (
-                                        <div
-                                            key={item.id}
-                                            className={`${styles.thumbnail} ${
-                                                selectedItem?.id === item.id ? styles.active : ""
-                                            }`}
-                                            onClick={() => handleItemClick(item)}
-                                        >
+                    ) : selectedCategory === "Taste" || selectedCategory === "Artifact" ? (
+                        <div className={styles.itemList}>
+                            {getCategoryItems().map((item) => (
+                                <div key={item.id} className={styles.itemListRow}>
+                                    <div className={styles.itemListContent} onClick={() => handleItemClick(item)}>
+                                        <div className={styles.itemListThumbnail}>
                                             {item.imageUrl && (
                                                 <Image
                                                     src={item.imageUrl}
                                                     alt={item.title}
-                                                    width={80}
-                                                    height={80}
+                                                    width={640}
+                                                    height={640}
                                                     loading="eager"
-                                                    quality={50}
+                                                    quality={75}
                                                 />
                                             )}
                                             {!item.imageUrl && item.videoUrl && (
@@ -466,45 +431,43 @@ export default function Home() {
                                                 />
                                             )}
                                         </div>
-                                    ))}
+                                        <div className={styles.itemListInfo}>
+                                            <div className={styles.itemListTitle}>{item.title}</div>
+                                            <div className={styles.itemListMeta}>
+                                                <span>{item.category}</span>
+                                                <span>{item.date}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div
+                                        className={`${styles.itemDescription} ${
+                                            expandedItems.has(item.id) ? styles.expanded : ""
+                                        }`}
+                                    >
+                                        <div className={styles.descriptionContent}>
+                                            {typeof item.description === "string"
+                                                ? item.description
+                                                : item.description?.ko}
+                                        </div>
+                                        <div className={styles.descriptionHeader}>
+                                            {((selectedCategory === "Taste" && item.url) ||
+                                                (selectedCategory === "Artifact" && item.projectUrl)) && (
+                                                <a
+                                                    href={selectedCategory === "Artifact" ? item.projectUrl : item.url}
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                    className={styles.itemLink}
+                                                >
+                                                    link
+                                                </a>
+                                            )}
+                                        </div>
+                                    </div>
                                 </div>
-                            )}
-                        </>
-                    )}
+                            ))}
+                        </div>
+                    ) : null}
                 </div>
-                {selectedCategory !== "Writing" && !showAbout && (
-                    <div className={styles.descriptionFrame}>
-                        {selectedItem && (
-                            <>
-                                <div className={styles.descriptionHeader}>
-                                    <div className={styles.itemTitle}>{selectedItem.title}</div>
-                                    <div className={styles.itemCategory}>{selectedItem.category}</div>
-                                    <div className={styles.itemDate}>{selectedItem.date}</div>
-                                    {((selectedCategory === "Taste" && selectedItem.url) ||
-                                        (selectedCategory === "Artifact" && selectedItem.projectUrl)) && (
-                                        <a
-                                            href={
-                                                selectedCategory === "Artifact"
-                                                    ? selectedItem.projectUrl
-                                                    : selectedItem.url
-                                            }
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                            className={styles.itemLink}
-                                        >
-                                            link
-                                        </a>
-                                    )}
-                                </div>
-                                <div className={styles.itemDescription}>
-                                    {typeof selectedItem.description === "string"
-                                        ? selectedItem.description
-                                        : selectedItem.description?.ko}
-                                </div>
-                            </>
-                        )}
-                    </div>
-                )}
                 <div className={styles.centerSection}>
                     <div className={styles.menuRow}>
                         {renderCategories()}
