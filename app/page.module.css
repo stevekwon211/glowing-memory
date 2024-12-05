@@ -258,6 +258,16 @@
         width: 100%;
         cursor: pointer;
     }
+
+    .overlayImageWrapper {
+        left: -90px !important;
+        top: 100px !important;
+    }
+
+    .overlayImage {
+        width: 150px;
+        height: auto;
+    }
 }
 
 @media (max-width: 425px) {
@@ -316,6 +326,14 @@
         gap: 12px;
         width: 100%;
         cursor: pointer;
+    }
+
+    .overlayImageWrapper {
+        transform: translate(100px, 80px) !important;
+    }
+
+    .overlayImage {
+        width: 120px;
     }
 }
 
@@ -589,6 +607,7 @@
     overflow: visible;
     position: relative;
     user-select: none;
+    touch-action: none;
 }
 
 .aboutImage {
@@ -604,6 +623,12 @@
     user-select: none;
     cursor: grab;
     overflow: visible;
+    touch-action: none;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
 }
 
 .overlayImage {

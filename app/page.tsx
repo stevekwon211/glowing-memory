@@ -36,7 +36,7 @@ export default function Home() {
     const [_isMobile, _setIsMobile] = useState(false);
     const [showAbout, setShowAbout] = useState(true);
     const [isDragging, setIsDragging] = useState(false);
-    const [position, setPosition] = useState({ x: 492, y: -60 });
+    const [position, setPosition] = useState({ x: 0, y: 0 });
     const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
     const [velocity, setVelocity] = useState({ x: 0, y: 0 });
     const [lastPosition, setLastPosition] = useState({ x: 0, y: 0 });
@@ -171,11 +171,10 @@ export default function Home() {
         }
         setIsDragging(true);
         const touch = e.touches[0];
-        const newDragStart = {
+        setDragStart({
             x: touch.clientX - position.x,
             y: touch.clientY - position.y,
-        };
-        setDragStart(newDragStart);
+        });
         setLastPosition(position);
         setLastTime(Date.now());
         setVelocity({ x: 0, y: 0 });
@@ -296,6 +295,31 @@ export default function Home() {
             </div>
         );
     };
+
+    // ��기 위치를 화면 크기에 따라 설정하는 함수
+    const getInitialPosition = () => {
+        if (typeof window !== "undefined") {
+            if (window.innerWidth <= 768) {
+                return { x: -50, y: -50 };
+            }
+        }
+        return { x: 492, y: -60 };
+    };
+
+    // 컴포넌트 마운트 시 초기 위치 설정
+    useEffect(() => {
+        setPosition(getInitialPosition());
+    }, []);
+
+    // 화면 크기 변경 감지
+    useEffect(() => {
+        const handleResize = () => {
+            setPosition(getInitialPosition());
+        };
+
+        window.addEventListener("resize", handleResize);
+        return () => window.removeEventListener("resize", handleResize);
+    }, []);
 
     return (
         <div className={styles.container}>
