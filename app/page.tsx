@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useRef, useCallback, useMemo } from "react";
 import styles from "./page.module.css";
 import { contentItems } from "../data/content";
 import { writingLinks } from "../data/writings";
@@ -32,7 +32,7 @@ interface Project {
 
 export default function Home() {
     const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
-    const [selectedItem, setSelectedItem] = useState<ContentItem | null>(null);
+    const [_selectedItem, setSelectedItem] = useState<ContentItem | null>(null);
     const [_isMobile, _setIsMobile] = useState(false);
     const [showAbout, setShowAbout] = useState(true);
     const [isDragging, setIsDragging] = useState(false);
@@ -42,10 +42,40 @@ export default function Home() {
     const [lastPosition, setLastPosition] = useState({ x: 0, y: 0 });
     const [lastTime, setLastTime] = useState(0);
     const animationRef = useRef<number>();
-    const [touchStart, setTouchStart] = useState(0);
-    const [touchEnd, setTouchEnd] = useState(0);
-    const [isListView, setIsListView] = useState(true);
+    const [_touchStart, _setTouchStart] = useState(0);
+    const [_touchEnd, _setTouchEnd] = useState(0);
     const [expandedItems, setExpandedItems] = useState<Set<string>>(new Set());
+
+    const memoizedVelocity = useMemo(() => velocity, [velocity]);
+    const memoizedPosition = useMemo(() => position, [position]);
+
+    const applyInertia = useCallback(() => {
+        let currentVelocity = { ...memoizedVelocity };
+        let currentPosition = { ...memoizedPosition };
+
+        const animate = () => {
+            const friction = 0.95;
+            currentVelocity = {
+                x: currentVelocity.x * friction,
+                y: currentVelocity.y * friction,
+            };
+
+            currentPosition = {
+                x: currentPosition.x + currentVelocity.x,
+                y: currentPosition.y + currentVelocity.y,
+            };
+
+            setPosition(currentPosition);
+
+            if (Math.abs(currentVelocity.x) > 0.1 || Math.abs(currentVelocity.y) > 0.1) {
+                animationRef.current = requestAnimationFrame(animate);
+            } else {
+                animationRef.current = undefined;
+            }
+        };
+
+        animationRef.current = requestAnimationFrame(animate);
+    }, [memoizedVelocity, memoizedPosition, setPosition]);
 
     const handleMouseDown = (e: React.MouseEvent) => {
         e.preventDefault();
@@ -85,40 +115,12 @@ export default function Home() {
         setLastTime(currentTime);
     };
 
-    const handleMouseUp = () => {
+    const handleMouseUp = useCallback(() => {
         if (isDragging) {
             setIsDragging(false);
             applyInertia();
         }
-    };
-
-    const applyInertia = () => {
-        let currentVelocity = { ...velocity };
-        let currentPosition = { ...position };
-
-        const animate = () => {
-            const friction = 0.95;
-            currentVelocity = {
-                x: currentVelocity.x * friction,
-                y: currentVelocity.y * friction,
-            };
-
-            currentPosition = {
-                x: currentPosition.x + currentVelocity.x,
-                y: currentPosition.y + currentVelocity.y,
-            };
-
-            setPosition(currentPosition);
-
-            if (Math.abs(currentVelocity.x) > 0.1 || Math.abs(currentVelocity.y) > 0.1) {
-                animationRef.current = requestAnimationFrame(animate);
-            } else {
-                animationRef.current = undefined;
-            }
-        };
-
-        animationRef.current = requestAnimationFrame(animate);
-    };
+    }, [isDragging, applyInertia, setIsDragging]);
 
     useEffect(() => {
         const handleGlobalMouseUp = () => {
@@ -207,35 +209,6 @@ export default function Home() {
         }
     };
 
-    const handleImageTouchStart = (e: React.TouchEvent) => {
-        setTouchStart(e.touches[0].clientX);
-    };
-
-    const handleImageTouchMove = (e: React.TouchEvent) => {
-        setTouchEnd(e.touches[0].clientX);
-    };
-
-    const handleImageTouchEnd = () => {
-        if (!selectedCategory) return;
-
-        const items = getCategoryItems();
-        const currentIndex = items.findIndex((item) => item.id === selectedItem?.id);
-        const minSwipeDistance = 50;
-
-        if (touchStart - touchEnd > minSwipeDistance && currentIndex < items.length - 1) {
-            // 왼쪽으로 스와이프 - 다음 아이템
-            setSelectedItem(items[currentIndex + 1]);
-        }
-
-        if (touchEnd - touchStart > minSwipeDistance && currentIndex > 0) {
-            // 오른쪽으로 스와이프 - 이전 아이템
-            setSelectedItem(items[currentIndex - 1]);
-        }
-
-        setTouchStart(0);
-        setTouchEnd(0);
-    };
-
     // 선택된 카테고리의 아이템들을 가져오는 함수
     const getCategoryItems = useCallback((): ContentItem[] => {
         if (selectedCategory === "Taste") {
@@ -278,7 +251,6 @@ export default function Home() {
     const handleCategoryClick = (category: string) => {
         setSelectedCategory(category);
         setShowAbout(false);
-        setIsListView(true);
         setSelectedItem(null);
     };
 
