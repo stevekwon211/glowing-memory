@@ -2,299 +2,551 @@
 .container {
     width: 100%;
     height: 100vh;
-    background-color: #efefef;
     display: flex;
-    flex-direction: row;
-    padding: 0;
-    overflow: hidden;
-    gap: 1.25rem;
+    justify-content: center;
+    align-items: center;
+    background: #efefef;
+    overflow: visible;
 }
 
-.topSection {
+.contentContainer {
     display: flex;
     flex-direction: column;
-    gap: 1.25rem;
-    border-right: 1px solid #dcdcdc;
-    padding: 24px;
-    width: 240px;
-    flex-shrink: 0;
-    height: 100%;
+    align-items: center;
+    justify-content: space-between;
+    border: 1px solid #dcdcdc;
+    width: 768px;
+    height: 600px;
+    overflow: visible;
 }
 
-.nameFrame,
-.categoriesFrame,
-.yearsFrame,
-.infoFrame {
+.mediaFrame {
     flex: 1;
-    padding: 0;
-    background-color: #efefef;
-}
-
-.name,
-.category,
-.year,
-.info {
-    font-size: 12px;
-    font-weight: normal;
-    color: #3c3c3c;
-    text-align: left;
-    cursor: pointer;
-}
-
-.category:hover,
-.year:hover {
-    color: #0c0c0c;
-}
-
-.category.active,
-.year.active {
-    color: #0c0c0c;
-}
-
-.bottomSection {
-    flex: 1;
-    display: flex;
-    gap: 1.25rem;
-    height: 100%;
-    overflow: hidden;
-}
-
-.graphIndex {
-    width: 100%;
-    height: 100%;
-    background: #efefef;
     position: relative;
+    height: 400px;
+    overflow: hidden;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    width: 600px;
+}
+
+.mediaFrame img {
+    height: 100%;
+    width: auto;
+    display: block;
+}
+
+.descriptionFrame {
+    width: 768px;
+    padding: 12px;
+    height: 100%;
+    overflow-y: auto;
+    scrollbar-width: none;
+}
+
+.descriptionFrame::-webkit-scrollbar {
+    display: none;
+}
+
+.descriptionHeader {
     display: flex;
     align-items: center;
-    justify-content: center;
+    gap: 12px;
+    margin-bottom: 6px;
 }
 
-.graphIndex :global(.scene-nav-info) {
-    display: none !important;
-}
-
-.graphIndex :global([class*="scene-nav-info"]) {
-    display: none !important;
-}
-
-/* 모바일 스타일 */
-@media (max-width: 768px) {
-    .container {
-        flex-direction: column;
-        height: 100vh;
-        overflow: hidden;
-        padding: 0;
-    }
-
-    .topSection {
-        flex-direction: column;
-        width: 100%;
-        height: auto;
-        padding: 16px;
-        gap: 12px;
-        border-right: none;
-        border-bottom: 1px solid #dcdcdc;
-    }
-
-    .nameFrame {
-        width: 100%;
-        padding: 0;
-        margin-bottom: 8px;
-    }
-
-    .categoriesFrame,
-    .yearsFrame {
-        width: 100%;
-        padding: 0;
-        position: relative;
-        background: none;
-    }
-
-    .dropdownButton {
-        width: 100%;
-        padding: 0;
-        background: #efefef;
-        border: none;
-        text-align: left;
-        font-size: 12px;
-        color: #3c3c3c;
-        cursor: pointer;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        box-shadow: none;
-        margin-bottom: 8px;
-    }
-
-    .dropdownContent {
-        position: absolute;
-        top: calc(100% + 4px);
-        left: 0;
-        width: 100%;
-        background: #efefef;
-        border: 1px solid #dcdcdc;
-        box-shadow: none;
-        z-index: 1000;
-        max-height: 200px;
-        overflow-y: auto;
-    }
-
-    .category,
-    .year {
-        padding: 12px 16px;
-        font-size: 12px;
-        color: #3c3c3c;
-        cursor: pointer;
-    }
-
-    .category:hover,
-    .year:hover {
-        color: #0c0c0c;
-    }
-
-    .category.active,
-    .year.active {
-        color: #0c0c0c;
-    }
-
-    .infoFrame {
-        display: none;
-    }
-
-    .bottomSection {
-        flex: 1;
-        width: 100%;
-        height: calc(100vh - 160px);
-        overflow: hidden;
-    }
-
-    .contentFrame {
-        padding: 16px;
-        height: 100%;
-        width: 100%;
-    }
-
-    /* 모바일 모달 스타일 */
-    .modalContent {
-        max-width: 100vw;
-        margin: 16px;
-    }
-}
-
-/* 모바일 툴팁과 모달 스타일 */
-.mobileTooltip {
-    position: fixed;
-    bottom: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-    background: rgba(255, 255, 255, 0.95);
-    padding: 12px 16px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    z-index: 1000;
-    max-width: 80%;
-    text-align: center;
-    cursor: pointer;
-    animation: fadeIn 0.2s ease;
-}
-
-.mobileTooltip h4 {
+.itemTitle {
     font-size: 12px;
-    margin: 0 0 4px 0;
+    font-weight: normal;
     color: #0c0c0c;
 }
 
-.mobileTooltip p {
+.itemCategory {
     font-size: 12px;
-    margin: 0;
     color: #3c3c3c;
 }
 
-.mobileNodeInfo {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    background: #ffffff;
-    padding: 16px;
-    border-top: 1px solid #dcdcdc;
-    z-index: 1000;
-    animation: slideUp 0.3s ease;
+.itemDate {
+    font-size: 12px;
+    color: #3c3c3c;
 }
 
-.mobileNodeInfoHeader {
+.itemDescription {
+    font-size: 12px;
+    color: #3c3c3c;
+    line-height: 1.5;
+}
+
+.centerSection {
+    width: 768px;
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    border-top: 1px solid #dcdcdc;
+    border-right: 1px solid #dcdcdc;
+    border-left: 1px solid #dcdcdc;
+    background: #f3ecc2;
+}
+
+.menuRow {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 12px;
-}
-
-.closeButton {
-    background: none;
-    border: none;
-    padding: 8px;
-    cursor: pointer;
-    color: #3c3c3c;
-    font-size: 12px;
-}
-
-.linkButton {
     width: 100%;
-    padding: 8px;
-    margin-top: 12px;
-    background: #efefef;
-    border: none;
-    font-size: 12px;
-    color: #3c3c3c;
+}
+
+.categoriesFrame {
+    display: flex;
+    gap: 12px;
+}
+
+.category {
     cursor: pointer;
+    color: #793315;
+    transition: color 0.2s ease;
+    font-size: 12px;
+    font-weight: normal;
 }
 
-/* 애니메이션 */
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translate(-50%, 10px);
+.category.active {
+    color: #793315;
+    font-weight: bold;
+}
+
+.infoFrame {
+    flex-shrink: 0;
+}
+
+.info {
+    font-size: 12px;
+    color: #793315;
+    cursor: pointer;
+    font-weight: normal;
+    transition: color 0.2s ease;
+    position: relative;
+}
+
+.info.active {
+    color: #793315;
+    font-weight: bold;
+}
+
+@media (max-width: 768px) {
+    .container {
+        width: 100%;
+        height: 100vh;
+        overflow: hidden;
     }
-    to {
-        opacity: 1;
-        transform: translate(-50%, 0);
+
+    .contentContainer {
+        width: 100%;
+        height: 100vh;
+        border: none;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+    }
+
+    .mediaSection {
+        width: 100%;
+        padding: 0;
+    }
+
+    .mediaFrame {
+        padding: 0;
+    }
+
+    .mediaFrame img {
+        width: 768px;
+
+        padding: 0px;
+    }
+
+    .descriptionFrame {
+        width: 768px;
+        max-width: 100%;
+    }
+    .centerSection {
+        width: 100%;
+        box-sizing: border-box;
+    }
+    .aboutContent {
+        width: 768px;
+        max-width: 100%;
+    }
+    .aboutImageContainer {
+        width: 768px;
+        max-width: 100%;
+    }
+    .sidebar {
+        display: none !important;
+    }
+
+    .mediaFrame video {
+        width: 100%;
+        height: auto;
     }
 }
 
-@keyframes slideUp {
-    from {
-        transform: translateY(100%);
+@media (max-width: 425px) {
+    .mediaSection {
+        width: 425px;
+        max-width: 100%;
     }
-    to {
-        transform: translateY(0);
+    .mediaFrame {
+        width: 425px;
+        max-width: 100%;
+        padding: 0px;
+    }
+    .descriptionFrame {
+        width: 425px;
+        max-width: 100%;
+        padding: 12px;
+    }
+    .aboutContent {
+        width: 425px;
+        max-width: 100%;
+    }
+    .aboutImageContainer {
+        width: 425px;
+        max-width: 100%;
+    }
+    .sidebar {
+        display: none !important;
+    }
+
+    .mediaFrame video {
+        width: 100%;
+        height: auto;
+    }
+    .writingInfo span:first-child {
+        display: none;
     }
 }
 
-/* 모달 스타일 수정 */
-.modalContent {
-    background-color: #efefef;
-    border: 1px solid #dcdcdc;
-    padding: 20px;
-    max-height: 90vh;
-    overflow: auto;
+@media (max-width: 375px) {
+    .mediaSection {
+        width: 375px;
+        max-width: 100%;
+    }
+    .mediaFrame {
+        width: 375px;
+        max-width: 100%;
+        padding: 0px;
+    }
+    .descriptionFrame {
+        width: 375px;
+        max-width: 100%;
+        padding: 12px;
+    }
+    .aboutContent {
+        width: 375px;
+        max-width: 100%;
+    }
+    .aboutImageContainer {
+        width: 375px;
+        max-width: 100%;
+    }
+    .sidebar {
+        display: none !important;
+    }
+    .mediaFrame video {
+        width: 100%;
+        height: auto;
+    }
+    .writingInfo span:first-child {
+        display: none;
+    }
+}
+
+@media (max-width: 320px) {
+    .mediaSection {
+        width: 320px;
+        max-width: 100%;
+    }
+    .mediaFrame {
+        width: 320px;
+        max-width: 100%;
+        padding: 0px;
+    }
+    .descriptionFrame {
+        width: 320px;
+        max-width: 100%;
+        padding: 12px;
+    }
+    .aboutContent {
+        width: 320px;
+        max-width: 100%;
+    }
+    .aboutImageContainer {
+        width: 320px;
+        max-width: 100%;
+    }
+    .sidebar {
+        display: none !important;
+    }
+    .mediaFrame video {
+        width: 100%;
+        height: auto;
+    }
+    .writingInfo span:first-child {
+        display: none;
+    }
+}
+
+.mediaSection {
+    display: flex;
+    gap: 12px;
+    width: 768px;
+    height: 400px;
+    overflow: visible;
+}
+
+.sidebar {
+    width: 100px;
     display: flex;
     flex-direction: column;
-    gap: 20px;
-    width: fit-content;
+    gap: 6px;
+    overflow-y: auto;
+    scrollbar-width: none;
 }
 
-.modalImageContainer {
+.sidebar::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, Opera */
+}
+
+.thumbnail {
+    width: 100px;
+    height: 100px;
+    border: 1px solid #dcdcdc;
+    cursor: pointer;
     position: relative;
-    width: auto;
-    height: auto;
-    margin: 0 auto;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    overflow: hidden;
+    flex-shrink: 0;
 }
 
-.modalImage {
+.thumbnail img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.thumbnail.active {
+    border-color: #0c0c0c;
+}
+
+.itemLink {
+    font-size: 12px;
+    color: #3c3c3c;
+    text-decoration: none;
+    cursor: pointer;
+    transition: color 0.2s ease;
+    position: relative;
+    display: inline-block;
+}
+
+.itemLink::after {
+    content: "";
+    position: absolute;
+    width: 0;
+    height: 1px;
+    bottom: -1px;
+    left: 0;
+    background-color: #0c0c0c;
+    transition: width 0.3s ease;
+}
+
+.itemLink:hover {
+    color: #0c0c0c;
+}
+
+.itemLink:hover::after {
+    width: 100%;
+}
+
+.itemLink:before {
+    margin-right: 12px;
+    color: #dcdcdc;
+    text-decoration: none;
+    position: absolute;
+    left: -18px;
+}
+
+.writingList {
+    width: 100%;
+    height: 100%;
+    overflow-y: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+.writingList::-webkit-scrollbar {
+    display: none;
+}
+
+.mediaSection.writing {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.writingItem {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px;
+    gap: 24px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.writingTitle {
+    position: relative;
+    display: block;
+    font-size: 12px;
+    color: #3c3c3c;
+    text-decoration: none;
+    cursor: pointer;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    transition: color 0.2s ease;
+    padding-bottom: 2px;
+    max-width: 100%;
+}
+
+.writingTitle::after {
+    content: "";
+    position: absolute;
+    width: 0;
+    height: 1px;
+    bottom: 0;
+    left: 0;
+    background-color: #0c0c0c;
+    transition: width 0.3s ease;
+}
+
+.writingTitle:hover {
+    color: #0c0c0c;
+}
+
+.writingTitle:hover::after {
+    width: 100%;
+}
+
+.writingInfo {
+    display: flex;
+    gap: 12px;
+    font-size: 12px;
+    color: #3c3c3c;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+.writingDate {
+    color: #3c3c3c;
+}
+
+.aboutContent {
+    width: 768px;
+    height: fit-content;
+    display: flex;
+    flex-direction: column;
+
+    overflow: visible;
+}
+
+.aboutImageContainer {
+    height: 400px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    overflow: visible;
+    position: relative;
+    user-select: none;
+}
+
+.aboutImage {
+    height: 400px;
     width: auto;
+    position: relative;
+    z-index: 1;
+}
+
+.overlayImageWrapper {
+    position: absolute;
+    z-index: 2;
+    user-select: none;
+    cursor: grab;
+    overflow: visible;
+}
+
+.overlayImage {
+    width: 200px;
     height: auto;
-    max-height: 70vh;
-    object-fit: contain;
+    pointer-events: none;
+}
+
+.aboutTextContent {
+    min-width: 0;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 12px 12px;
+    overflow-y: auto;
+    scrollbar-width: none;
+}
+
+.aboutTextContent::-webkit-scrollbar {
+    display: none;
+}
+
+.aboutTitle {
+    font-size: 12px;
+    color: #0c0c0c;
+    word-break: keep-all;
+}
+
+.aboutDescription {
+    font-size: 12px;
+    color: #3c3c3c;
+    white-space: pre-line;
+    word-break: keep-all;
+}
+
+.aboutLinks {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.aboutLink {
+    font-size: 12px;
+    color: #3c3c3c;
+    text-decoration: none;
+    cursor: pointer;
+    transition: color 0.2s ease;
+    position: relative;
+}
+
+.aboutLink::after {
+    content: "";
+    position: absolute;
+    width: 0;
+    height: 1px;
+    bottom: -1px;
+    left: 0;
+    background-color: #0c0c0c;
+    transition: width 0.3s ease;
+}
+
+.aboutLink:hover {
+    color: #0c0c0c;
+}
+
+.aboutLink:hover::after {
+    width: 100%;
 }

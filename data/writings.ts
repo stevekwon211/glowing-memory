@@ -205,13 +205,7 @@ export const writingLinks: WritingLink[] = [
         date: "2024-05-27",
         category: ["essay"],
     },
-    {
-        id: "29",
-        title: "솔직한 회고",
-        url: "https://kwondoeon.substack.com/p/714",
-        date: "2024-05-21",
-        category: ["essay"],
-    },
+
     {
         id: "30",
         title: "솔직한 회고",
