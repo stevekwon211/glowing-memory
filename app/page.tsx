@@ -406,8 +406,12 @@ export default function Home() {
                                         alt={selectedItem.title}
                                         width={0}
                                         height={0}
-                                        sizes="100vw"
-                                        style={{ width: "100%", height: "auto" }}
+                                        sizes="100vh"
+                                        style={{
+                                            maxWidth: "100%",
+                                            width: "auto",
+                                            objectFit: "contain",
+                                        }}
                                         priority
                                         loading="eager"
                                         quality={75}
@@ -420,7 +424,14 @@ export default function Home() {
                                         loop
                                         muted
                                         playsInline
-                                        style={{ width: "100%", height: "auto" }}
+                                        width={0}
+                                        height={0}
+                                        style={{
+                                            maxWidth: "100%",
+                                            height: "100%",
+                                            width: "auto",
+                                            objectFit: "contain",
+                                        }}
                                     />
                                 )}
                             </div>
@@ -440,7 +451,6 @@ export default function Home() {
                                                     alt={item.title}
                                                     width={80}
                                                     height={80}
-                                                    style={{ objectFit: "cover" }}
                                                     loading="eager"
                                                     quality={50}
                                                 />
