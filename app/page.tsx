@@ -409,8 +409,8 @@ export default function Home() {
                                         sizes="100vw"
                                         style={{ width: "100%", height: "auto" }}
                                         priority
-                                        quality={100}
-                                        unoptimized
+                                        loading="eager"
+                                        quality={75}
                                     />
                                 )}
                                 {!selectedItem?.imageUrl && selectedItem?.videoUrl && (
@@ -441,8 +441,8 @@ export default function Home() {
                                                     width={80}
                                                     height={80}
                                                     style={{ objectFit: "cover" }}
-                                                    quality={100}
-                                                    unoptimized
+                                                    loading="eager"
+                                                    quality={50}
                                                 />
                                             )}
                                             {!item.imageUrl && item.videoUrl && (
