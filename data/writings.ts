@@ -339,6 +339,13 @@ export const writingLinks: WritingLink[] = [
         date: "2022-10-15",
         category: ["essay"],
     },
+    {
+        id: "49",
+        title: "관계빈곤",
+        url: "https://kwondoeon.substack.com/p/391",
+        date: "2024-12-06",
+        category: ["essay"],
+    },
 ];
 
 export default writingLinks;
