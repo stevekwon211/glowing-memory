@@ -31,10 +31,10 @@ interface Project {
 }
 
 export default function Home() {
-    const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+    const [selectedCategory, setSelectedCategory] = useState<string | null>("Writing");
     const [_selectedItem, setSelectedItem] = useState<ContentItem | null>(null);
     const [_isMobile, _setIsMobile] = useState(false);
-    const [showAbout, setShowAbout] = useState(true);
+    const [showAbout, setShowAbout] = useState(false);
     const [isDragging, setIsDragging] = useState(false);
     const [position, setPosition] = useState({ x: 0, y: 0 });
     const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
@@ -275,16 +275,16 @@ export default function Home() {
         return (
             <div className={styles.categoriesFrame}>
                 <div
-                    className={`${styles.category} ${selectedCategory === "Taste" ? styles.active : ""}`}
-                    onClick={() => handleCategoryClick("Taste")}
-                >
-                    taste
-                </div>
-                <div
                     className={`${styles.category} ${selectedCategory === "Writing" ? styles.active : ""}`}
                     onClick={() => handleCategoryClick("Writing")}
                 >
                     writing
+                </div>
+                <div
+                    className={`${styles.category} ${selectedCategory === "Taste" ? styles.active : ""}`}
+                    onClick={() => handleCategoryClick("Taste")}
+                >
+                    taste
                 </div>
                 <div
                     className={`${styles.category} ${selectedCategory === "Artifact" ? styles.active : ""}`}
@@ -296,7 +296,7 @@ export default function Home() {
         );
     };
 
-    // ��기 위치를 화면 크기에 따라 설정하는 함수
+    // 기 위치를 화면 크기에 따라 설정하는 함수
     const getInitialPosition = () => {
         if (typeof window !== "undefined") {
             if (window.innerWidth <= 768) {
