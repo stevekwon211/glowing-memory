@@ -346,6 +346,13 @@ export const writingLinks: WritingLink[] = [
         date: "2024-12-06",
         category: ["essay"],
     },
+    {
+        id: "50",
+        title: "Inspired #14 | 자기신뢰, 유대감, 생존 본능, 불완전함 + 유머 = 좋은 삶",
+        url: "https://kwondoeon.substack.com/p/inspired-14",
+        date: "2024-12-09",
+        category: ["inspired"],
+    },
 ];
 
 export default writingLinks;
