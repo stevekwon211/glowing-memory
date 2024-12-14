@@ -353,6 +353,13 @@ export const writingLinks: WritingLink[] = [
         date: "2024-12-09",
         category: ["inspired"],
     },
+    {
+        id: "51",
+        title: "The full stack of society - conrad bastable을 읽고",
+        url: "https://kwondoeon.substack.com/p/the-full-stack-of-society-conrad",
+        date: "2024-12-14",
+        category: ["inspired"],
+    },
 ];
 
 export default writingLinks;
