@@ -1,38 +1,38 @@
 {
-  "name": "glowing-memory",
-  "version": "0.1.0",
-  "private": true,
-  "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "lint": "next lint"
-  },
-  "dependencies": {
-    "3d-force-graph": "^1.73.6",
-    "@headlessui/react": "^2.1.10",
-    "@types/three": "^0.170.0",
-    "d3": "^7.9.0",
-    "framer-motion": "^11.11.7",
-    "git": "^0.1.5",
-    "lucide-react": "^0.451.0",
-    "next": "^15.0.1",
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1",
-    "react-force-graph-2d": "^1.25.8",
-    "react-intersection-observer": "^9.13.1",
-    "react-masonry-css": "^1.0.16",
-    "react-spring": "^9.7.4",
-    "three": "^0.170.0"
-  },
-  "devDependencies": {
-    "@types/node": "22.10.1",
-    "@types/react": "18.3.12",
-    "@types/react-dom": "^18",
-    "eslint": "^8",
-    "eslint-config-next": "14.2.15",
-    "postcss": "^8",
-    "tailwindcss": "^3.4.1",
-    "typescript": "5.7.2"
-  }
+    "name": "glowing-memory",
+    "version": "0.1.0",
+    "private": true,
+    "scripts": {
+        "dev": "next dev",
+        "build": "next build",
+        "start": "next start",
+        "lint": "next lint"
+    },
+    "dependencies": {
+        "@react-spring/three": "^9.7.5",
+        "@react-three/drei": "^9.99.0",
+        "@react-three/fiber": "^8.15.16",
+        "next": "14.2.15",
+        "react": "^18.2.0",
+        "react-dom": "^18.2.0",
+        "react-is": "^19.0.0",
+        "simplex-noise": "^4.0.3",
+        "stats-gl": "^3.6.0",
+        "three": "^0.161.0",
+        "zustand": "^5.0.2"
+    },
+    "devDependencies": {
+        "@types/node": "22.10.2",
+        "@types/react": "19.0.1",
+        "@types/react-dom": "^18",
+        "@types/three": "^0.171.0",
+        "eslint": "^8",
+        "eslint-config-next": "14.2.15",
+        "postcss": "^8",
+        "tailwindcss": "^3.4.1",
+        "typescript": "5.7.2"
+    },
+    "resolutions": {
+        "use-sync-external-store": "1.2.0"
+    }
 }
