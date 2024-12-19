@@ -1,8 +1,8 @@
 // Grass.tsx
 
-import { useRef, useMemo } from "react";
+import { useRef, useMemo, useCallback } from "react";
 import { Instance, Instances } from "@react-three/drei";
-import { Vector3, InstancedMesh, MeshStandardMaterial, DoubleSide, Euler, Matrix4 } from "three";
+import { Vector3, InstancedMesh, MeshStandardMaterial, DoubleSide, Object3D } from "three";
 import { useFrame } from "@react-three/fiber";
 import { createGrassGeometry } from "./GrassBlade";
 
@@ -10,7 +10,6 @@ export default function Grass({ count = 10000, size = 50 }) {
     const CHUNK_SIZE = 1000;
     const instancesRef = useRef<(InstancedMesh | null)[]>([]);
     const initialRotations = useRef<{ x: number; y: number; z: number }[]>([]);
-    const instanceMatrix = useMemo(() => new Matrix4(), []);
 
     const settings = useMemo(
         () => ({
@@ -61,7 +60,25 @@ export default function Grass({ count = 10000, size = 50 }) {
         });
     }, []);
 
-    const instanceRefs = useRef<(Instance | null)[]>([]);
+    const instanceRefs = useRef<(Object3D | null)[]>([]);
+
+    const setInstanceRef = useCallback(
+        (index: number) => (el: Object3D | null) => {
+            if (instanceRefs.current[index] !== el) {
+                instanceRefs.current[index] = el;
+            }
+        },
+        []
+    );
+
+    const setInstancesRef = useCallback(
+        (index: number) => (el: InstancedMesh | null) => {
+            if (instancesRef.current[index] !== el) {
+                instancesRef.current[index] = el;
+            }
+        },
+        []
+    );
 
     useFrame(({ clock }) => {
         const time = clock.getElapsedTime();
@@ -88,7 +105,7 @@ export default function Grass({ count = 10000, size = 50 }) {
                 <Instances
                     key={chunkIndex}
                     frustumCulled
-                    ref={(el) => (instancesRef.current[chunkIndex] = el)}
+                    ref={setInstancesRef(chunkIndex)}
                     geometry={bladeGeom}
                     material={material}
                 >
@@ -102,7 +119,7 @@ export default function Grass({ count = 10000, size = 50 }) {
                         return (
                             <Instance
                                 key={i}
-                                ref={(el) => (instanceRefs.current[currentIndex] = el)}
+                                ref={setInstanceRef(currentIndex)}
                                 position={pos}
                                 scale={[baseScale, baseScale * heightScale, baseScale]}
                                 rotation={[tiltX, rotationY, 0]}
