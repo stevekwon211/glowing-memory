@@ -8,8 +8,8 @@ const manrope = Manrope({
 });
 
 export const metadata = {
-    title: "Kwon Doeon",
-    description: "Kwon Doeon's portfolio",
+    title: "kwondoeon",
+    description: "kwondoeon",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
