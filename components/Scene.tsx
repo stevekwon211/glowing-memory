@@ -23,7 +23,7 @@ function SceneComponent() {
                 mieCoefficient={0.005}
                 mieDirectionalG={0.005}
                 distance={450000}
-                sunPosition={[180, 4, -480]}
+                sunPosition={[140, 4, -480]}
                 inclination={0.02}
             />
             <OrbitControls minPolarAngle={Math.PI / 2.5} maxPolarAngle={Math.PI / 2.5} maxDistance={maxDistance} />
