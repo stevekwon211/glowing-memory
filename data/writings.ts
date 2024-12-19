@@ -360,6 +360,13 @@ export const writingLinks: WritingLink[] = [
         date: "2024-12-14",
         category: ["inspired"],
     },
+    {
+        id: "52",
+        title: "Inspired #15 | 다음 웨이브, 종교 → 게임 → 가상 현실, next pixar & blizard, Don’t Surround Yourself With Smarter People, 무엇이 나를 살아있게 만드는가 등",
+        url: "https://kwondoeon.substack.com/p/inspired-15-next-pixar-and-blizard",
+        date: "2024-12-19",
+        category: ["inspired"],
+    },
 ];
 
 export default writingLinks;
