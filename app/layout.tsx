@@ -1,5 +1,6 @@
 import "./globals.css";
 import { Manrope } from "next/font/google";
+import { Analytics } from "@vercel/analytics/react";
 
 const manrope = Manrope({
     subsets: ["latin"],
@@ -15,7 +16,10 @@ export const metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
     return (
         <html lang="en" className={manrope.className}>
-            <body>{children}</body>
+            <body>
+                {children}
+                <Analytics />
+            </body>
         </html>
     );
 }
