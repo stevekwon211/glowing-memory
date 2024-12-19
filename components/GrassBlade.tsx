@@ -1,15 +1,7 @@
-import { useMemo } from "react";
-import { BufferGeometry } from "three";
 import * as THREE from "three";
-import { extend } from "@react-three/fiber";
-
-// Three.js 컴포넌트들을 확장
-extend({
-    BufferGeometry: THREE.BufferGeometry,
-});
 
 export function createGrassGeometry(height: number = 1) {
-    const geometry = new BufferGeometry();
+    const geometry = new THREE.BufferGeometry();
 
     // 두 개의 교차하는 평면을 위한 정점들
     const vertices = new Float32Array([
@@ -51,26 +43,4 @@ export function createGrassGeometry(height: number = 1) {
     geometry.computeVertexNormals();
 
     return geometry;
-}
-
-export default function GrassBlade() {
-    const geometry = useMemo(() => createGrassGeometry(1), []);
-
-    return (
-        <bufferGeometry>
-            <bufferAttribute
-                attach="attributes-position"
-                count={6}
-                array={geometry.attributes.position.array}
-                itemSize={3}
-            />
-            <bufferAttribute
-                attach="attributes-normal"
-                count={6}
-                array={geometry.attributes.normal.array}
-                itemSize={3}
-            />
-            <bufferAttribute attach="index" array={new Uint16Array([0, 1, 2, 3, 4, 5])} count={6} />
-        </bufferGeometry>
-    );
 }

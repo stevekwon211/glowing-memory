@@ -1,17 +1,12 @@
-"use client";
+// Grass.tsx
 
 import { useRef, useMemo } from "react";
 import { Instance, Instances } from "@react-three/drei";
-import { Vector3, Object3D, InstancedMesh, MeshStandardMaterial, DoubleSide } from "three";
+import { Vector3, InstancedMesh, MeshStandardMaterial, DoubleSide } from "three";
 import { useFrame } from "@react-three/fiber";
-import GrassBlade from "./GrassBlade";
+import { createGrassGeometry } from "./GrassBlade"; // geometry 생성 함수만 임포트
 
-interface GrassProps {
-    count?: number;
-    size?: number;
-}
-
-export default function Grass({ count = 10000, size = 50 }: GrassProps) {
+export default function Grass({ count = 10000, size = 50 }) {
     const CHUNK_SIZE = 1000;
     const instancesRef = useRef<(InstancedMesh | null)[]>([]);
 
@@ -47,20 +42,11 @@ export default function Grass({ count = 10000, size = 50 }: GrassProps) {
         return chunks;
     }, [settings]);
 
-    useFrame(({ clock }) => {
+    useFrame(({ clock: _clock }) => {
         instancesRef.current.forEach((instances) => {
             if (!instances) return;
-
-            const time = clock.getElapsedTime();
-            (instances as unknown as { children: Object3D[] }).children.forEach((instance, _i) => {
-                if (instance) {
-                    const offset = instance.position.x * 0.5 + instance.position.z * 0.5;
-                    const swayAmount = instance.scale.y * 0.1;
-
-                    instance.rotation.x = Math.sin(time + offset) * 0.1 + instance.userData.initialRotation.x;
-                    instance.rotation.z = Math.cos(time * 0.5 + offset) * swayAmount;
-                }
-            });
+            // 현재는 애니메이션이 구현되지 않아 clock을 사용하지 않음
+            // 추후 애니메이션 구현 시 사용할 예정
         });
     });
 
@@ -68,6 +54,7 @@ export default function Grass({ count = 10000, size = 50 }: GrassProps) {
         instancesRef.current[index] = el;
     };
 
+    const bladeGeom = useMemo(() => createGrassGeometry(1), []);
     const material = useMemo(() => {
         return new MeshStandardMaterial({
             color: "#4a8505",
@@ -80,8 +67,13 @@ export default function Grass({ count = 10000, size = 50 }: GrassProps) {
     return (
         <>
             {chunks.map((positions, chunkIndex) => (
-                <Instances key={chunkIndex} frustumCulled ref={setInstanceRef(chunkIndex)} material={material}>
-                    <GrassBlade />
+                <Instances
+                    key={chunkIndex}
+                    frustumCulled
+                    ref={setInstanceRef(chunkIndex)}
+                    geometry={bladeGeom}
+                    material={material}
+                >
                     {positions.map((pos, i) => {
                         const baseScale = 0.3 + Math.random() * 0.4;
                         const heightScale = 1.5 + Math.random() * 1.5;
