@@ -367,6 +367,13 @@ export const writingLinks: WritingLink[] = [
         date: "2024-12-19",
         category: ["inspired"],
     },
+    {
+        id: "53",
+        title: "진짜 성장",
+        url: "https://open.substack.com/pub/kwondoeon/p/538?r=qmaeh&utm_campaign=post&utm_medium=web&showWelcomeOnShare=true",
+        date: "2024-12-27",
+        category: ["essay"],
+    },
 ];
 
 export default writingLinks;
