@@ -374,6 +374,13 @@ export const writingLinks: WritingLink[] = [
         date: "2024-12-27",
         category: ["essay"],
     },
+    {
+        id: "54",
+        title: "디스콰이엇에서의 3년 회고",
+        url: "https://kwondoeon.substack.com/p/3-e43",
+        date: "2024-12-31",
+        category: ["reflection"],
+    },
 ];
 
 export default writingLinks;
