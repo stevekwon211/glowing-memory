@@ -13,5 +13,16 @@ export const projects: Project[] = [
         projectUrl: "https://disquiet.io/",
         category: "startup",
     },
-    // 다른 프로젝트들도 같은 방식으로 수정합니다
+    {
+        id: 2,
+        title: "We Are All Banksy",
+        description: {
+            en: "We Are All Banksy",
+            ko: "We Are All Banksy",
+        },
+        year: "2024",
+        imageUrl: "",
+        projectUrl: "https://chromewebstore.google.com/detail/we-are-all-banksy/dkmagekikpacoieehgabbombcellagmp",
+        category: "for fun",
+    },
 ];
