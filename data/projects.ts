@@ -25,4 +25,16 @@ export const projects: Project[] = [
         projectUrl: "https://chromewebstore.google.com/detail/we-are-all-banksy/dkmagekikpacoieehgabbombcellagmp",
         category: "for fun",
     },
+    {
+        id: 3,
+        title: "Daisy (recommended on desktop)",
+        description: {
+            en: " ",
+            ko: " ",
+        },
+        year: "2025",
+        imageUrl: "",
+        projectUrl: "https://daisy-teal.vercel.app/",
+        category: "design",
+    },
 ];
