@@ -381,6 +381,13 @@ export const writingLinks: WritingLink[] = [
         date: "2024-12-31",
         category: ["reflection"],
     },
+    {
+        id: "55",
+        title: "Inspired #16 | Agents, 가상 세계 비즈니스, 마인크래프트, 엔비디아, 야나기사와 쇼, The Refragmentation, Sam Altman on choosing projects/creating value/finding purpose etc.",
+        url: "https://kwondoeon.substack.com/p/inspired-16-agents-the-refragmentation",
+        date: "2025-01-19",
+        category: ["inspired"],
+    },
 ];
 
 export default writingLinks;
