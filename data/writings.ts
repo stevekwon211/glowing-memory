@@ -388,6 +388,13 @@ export const writingLinks: WritingLink[] = [
         date: "2025-01-19",
         category: ["inspired"],
     },
+    {
+        id: "56",
+        title: "Inspired #17 | 구글 Titans, Game 산업, Wokeness, Deepseek is not Sputnik moment, 2050 미래 예측 등",
+        url: "https://kwondoeon.substack.com/p/inspired-17-titans-game-wokeness",
+        date: "2025-02-04",
+        category: ["inspired"],
+    },
 ];
 
 export default writingLinks;
