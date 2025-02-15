@@ -395,6 +395,13 @@ export const writingLinks: WritingLink[] = [
         date: "2025-02-04",
         category: ["inspired"],
     },
+    {
+        id: "57",
+        title: "Inspired #18 | 기술 주도 과학, AI 스타트업, Utility AI, 소크라테스적 사랑, Growth Maze, 학습 루틴, Director AI, 게이밍 슬럼프, Taste 시대, 우주=데이터, Strong Form AI Company, AI-네이티브 코딩, Pet Ideas, AI DAO, Selfish Software 등",
+        url: "https://kwondoeon.substack.com/p/inspired-18-ai-utility-ai-growth",
+        date: "2025-02-16",
+        category: ["inspired"],
+    },
 ];
 
 export default writingLinks;
