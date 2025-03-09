@@ -1,0 +1,57 @@
+.nowPlaying {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: white;
+  white-space: nowrap;
+  max-width: 100%;
+  overflow: hidden;
+  min-width: 200px;
+  width: auto;
+}
+
+.prefix {
+  color: white;
+  opacity: 0.7;
+}
+
+.nowPlayingTrack {
+  overflow: hidden;
+  position: relative;
+  min-width: 180px;
+  width: auto;
+}
+
+.trackText {
+  display: inline-block;
+  padding-left: 100%;
+  animation: marquee 15s linear infinite;
+  white-space: nowrap;
+}
+
+@keyframes marquee {
+  0% {
+    transform: translate(0, 0);
+  }
+  100% {
+    transform: translate(-100%, 0);
+  }
+}
+
+/* 호버 시 애니메이션 일시 정지 */
+.trackText:hover {
+  animation-play-state: paused;
+}
+
+/* 모바일 화면에서도 동일하게 적용 */
+@media (max-width: 768px) {
+  .nowPlaying {
+    font-size: 11px;
+    min-width: 150px;
+  }
+
+  .nowPlayingTrack {
+    min-width: 130px;
+  }
+}

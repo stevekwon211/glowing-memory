@@ -99,7 +99,24 @@ export default function Home() {
           {activeTab === '😌' && (
             <div className={styles.aboutMeContent}>
               <h2 className={styles.aboutTitle}>{language === 'EN' ? aboutContent.title.en : aboutContent.title.ko}</h2>
-              <p className={styles.aboutDescription}>{aboutContent.description.ko}</p>
+              <p className={styles.aboutDescription}>
+                {(language === 'EN' ? aboutContent.description.en : aboutContent.description.ko).map((item, index) =>
+                  item.type === 'text' ? (
+                    <span key={index}>{item.content}</span>
+                  ) : (
+                    <a
+                      key={index}
+                      href={item.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className={styles.aboutLink}
+                      style={{ textDecoration: 'underline', color: '#000000' }}
+                    >
+                      {item.content}
+                    </a>
+                  )
+                )}
+              </p>
               <div className={styles.aboutLinks}>
                 {aboutContent.links.map((link) => (
                   <a
