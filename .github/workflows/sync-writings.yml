@@ -1,0 +1,97 @@
+name: Sync Writings
+
+on:
+  schedule:
+    - cron: '0 */6 * * *' # 6시간마다 실행 (0시, 6시, 12시, 18시)
+  workflow_dispatch: # 수동 실행 옵션 추가
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Check for new blog posts
+        id: check-posts
+        run: |
+          # RSS 피드 확인 스크립트 실행
+          node -e "
+          const Parser = require('rss-parser');
+          const fs = require('fs');
+
+          async function checkNewPosts() {
+            try {
+              const parser = new Parser();
+              
+              // 한국어 및 영어 피드 가져오기
+              const koFeed = await parser.parseURL('https://kwondoeon.substack.com/feed');
+              const enFeed = await parser.parseURL('https://doeon.substack.com/feed');
+              
+              // 최신 글 정보
+              const latestKoPost = koFeed.items[0];
+              const latestEnPost = enFeed.items[0];
+              
+              // 최신 글 날짜 비교
+              const latestDate = new Date(Math.max(
+                new Date(latestKoPost.isoDate || '').getTime(),
+                new Date(latestEnPost.isoDate || '').getTime()
+              ));
+              
+              // 현재 writings.ts 파일 읽기
+              const writingsFile = fs.readFileSync('./data/writings.ts', 'utf8');
+              
+              // 파일에 최신 글 포함 여부 확인 (간단한 문자열 검색)
+              const hasLatestKoPost = writingsFile.includes(latestKoPost.link || '');
+              const hasLatestEnPost = writingsFile.includes(latestEnPost.link || '');
+              
+              // 새 글이 있는지 확인
+              const hasNewPosts = !hasLatestKoPost || !hasLatestEnPost;
+              
+              console.log('::set-output name=has_new_posts::' + hasNewPosts);
+              console.log('::set-output name=latest_date::' + latestDate.toISOString());
+              
+              if (hasNewPosts) {
+                console.log('새 글이 발견되었습니다. 동기화를 진행합니다.');
+              } else {
+                console.log('새 글이 없습니다. 동기화가 필요하지 않습니다.');
+              }
+            } catch (error) {
+              console.error('RSS 피드 확인 중 오류 발생:', error);
+              console.log('::set-output name=has_new_posts::true');  // 오류 발생 시 동기화 진행
+            }
+          }
+
+          checkNewPosts();
+          "
+
+      - name: Run sync script
+        if: steps.check-posts.outputs.has_new_posts == 'true'
+        env:
+          API_SECRET_KEY: ${{ secrets.API_SECRET_KEY }}
+        run: |
+          # 개발 서버 시작 (백그라운드에서 실행)
+          npm run dev &
+          # 서버가 시작될 때까지 대기
+          sleep 10
+          # 동기화 스크립트 실행
+          npm run sync-writings
+          # 개발 서버 종료
+          kill $(lsof -t -i:3000) || true
+
+      - name: Commit and push changes
+        if: steps.check-posts.outputs.has_new_posts == 'true'
+        run: |
+          git config --global user.name 'GitHub Action'
+          git config --global user.email 'action@github.com'
+          git add data/writings.ts
+          git commit -m "Auto-sync writings (${GITHUB_SHA})" || echo "No changes to commit"
+          git push
