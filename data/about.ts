@@ -9,16 +9,16 @@ export const aboutContent = {
       {
         type: 'text',
         content:
-          "I grew up in Korea, loving the internet, games, history, and stories of great people, which inspired me to dream of starting a software company when I was 15. Since Australia's "
+          "I grew up in Korea, loving the internet, games, history, and stories of great people, which inspired me to dream of starting a software company when I was 15. Driven by the rapidly growing internet and mobile markets in Southeast Asia (and the fact that competition there still felt relatively light), I set my sights on building a startup in that region. That's why I chose Australia's "
       },
       { type: 'link', content: 'University of Technology Sydney', url: 'https://www.uts.edu.au/' },
       {
         type: 'text',
         content:
-          ' was close to Southeast Asia and a great place to study, I moved there to study computer science, but after my first year, I dropped out to join '
+          ' was close to Southeast Asia and had a solid CS program. I moved there and started studying computer science, but after my first year, I dropped out to join '
       },
       { type: 'link', content: 'Disquiet', url: 'https://disquiet.io/' },
-      { type: 'text', content: " as an early member. Now, I'm co-founding and working on " },
+      { type: 'text', content: " as an early member. Now, I'm co-founding and building " },
       { type: 'link', content: 'Space Zero', url: 'https://0.space/about' },
       {
         type: 'text',
@@ -72,7 +72,7 @@ export const aboutContent = {
       {
         type: 'text',
         content:
-          '저는 인터넷, 게임, 역사, 그리고 위인들의 이야기를 좋아하며 자랐고, 이런 영향으로 중3 때 소프트웨어 창업을 꿈꿨습니다. 동남아권에서 창업하고 싶어 근처 호주의 '
+          '저는 인터넷, 게임, 역사, 그리고 위인들의 이야기를 좋아하며 자랐고, 이런 영향으로 중3 때 소프트웨어 창업을 꿈꿨습니다. 인터넷/모바일 시장이 빠르게 성장하는 동남아권에서 창업하고 싶어 근처 호주의 '
       },
       { type: 'link', content: '시드니공과대학교', url: 'https://www.uts.edu.au/' },
       { type: 'text', content: '에서 컴퓨터 과학을 공부했지만, 1학년만 하고 자퇴해 ' },
