@@ -9,7 +9,7 @@ export const aboutContent = {
       {
         type: 'text',
         content:
-          "I grew up in Korea, loving the internet, games, history, and stories of great people, which inspired me to dream of starting a software company when I was 15. Driven by the rapidly growing internet and mobile markets in Southeast Asia (and the fact that competition there still felt relatively light), I set my sights on building a startup in that region. That's why I chose Australia's "
+          "I grew up in Korea, loving the internet, games, history, and stories of great people, which inspired me to dream of starting a software company when I was 15. Driven by the rapidly growing internet and mobile markets in Southeast Asia, I set my sights on building a startup in that region. That's why I chose Australia's "
       },
       { type: 'link', content: 'University of Technology Sydney', url: 'https://www.uts.edu.au/' },
       {
