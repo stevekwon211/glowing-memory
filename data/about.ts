@@ -219,5 +219,9 @@ export const aboutContent = {
       title: "substack",
       url: "https://kwondoeon.substack.com",
     },
+    {
+      title: "linkedin",
+      url: "https://www.linkedin.com/in/kwondoeon/?locale=en_US",
+    },
   ],
 };
