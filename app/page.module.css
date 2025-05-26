@@ -377,6 +377,9 @@
   color: white;
   font-size: 12px;
   font-weight: bold;
+  letter-spacing: -0.3px;
+  display: inline-block;
+  vertical-align: baseline;
 }
 
 /* Responsive styles */
@@ -1701,20 +1704,37 @@
   background: none;
   color: white;
   font-size: 12px;
+  font-weight: normal;
   transition: background-color 0.3s ease;
   border: 1px solid #333;
   user-select: none;
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
 }
 
 .languageSelectorTop span {
   transition: opacity 0.3s ease;
+  font-size: 12px;
+  font-weight: normal;
+  letter-spacing: 0px;
+  display: inline-block;
+  vertical-align: baseline;
 }
 
-.activeLanguage {
-  opacity: 1;
+/* Active language with maximum specificity */
+.languageSelectorTop .activeLanguage,
+.languageSelectorTop span.activeLanguage,
+.contentBox .languageSelectorTop .activeLanguage {
+  color: white !important;
+  font-size: 12px !important;
+  font-weight: 900 !important;
+  letter-spacing: -0.3px !important;
+  display: inline-block !important;
+  vertical-align: baseline !important;
 }
 
 /* Creative Archive Link */
@@ -1727,9 +1747,13 @@
   background: none;
   color: white !important;
   font-size: 12px;
+  font-weight: normal;
   text-decoration: none !important;
   transition: none;
   border: 1px solid #333;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
 }
 
 .creativeArchiveLink:hover {
@@ -1756,7 +1780,13 @@
   .languageSelectorTop {
     top: 8px;
     right: 8px;
-    font-size: 10px;
+    font-size: 12px;
+  }
+
+  .creativeArchiveLink {
+    top: 8px;
+    left: 8px;
+    font-size: 12px;
   }
 
   .spotifyBottom {
@@ -1771,7 +1801,13 @@
   .languageSelectorTop {
     top: 6px;
     right: 6px;
-    font-size: 10px;
+    font-size: 12px;
+  }
+
+  .creativeArchiveLink {
+    top: 6px;
+    left: 6px;
+    font-size: 12px;
   }
 
   .spotifyBottom {
@@ -1786,7 +1822,13 @@
   .languageSelectorTop {
     top: 4px;
     right: 4px;
-    font-size: 9px;
+    font-size: 12px;
+  }
+
+  .creativeArchiveLink {
+    top: 4px;
+    left: 4px;
+    font-size: 12px;
   }
 
   .spotifyBottom {
