@@ -1,0 +1,104 @@
+.container {
+  background: black;
+  padding: 20px;
+  font-family: "Helvetica", sans-serif;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.backButton {
+  align-self: flex-start;
+  padding: 8px 16px;
+  background: none;
+  color: white !important;
+  font-size: 12px;
+  text-decoration: none !important;
+  transition: none;
+  border: 1px solid #333;
+  margin-bottom: 20px;
+  flex-shrink: 0;
+}
+
+.backButton:hover {
+  background: none;
+  transform: none;
+  box-shadow: none;
+}
+
+.gridContainer {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+  width: 100%;
+  opacity: 1;
+}
+
+.gridItem {
+  aspect-ratio: 1;
+  overflow: hidden;
+  background: #111;
+  border: 1px solid #333;
+  cursor: pointer;
+  transition: border-color 0.3s ease;
+  position: relative;
+}
+
+.gridItem:hover {
+  border-color: white;
+}
+
+.thumbnailContainer {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.thumbnail {
+  width: 400%;
+  height: 400%;
+  border: none;
+  background: #000;
+  opacity: 0.7;
+  transform: scale(0.25);
+  transform-origin: top left;
+  display: block;
+  pointer-events: none;
+}
+
+.gridItem:hover .thumbnail {
+  opacity: 0.9;
+}
+
+/* Mobile Responsive */
+@media (max-width: 1024px) {
+  .gridContainer {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+  }
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 15px;
+  }
+
+  .gridContainer {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+  }
+}
+
+@media (max-width: 480px) {
+  .container {
+    padding: 10px;
+  }
+
+  .gridContainer {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+  }
+}

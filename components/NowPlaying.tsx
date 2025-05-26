@@ -1,25 +1,31 @@
-'use client';
+"use client";
 
-import { useEffect, useState } from 'react';
-import styles from './NowPlaying.module.css';
+import { useEffect, useState } from "react";
+import styles from "./NowPlaying.module.css";
 
 export default function NowPlaying() {
-  const [currentTrack, setCurrentTrack] = useState<string | null>('Loading...');
+  const [currentTrack, setCurrentTrack] = useState<string | null>("Loading...");
 
   useEffect(() => {
     const fetchNowPlaying = async () => {
       try {
-        const response = await fetch('/api/spotify');
+        const response = await fetch("/api/spotify");
         const data = await response.json();
+
+        // Handle the new response format
+        if (data.playing === false && data.message) {
+          setCurrentTrack("Not available");
+          return;
+        }
 
         if (data && data.item) {
           setCurrentTrack(`${data.item.name} - ${data.item.artists[0].name}`);
         } else {
-          setCurrentTrack('Not playing');
+          setCurrentTrack("Not playing");
         }
       } catch (error) {
-        console.error('Error fetching now playing:', error);
-        setCurrentTrack('Not available');
+        console.error("Error fetching now playing:", error);
+        setCurrentTrack("Not available");
       }
     };
 

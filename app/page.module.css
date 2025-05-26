@@ -55,7 +55,7 @@
   font-size: 14px;
   cursor: pointer;
   transition: none;
-  font-family: 'Helvetica', sans-serif;
+  font-family: "Helvetica", sans-serif;
   color: #aaa;
   text-align: left;
 }
@@ -447,15 +447,15 @@
 
 /* 최상위에 추가 */
 @font-face {
-  font-family: 'Helvetica';
-  src: url('/fonts/helvetica-255/Helvetica.ttf') format('truetype');
+  font-family: "Helvetica";
+  src: url("/fonts/helvetica-255/Helvetica.ttf") format("truetype");
   font-weight: normal;
   font-style: normal;
 }
 
 @font-face {
-  font-family: 'Helvetica Oblique';
-  src: url('/fonts/helvetica-255/Helvetica-Oblique.ttf') format('truetype');
+  font-family: "Helvetica Oblique";
+  src: url("/fonts/helvetica-255/Helvetica-Oblique.ttf") format("truetype");
   font-weight: normal;
   font-style: normal;
 }
@@ -474,11 +474,11 @@
 .itemListTitle,
 .itemListMeta,
 .descriptionContent {
-  font-family: 'Helvetica', 'Helvetica Oblique', sans-serif;
+  font-family: "Helvetica", "Helvetica Oblique", sans-serif;
 }
 
 .tagline {
-  font-family: 'Helvetica Oblique', 'Helvetica', sans-serif;
+  font-family: "Helvetica Oblique", "Helvetica", sans-serif;
 }
 
 /* 기본 스타일 */
@@ -1004,7 +1004,7 @@
 }
 
 .itemLink::after {
-  content: '';
+  content: "";
   position: absolute;
   width: 0;
   height: 1px;
@@ -1347,7 +1347,7 @@
   }
 
   .spotifyHeader span::before {
-    content: ': ';
+    content: ": ";
   }
 }
 
@@ -1583,7 +1583,7 @@
   font-size: 6px; /* Match the 3D text size */
   color: white; /* White text */
   text-shadow: 0px 0px 1px #000000; /* Thin black border effect for text */
-  font-family: 'Courier New', monospace; /* Digital/pixelated style font */
+  font-family: "Courier New", monospace; /* Digital/pixelated style font */
   letter-spacing: 0.5px; /* Slightly wider letter spacing for digital look */
   text-transform: lowercase; /* Ensure text is lowercase like in the 3D view */
 }
@@ -1606,7 +1606,7 @@
   padding: 20px;
   background-color: rgba(25, 25, 25, 0.5); /* #191919 with 50% opacity */
   color: white; /* White text */
-  font-family: 'Courier New', monospace; /* Digital/pixelated style font */
+  font-family: "Courier New", monospace; /* Digital/pixelated style font */
   letter-spacing: 0.5px; /* Slightly wider letter spacing for digital look */
 }
 
@@ -1693,45 +1693,55 @@
 /* Language selector at top right */
 .languageSelectorTop {
   position: absolute;
-  top: 16px;
-  right: 16px;
-  display: flex;
-  gap: 8px;
-  font-size: 12px;
+  top: 20px;
+  right: 20px;
+  z-index: 1000;
   cursor: pointer;
-  z-index: 10;
-  color: #aaa;
+  padding: 8px 16px;
+  background: none;
+  color: white;
+  font-size: 12px;
+  transition: background-color 0.3s ease;
+  border: 1px solid #333;
   user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
 }
 
 .languageSelectorTop span {
-  font-size: 12px;
+  transition: opacity 0.3s ease;
 }
 
 .activeLanguage {
-  color: white;
-  font-weight: bold;
+  opacity: 1;
 }
 
-@media (max-width: 480px) {
-  .languageSelectorTop,
-  .languageSelectorTop span {
-    font-size: 10px;
-  }
+/* Creative Archive Link */
+.creativeArchiveLink {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  z-index: 1000;
+  padding: 8px 16px;
+  background: none;
+  color: white !important;
+  font-size: 12px;
+  text-decoration: none !important;
+  transition: none;
+  border: 1px solid #333;
 }
 
-@media (max-width: 375px) {
-  .languageSelectorTop,
-  .languageSelectorTop span {
-    font-size: 10px;
-  }
+.creativeArchiveLink:hover {
+  background: none;
+  transform: none;
+  box-shadow: none;
 }
 
-@media (max-width: 320px) {
-  .languageSelectorTop,
-  .languageSelectorTop span {
-    font-size: 9px;
-  }
+.creativeArchiveLink span {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 
 /* Spotify at bottom right */
@@ -1798,7 +1808,7 @@
   background-color: rgba(0, 0, 0, 0.5);
   padding: 4px 8px;
   border-radius: 4px;
-  font-family: 'Courier New', monospace;
+  font-family: "Courier New", monospace;
 }
 
 @media (max-width: 480px) {

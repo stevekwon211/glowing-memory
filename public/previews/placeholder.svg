@@ -1,0 +1,5 @@
+<svg width="400" height="400" xmlns="http://www.w3.org/2000/svg">
+  <rect width="400" height="400" fill="#111"/>
+  <circle cx="200" cy="200" r="50" fill="#333" opacity="0.8"/>
+  <text x="200" y="280" text-anchor="middle" fill="#666" font-family="Arial" font-size="14">Three.js Preview</text>
+</svg> 
